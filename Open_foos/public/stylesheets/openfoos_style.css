@@ -1,0 +1,59 @@
+/* 
+    Document   : openfoos_style
+    Created on : 02.apr.2012, 13:49:12
+    Author     : Neberd
+    Description:
+        Purpose of the stylesheet follows.
+*/
+
+/* 
+   TODO customize this sample style
+   Syntax recommendation http://www.w3.org/TR/REC-CSS2/
+*/
+
+root { 
+    display: block;
+}
+
+
+
+
+.openfoss_main{
+    height: 328px;
+    width: 838px;
+    margin: -154px 0 0 -418px;
+    position: absolute;
+    left: 50%;
+    top: 50%;
+}
+
+.hero-unit{
+    padding: 0;
+    width: 520px;
+    height: 328px;
+}
+
+.signin{
+    position: absolute;
+    top: 0;
+    left: 536px;
+    width: 300px;
+    height: 108px;
+    background-color: #eeeeee;
+    -webkit-border-radius: 6px;
+    -moz-border-radius: 6px;
+    border-radius: 6px;
+}
+
+.signup{
+    position: absolute;
+    top: 121px;
+    left: 536px;
+    width: 300px;
+    height: 206px;
+    background-color: #eeeeee;
+    -webkit-border-radius: 6px;
+    -moz-border-radius: 6px;
+    border-radius: 6px;
+    
+}
