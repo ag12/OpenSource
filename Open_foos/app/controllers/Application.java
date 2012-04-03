@@ -16,9 +16,5 @@ public class Application extends Controller {
     public static void main_page(){
         render();
     }
-    
    
-    public static void neberd(){
-        render();
-    }
 }
