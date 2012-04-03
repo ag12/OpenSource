@@ -17,6 +17,7 @@ public class Application extends Controller {
         render();
     }
     
+    //dette må fjernes etterpå
     public static void neberd(){
         render();
     }
