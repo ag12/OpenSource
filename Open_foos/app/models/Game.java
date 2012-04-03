@@ -11,7 +11,7 @@ import play.db.jpa.Model;
 
 /**
  *
- * @author Santonas
+ * @author Bela Lugosi
  */
 @Entity
 public class Game extends Model {
