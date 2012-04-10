@@ -1,0 +1,185 @@
+/*
+    My Custom Stylesheet
+*/
+
+/* First, pull in Bootstrap's stylesheet */
+@import url(/public/bootstrap/css/bootstrap.css);
+
+
+/* Now my custom styles */
+
+body
+{
+    padding-top: 60px;
+    background-image: url(https://si0.twimg.com/images/themes/theme1/bg.png);
+    background-position: left 40px;
+    background-attachment: fixed;
+    background-repeat: repeat;
+    background-repeat: no-repeat;
+    background-color: #C0DEED;
+}
+
+
+/******************************************
+    General
+******************************************/
+
+.card
+{
+    background-color: white;
+    border-radius: 5px;
+    border: 1px solid #eee;
+    padding:12px;
+    box-sizing:border-box;
+    -moz-box-sizing:border-box; /* Firefox */
+    -webkit-box-sizing:border-box; /* Safari */
+    -ms-box-sizing:border-box; /* ie8 */
+}
+
+.section
+{
+    margin-bottom: 15px;
+}
+
+img
+{
+    border-radius: 5px;
+}
+
+.shadow{
+    background: -webkit-linear-gradient(top,white 0,#DDD 100%);
+    background: -moz-linear-gradient(top,white 0,#DDD 100%);
+    background: -ms-linear-gradient(top,white 0,#DDD 100%);
+    background: -o-linear-gradient(top,white 0,#DDD 100%);
+    background: linear-gradient(top,white 0,#DDD 100%);
+
+    border-left: solid 1px #EEE;
+    border-right: solid 1px #EEE;
+    border-bottom: solid 1px #CCC;
+    -webkit-box-shadow: 0 1px 0 rgba(0,0,0,.1);
+    -moz-box-shadow: 0 1px 0 rgba(0,0,0,.1);
+    box-shadow: 0 1px 0 rgba(0,0,0,.1);
+}
+
+.center{
+    margin-left: auto;
+    margin-right: auto;
+}
+
+.underline{
+    border-bottom: 1px solid #eee;
+}
+
+.title{
+    color: silver;
+    font-weight: lighter;
+}
+
+.subheader{
+    color: #999;
+    margin-top: 3px;
+}
+
+.thumbnail{
+    border: 0;
+    box-shadow: none;
+}
+
+.number{
+    float: right;
+    
+}
+
+.image-info{
+    padding: 5px 20px;
+}
+
+
+.team-name{
+    padding: 4px 20px;
+}
+
+/******************************************
+    Profile-Page
+******************************************/
+.profile-right-corner{
+    width: 112px;
+    margin: 10px 55px 9px 25px;
+    padding-top: 30px;
+    list-style: none;
+   
+}
+.stat-para{
+    margin: 0px;
+   float: right;
+   
+}
+#profile-menu
+{
+    background-color:white;
+    border-radius: 5px;
+}
+
+
+.dashboard
+{
+    width: 300px;
+    float: left;
+}
+
+textarea
+{
+    min-width: 270px;
+    max-width: 270px;
+    min-height: 50px;
+    max-height: 50px;
+}
+
+.form-actions
+{
+    background-color: white;
+    border-top: 0;
+}
+
+#edit-btn
+{
+    float: right;
+    margin-right: -60px;
+    font-size: 13px;
+    font-weight: bold;
+    border: 1px solid #CCC;
+    color: #333;
+    line-height: 18px;
+    padding: 5px 10px;
+}
+
+.nav-tabs > .active > a, .nav-tabs > .active > a:hover
+{
+    font-weight: bold;
+}
+
+.beste{
+    overflow: hidden;
+}
+
+.beste a{
+    float: left;
+    padding: 7px 12px;
+    color: black;
+    font-size: 10px;
+    line-height: 16px;
+    text-transform: uppercase;overflow: hidden;
+}
+
+.beste ul{
+    list-style: none;
+}
+
+.beste li{
+    display: inline;
+}
+.beste li + li a {
+    border-left: 1px solid #E8E8E8;
+}
+
+

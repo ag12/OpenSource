@@ -3,8 +3,9 @@
 # ~~~~
 
 # Home page
-GET     /                                       Application.index
+GET     /                                           Application.index
 GET     /main                                       Application.main_page
+
 
 # Ignore favicon requests
 GET     /favicon.ico                            404
@@ -14,3 +15,9 @@ GET     /public/                                staticDir:public
 
 # Catch all
 *       /{controller}/{action}                  {controller}.{action}
+
+
+# Player pages
+
+GET     /profile                                    Players.profile
+GET     /settings                                   Players.settings

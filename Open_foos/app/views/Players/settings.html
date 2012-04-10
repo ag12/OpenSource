@@ -1,0 +1,167 @@
+#{extends 'main.html' /}
+#{set page:'settings' /}
+<div class="row">
+    <div class="dashboard">
+        <div class="span4 card section">
+            <ul class="thumbnails">
+                <li>
+                    <a href="/profile" class="thumbnail">
+                        <img src="http://placehold.it/40x40" alt="">
+                    </a>
+                </li>
+                <li>
+                    <h3>neberd salimi</h3>
+                    <p class="subheader">View my profile page</p>
+                </li>
+            </ul>
+        </div>
+
+        <div class="span4">
+            <ul id="profile-menu" class="nav nav-tabs nav-stacked ">
+                <li class="active">
+                    <a href="#account" data-toggle="tab">Account
+                        <i class="icon-chevron-right pull-right"></i>
+                    </a></li>
+                <li><a href="#password" data-toggle="tab">Password
+                        <i class="icon-chevron-right pull-right"></i>
+                    </a>
+                </li>
+                <li><a href="#team" data-toggle="tab">Your teams
+                        <i class="icon-chevron-right pull-right"></i>
+                    </a>
+                </li>
+            </ul>
+        </div>
+
+    </div>
+    <div class="tabbable" style="float: right"> 
+        <div class="span8">
+            <div class="tab-content card">
+                <div class="tab-pane active" id="account">
+                    <h2>Account</h2>
+                    <h3 class="title underline section ">Change your basic account.</h3>
+
+                    <form class="form-horizontal">
+                        <fieldset>
+                            <div class="control-group">
+                                <label class="control-label" for="fileInput">Picture</label>
+                                <img src="https://si0.twimg.com/sticky/default_profile_images/default_profile_2_bigger.png" style="float: left; margin: 0 20px 0 20px;"></img>
+                                <div class="controls">
+                                    <input class="input-file" id="fileInput" type="file"><br/>
+                                    Maximum size of 700k.<br/> 
+                                    JPG, GIF, PNG
+                                </div>
+                            </div>   
+                            <div class="control-group">
+                                <label class="control-label" for="fname">First name</label>
+                                <div class="controls">
+                                    <input type="text" class="input-xlarge" id="fname">
+                                    <p class="help-block">Enter your real name, so people can recognize you.</p>
+                                </div>
+                            </div>
+                            <div class="control-group">
+                                <label class="control-label" for="lname">Last name</label>
+                                <div class="controls">
+                                    <input type="text" class="input-xlarge" id="lname">
+                                    <p class="help-block">Enter your real name, so people can recognize you.</p>
+                                </div>
+                            </div>
+                            <div class="control-group">
+                                <label class="control-label" for="email">Email</label>
+                                <div class="controls">
+                                    <input type="text" class="input-xlarge" id="email">
+                                    <p class="help-block">Enter your real name, so people can recognize you.</p>
+                                </div>
+                            </div>
+                            <div class="control-group">
+                                <label class="control-label" for="bio">Bio</label>
+                                <div class="controls">
+                                    <textarea id="bio" maxlength="160" name="user-bio"></textarea>
+                                    <p class="help-block">About yourself in fewer than <strong>160</strong> characters.</p>
+                                </div>
+                            </div>
+                            <div class="form-actions">
+                                <button id="settings_save" type="submit" class="btn btn-primary">Save changes</button>
+                            </div>
+                        </fieldset>
+                    </form>
+                </div>
+                <div class="tab-pane" id="password">
+                    <h2>Password</h2>
+                    <h3 class="title underline section ">Change your password.</h3>
+
+
+                    <form class="form-horizontal">
+                        <fieldset>
+                            <div class="control-group">
+                                <label class="control-label" for="current_password">Current password</label>
+                                <div class="controls">
+                                    <input type="password" class="input-xlarge" id="current_password">
+
+                                </div>
+                            </div>
+
+                            <div class="control-group">
+                                <label class="control-label" for="new_password">New password</label>
+                                <div class="controls">
+                                    <input type="password" class="input-xlarge" id="new_password">
+                                    <small id="password_strength" class="help-inline help-error"
+                                           style="display: none;">Too short</small>
+                                </div>
+                            </div>
+
+                            <div class="control-group">
+                                <label class="control-label" for="verify_password">Verify password</label>
+                                <div class="controls">
+                                    <input type="password" class="input-xlarge" id="verify_password">
+                                    <small id="password_match" class="help-inline help-error"
+                                           style="display: none;">Password don't match</small>
+                                </div>
+                            </div>
+                            <div class="form-actions">
+                                <button id="settings_save" type="submit" class="btn btn-primary">Save changes</button>
+                            </div>
+                        </fieldset>
+                    </form>
+                </div>
+
+
+                <div class="tab-pane" id="team">
+                    <h2>Your teams</h2>
+                    <h3 class="title underline section ">Change your teams basic account.</h3>
+
+                    <form class="form-horizontal">
+                        <fieldset>
+                            <div class="control-group">
+                                <label class="control-label" for="fileInput">Picture</label>
+                                <img src="https://si0.twimg.com/sticky/default_profile_images/default_profile_2_bigger.png" style="float: left; margin: 0 20px 0 20px;"></img>
+                                <div class="controls">
+                                    <input class="input-file" id="fileInput" type="file"><br/>
+                                    Maximum size of 700k.<br/> 
+                                    JPG, GIF, PNG
+                                </div>
+                            </div>  
+                            <div class="control-group">
+                                <label class="control-label" for="arch-rival">Arch-rival</label>
+                                <div class="controls">
+                                    <input type="text" data-provide="typeahead" class="input-xlarge" id="arch-rival">
+                                    <p class="help-block"></p>
+                                </div>
+                            </div>
+                            <div class="control-group">
+                                <label class="control-label" for="bio">Bio</label>
+                                <div class="controls">
+                                    <textarea id="bio" maxlength="160" name="user-bio"></textarea>
+                                    <p class="help-block">About yourself in fewer than <strong>160</strong> characters.</p>
+                                </div>
+                            </div>
+                            <div class="form-actions">
+                                <button id="settings_save" type="submit" class="btn btn-primary">Save changes</button>
+                            </div>
+                        </fieldset>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>

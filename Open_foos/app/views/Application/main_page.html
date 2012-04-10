@@ -1,73 +1,30 @@
-<!DOCTYPE html>
-<html lang="en">
-    <head>
-        <meta charset="utf-8">
-        <title>OpenFoos</title>
+#{extends 'main.html' /}
+#{set page:'main' /}
 
-        <meta name="viewport" content="width=device-width, initial-scale=1.0">
-        <meta name="description" content="">
-        <meta name="author" content="">
-
-        <!-- Le styles -->
-        <link href="/public/bootstrap/css/bootstrap.css" rel="stylesheet">
-        <style type="text/css">
-            body {
-                padding-top: 60px;
-                padding-bottom: 40px;
-            }
-        </style>
-        <link href="/public/bootstrap/css/bootstrap-responsive.css" rel="stylesheet">
-        <link href="/public/stylesheets/openfoos_style.css" rel="stylesheet">
-
-    </head>
-
-    <body>
-
-        <div class="navbar navbar-fixed-top" >
-            <div class="navbar-inner">
-                <div class="container">
-                    <a class="brand" href="startpage">Openfoos</a>
-
-                    <form class="navbar-search pull-right">
-                        <input type="text" class="search-query" placeholder="Search">
-                    </form>
-                </div>
+<div class="row-fluid" style="margin-top: 100px;">
+    <div class="span12">
+        <div class="row-fluid">
+            <div class="span7">
+                <img src="https://si0.twimg.com/a/1333470865/t1/img/front_page/city-balcony.jpg"  />
+            </div>
+            <div class="span5 card section shadow">
+                <form id="profile-signin">
+                    <input type="text" class="span3" placeholder="Username"><br/>
+                    <input type="password" class="span3" placeholder="Password"><br/>
+                    <button type="submit" class="btn btn-primary">Sign in</button>
+                </form>
+            </div>
+            <div class="span5 card shadow">
+                <h4 class="section">
+                    New to Openfoos? Sign up
+                </h4>
+                <form id="profile-signup">
+                    <input type="text" class="span3 " placeholder="Username">You can change it later</input>
+                    <input type="password" class="span3" placeholder="Password">6 characters or more!</input>
+                    <button type="submit" class="btn btn-warning">Sign up for OpenFoos</button>
+                </form>
             </div>
         </div>
+    </div>
+</div>
 
-
-
-        <div class="container-fluid">
-
-
-            <div class="openfoss_main">
-                <div class="hero-unit">
-                    
-                </div><!-- hero-unit -->
-                
-                <div class="signin">
-                    
-                </div><!-- info -->
-                <div class="signup">
-                    
-                </div><!-- info -->
-                
-            </div><!-- .openfoss_main -->
-
-
-
-
-            <footer>
-
-            </footer>
-
-
-        </div> <!-- /container -->
-
-        <!-- Le javascript
-        ================================================== -->
-        <!-- Placed at the end of the document so the pages load faster -->
-
-
-    </body>
-</html>

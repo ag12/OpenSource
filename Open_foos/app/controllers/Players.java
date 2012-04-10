@@ -11,4 +11,12 @@ import play.mvc.Controller;
  * @author Santonas
  */
 public class Players extends Controller {
+
+    public static void profile() {
+        render();
+    }
+
+    public static void settings() {
+        render();
+    }
 }

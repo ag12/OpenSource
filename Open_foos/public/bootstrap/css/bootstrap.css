@@ -2921,6 +2921,7 @@ input[type="submit"].btn.btn-mini {
   float: left;
   margin-top: 6px;
   margin-bottom: 0;
+  /*margin-right: 168px;*/
 }
 .navbar-search .search-query {
   padding: 4px 9px;
