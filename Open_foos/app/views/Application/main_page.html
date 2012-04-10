@@ -8,21 +8,49 @@
                 <img src="https://si0.twimg.com/a/1333470865/t1/img/front_page/city-balcony.jpg"  />
             </div>
             <div class="span5 card section shadow">
-                <form id="profile-signin">
-                    <input type="text" class="span3" placeholder="Username"><br/>
-                    <input type="password" class="span3" placeholder="Password"><br/>
+              <form id="profile-signin" action="@{Players.login_player()}" method="POST">
+                  
+                  
+                  <input type="text" name="player.username" 
+                               autofocus="autofocus" autocomplete="on" class="span3"
+                               placeholder="Type your username"/>
+                  
+                 <br/>
+                  
+                 <input type="password" name="player.password"
+                               autofocus="autofocus" autocomplete="on" class="span3"
+                               placeholder="Type your password"/>
+                  
+                  
+              <br/>
                     <button type="submit" class="btn btn-primary">Sign in</button>
+                    
                 </form>
             </div>
             <div class="span5 card shadow">
                 <h4 class="section">
                     New to Openfoos? Sign up
                 </h4>
-                <form id="profile-signup">
-                    <input type="text" class="span3 " placeholder="Username">You can change it later</input>
-                    <input type="password" class="span3" placeholder="Password">6 characters or more!</input>
+                
+                
+                
+                <form id="profile-signup" action="@{Players.register_player()}" method="POST">
+                    
+                     <input type="text" name="player.username" 
+                               autofocus="autofocus" autocomplete="on" class="span3 "
+                               placeholder="Type your username"/>
+                    
+                                            <input type="password" name="player.password"
+                               autofocus="autofocus"
+                               placeholder="Type your password"/>
+
+                  
                     <button type="submit" class="btn btn-warning">Sign up for OpenFoos</button>
                 </form>
+                
+                
+                
+                
             </div>
         </div>
     </div>

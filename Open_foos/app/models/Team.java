@@ -5,8 +5,10 @@
 package models;
 
 import java.util.Date;
+import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.ManyToOne;
+import javax.persistence.OneToOne;
 import play.db.jpa.Model;
 
 /**
@@ -16,18 +18,23 @@ import play.db.jpa.Model;
 @Entity
 public class Team extends Model {
     
+    @Column(unique=true)
     public String team_name = null;
     
     public String bio = null;
     
     public Date registered = null;
-    
-    public String image = null;
+    //default "team.png"
+    public String image = "team.png";
    
     @ManyToOne
     public Player player1 = null;
     @ManyToOne
     public Player player2 = null;
+    
+    
+    @OneToOne
+    public Team arch_rival = null;
     
     public int memberCount()
     {

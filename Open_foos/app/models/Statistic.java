@@ -46,4 +46,15 @@ public class Statistic {
     
     
     public String last_three_games_played = null;
+    
+    public Team target_team = null;
+    
+    
+    
+    
+    public int count_most_played_against;
+    public int count_most_lost_against;
+    public int count_most_won_against;  
+    public int count_most_regular_appearances;
+    
 }

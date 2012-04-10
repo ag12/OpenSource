@@ -16,5 +16,21 @@ public class Application extends Controller {
     public static void main_page(){
         render();
     }
+     //Player is login
+    public static boolean afterLogin(Player exist) {
+        
+        session.put("login", true);
+        session.put("pid", exist.id);
+        session.put("pname", exist.username);
+        String token = session.getAuthenticityToken();
+        session.put("token", token);
+        return true;
+
+    }
+
+    public static boolean afterLogout() {
+        session.clear();
+        return true;
+    }
    
 }

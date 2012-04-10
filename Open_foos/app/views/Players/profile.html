@@ -1,36 +1,186 @@
 #{extends 'main.html' /}
 #{set page:'profile' /}
+ <script type="text/javascript" src="/public/javascripts/highcharts/highcharts.js"></script>
+ <script type="text/javascript" src="/public/javascripts/highcharts/options.js"></script>
+   <script type="text/javascript">
+            
+            window.chart = null;
+            $(document).ready(function() {
+                console.log( window.chart)
+                function openfoose_typeahead(){
+                    //GitHub
+                    $('#typeahead').typeahead()
+                    .on('click', function(ev){
+                        console.log("klik feeld");
+                    })
+                   
+                    .on('keyup', function(ev){
+
+                       
+                        ev.stopPropagation();
+                        ev.preventDefault();
+
+                        //filter out up/down, tab, enter, and escape keys
+                        if( $.inArray(ev.keyCode,[40,38,9,13,27]) === -1 ){
+
+                            var self = $(this);
+                
+                            //a empty source
+                            self.data('typeahead').source = [];
+
+                            //active used so we aren't triggering duplicate keyup events
+                            if( !self.data('active') && self.val().length > 0){
+
+                                self.data('active', true);
+
+                                //Do data request. Insert your own API logic here.
+                                $.getJSON("@{Players.allPlayersByUsername()}",{
+                               
+                               
+                                    //if we dont use filter vi the typehead can sort list for us. 
+                                    //or change the method sett Like  % var % 
+                                    // filter: $(this).val() use this for PlayerController
+                        
+                        
+                        
+                                }, function(data) {
+                        
+                              
+                                    //set this to true when your callback executes
+                                    self.data('active',true);
+
+                                    //change values
+                                    var arr = [],
+                        
+                                    i=data.length;
+                                    while(i--){
+                                        arr[i] = data[i].username;
+                                    }
+
+                                    //set your results into the typehead's source 
+                                    self.data('typeahead').source = arr;
+                                   
+
+                                    //trigger keyup on the typeahead to make it search
+                                    self.trigger('keyup');
+
+                                    //All done, set to false to prepare for the next remote query.
+                                
+                                    self.data('active', false);
+
+                                });
+
+                            }
+                        }
+                    });
+                    
+
+
+                }              
+                function this_clicButton(){
+       
+                    $('#mysub').click(function (){
+        
+                        $.getJSON("@{Players.allPlayersByUsername()}",
+                        { filter : $('#typeahead').val()}, 
+                        function (data){
+             
+                            console.log(data[0].id);
+                       
+                            this_AddTodrawChart(data[0].id,data[0].username);
+                            
+                        });
+                    });
+                }
+                
+                function this_drawChart(id){
+                    
+                    var options =  window.versus_options;
+                    $.getJSON("@{Statistics.data()}", {id : id},function(data){
+                       options.series = new Array();
+                       options.series[0] = new Array();
+ 
+                        options.series[0].data = [ data.games_playd, data.winns, data.losts ]
+                        options.series[0].name = "${player.username}";
+                        
+                        window.chart = new Highcharts.Chart(options);
+                        console.log("new chart")
+                    });               
+                }
+                
+                
+                
+                
+                
+
+                function this_AddTodrawChart(id, username){
+               
+                    $.getJSON("@{Statistics.data()}", {id : "${player.id}"},function(data1){
+ 
+                        $.getJSON("@{Statistics.data()}", {id : id},function(data2){
+     
+                            var options = window.versus_options;
+                            
+                            options.series = new Array();
+                            options.series[0] = new Array();                          
+                            options.series[1] = new Array();
+                          
+                
+                            options.series[0].data = [ data1.games_playd, data1.winns, data1.losts ]
+                            options.series[0].name = "${player.username}";
+                          
+                            options.series[1].data = [ data2.games_playd, data2.winns, data2.losts]
+                            options.series[1].name = username;
+                            
+                            chart = new Highcharts.Chart(options);
+                            
+                            
+                        });           
+                    });               
+                }
+                openfoose_typeahead();
+                this_clicButton();
+                this_drawChart("${player.id}");
+           
+                
+               
+               
+             
+            });
+            
+            
+            
+        </script>
+
+
 
 <div class="row section">
     <div id="profile-info-container" class="span12 card">
         <div class="row">
-            <img src="https://si0.twimg.com/a/1333386813/images/default_profile_add_photo.png" id="profile-image" class="span3" style="width: 128px;" />
+
+            <img src="../public/images/small/${player.image}" id="profile-image" class="span3" style="width: 128px;" />
 
             <div id="profile-description" class="span7">
-                <h1>Neberd Salimi 
+                <h1>${player?.first_name} ${player?.last_name}
                     <!--<button type="submit" class="btn btn-primary" style="float: right;">Search</button>-->
 
                 </h1>
-                <h2 class="title">@neberd
+                <h2 class="title">@ ${player?.username}
 
                 </h2>
-                <p>Neberd er en av de beste spillerne ................
-                    Neberd er en av de beste spillerne ................
-                    Neberd er en av de beste spillerne ................
-                    Neberd er en av de beste spillerne ................
-                    Neberd er en av de beste spillerne ................</p>
+                <p>${player?.bio}</p>
             </div>
             <div class="span2 pull-right">
-                <div><a id="" class="btn pull-right" href="/settings">Edit your profile</a></div>
+                <div><a id="openfoose_see_profile" class="btn pull-right" href="/settings">Edit your profile</a></div>
                 <ul class="profile-right-corner">
                     <li>
-                        <h6 class="underline">PLAYED<p class="stat-para">810</p></h6>
+                        <h6 class="underline">PLAYED<p class="stat-para">${statistic?.games_playd}</p></h6>
                     </li>
                     <li>
-                        <h6 class="underline">PLAYED<p class="stat-para">1</p></h6>
+                        <h6 class="underline">WON<p class="stat-para">${statistic?.winns}</p></h6>
                     </li>
                     <li>
-                        <h6 class="underline">PLAYED<p class="stat-para">715</p></h6>    
+                        <h6 class="underline">LOST<p class="stat-para">${statistic?.losts}</p></h6>    
                     </li> 
                 </ul>
 
@@ -60,11 +210,13 @@
                         <i class="icon-chevron-right pull-right"></i>
                     </a>
                 </li>
+                #{if team != null}
                 <li>
-                    <a href="#test" data-toggle="tab">Test
+                    <a href="#test" data-toggle="tab">${team?.team_name}
                         <i class="icon-chevron-right pull-right"></i>
                     </a>
                 </li>
+                #{/if}
             </ul>  
         </div>
         <div class="span9"> 
@@ -86,78 +238,91 @@
 
                             </div>
                         </li>
-                        <li class="span2">
-                            <div class="thumbnail">
-                                <img src="http://placehold.it/160x120" alt="">
-                                <h3>Amir</h3>
-                                <p>Win: 50%</p>
-                            </div>
-                        </li>
-                        <li class="span2">
-                            <div class="thumbnail">
-                                <img src="http://placehold.it/160x120" alt="">
-                                <h3>Valentin</h3>
-                                <p>Win: 50%</p>
-                            </div>
-                        </li>
-                        <li class="span2">
-                            <div class="thumbnail">
-                                <img src="http://placehold.it/160x120" alt="">
-                                <h3>Ole</h3>
-                                <p>Win: 50%</p>
-                            </div>
-                        </li>
+                      
                     </ul>
                 </div>
                 <div id="stat" class="tab-pane">
                     <h2 class="underline section">Statistic</h2>
-                    <p> and so on ...</p>
+                   
+               
+                
+                
+                        <div id="mDiv">
+                    
+                        <input type="text" class="input-large search-query"
+                               id="typeahead" data-provide="typeahead"
+                               placeholder="Search for your team mates here">
+                        <button type="submit" class="btn btn-primary" id="mysub">Search</button>
+                 
+        </div>
+        <div id="personalia"></div>
+                
+                
+                
+                
                 </div>
+                
+                
+                
+                
+                
+                
+                
                 <div id="game" class="tab-pane">
-                    <h2 class="underline section">Game stat</h2>
+                    <h2 class="underline section">Game statistics</h2>
+                    #{if statistics.size() >= 1}
                     <ul class="thumbnails center">
-                        <li class="span2">
-                            <p class="section">Spilt mest mot:</p>
-                            <div class="thumbnail">
 
-                                <img src="http://placehold.it/160x120" alt="">
-                                <h3>Marcel</h3>
-                                <p>Win: 60%</p>
+
+                        #{list items:statistics, as:'statistics'}
+
+                        #{if statistics?.target_team != null }
+                        <li class="span2">
+                            <div class="thumbnail">
+                                <img src="../public/images/medium/${statistics?.target_team.image}" alt="">
+                                <h6 class="image-info">
+                                    #{if statistics?.count_most_played_against != 0}
+                                    Played most<p class="number">${statistics?.count_most_played_against}</p> 
+                                    #{/if}
+
+
+                                    #{if statistics?.count_most_lost_against != 0}
+                                    Lost most<p class="number">${statistics?.count_most_lost_against} </p>
+                                    #{/if}
+
+
+                                    #{if statistics?.count_most_won_against != 0}
+                                    won most<p class="number">${statistics?.count_most_won_against}</p>
+                                    #{/if}
+
+
+
+                                    #{if statistics?.count_most_regular_appearances != 0}
+                                    Regular app<p class="number">${statistics?.count_most_regular_appearances}</p> 
+                                    #{/if}
+
+
+
+                                </h6>
+                                <h3 class="team-name">@  ${statistics?.target_team.team_name}</h3>
                             </div>
                         </li>
-                        <li class="span2">
-                            <p class="section">Vunnet mest mot:</p>
-                            <div class="thumbnail">
 
-                                <img src="http://placehold.it/160x120" alt="">
-                                <h3>Amir</h3>
-                                <p>Win: 50%</p>
-                            </div>
-                        </li>
-                        <li class="span2">
-                            <p class="section">Tapt mest mot:</p>
-                            <div class="thumbnail">
-
-                                <img src="http://placehold.it/160x120" alt="">
-                                <h3>Valentin</h3>
-                                <p>Win: 50%</p>
-                            </div>
-                        </li>
-                        <li class="span2">
-                            <p class="section">Flest gjevne kamper:</p>
-                            <div class="thumbnail">
-
-                                <img src="http://placehold.it/160x120" alt="">
-                                <h3>Ole</h3>
-                                <p>Win: 50%</p>
-                            </div>
-                        </li>
+                        #{/if}<!-- if team != null  -->
+                        #{/list}<!-- list -->                                            
                     </ul>
+                    #{/if}<!--  Statistics size() >= 1 -->
+
+                    #{else }
+                    <p>sdfsd</p>
+                    #{/else}
+
                 </div>
+
                 <div id="test" class="tab-pane">
                     <h2 class="underline section">Test 4 Content</h2>
-                    <a href="">
-                        <img src="http://placehold.it/160x120" alt=""></img>
+                    <a href="#">
+                        <img src="../public/images/medium/${team.image}" alt="${team.team_name}" />
                     </a>
                 </div>
             </div><!-- /.tab-content -->

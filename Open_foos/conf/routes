@@ -2,6 +2,12 @@
 # This file defines all application routes (Higher priority routes first)
 # ~~~~
 
+# Import Secure routes
+#*      /                module:secure
+
+
+
+
 # Home page
 GET     /                                           Application.index
 GET     /main                                       Application.main_page
@@ -19,5 +25,5 @@ GET     /public/                                staticDir:public
 
 # Player pages
 
-GET     /profile                                    Players.profile
+GET     /players/profile/{username}                 Players.profile(username: String)
 GET     /settings                                   Players.settings
