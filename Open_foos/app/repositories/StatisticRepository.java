@@ -331,4 +331,15 @@ public class StatisticRepository {
         return statistics;
     }
     
+    public static List<Statistic> getMoreInfoForTeams(List<Team> teams){
+        
+        List<Statistic> statistics = new ArrayList<Statistic>(); 
+        for ( int i = 0; i < teams.size(); i++){
+            
+            statistics.add(getStatistics(teams.get(i).id));
+        }  
+        
+        return statistics;
+    }
+    
 }

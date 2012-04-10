@@ -1,156 +1,156 @@
 #{extends 'main.html' /}
 #{set page:'profile' /}
- <script type="text/javascript" src="/public/javascripts/highcharts/highcharts.js"></script>
- <script type="text/javascript" src="/public/javascripts/highcharts/options.js"></script>
-   <script type="text/javascript">
+<script type="text/javascript" src="/public/javascripts/highcharts/highcharts.js"></script>
+<script type="text/javascript" src="/public/javascripts/highcharts/options.js"></script>
+<script type="text/javascript">
             
-            window.chart = null;
-            $(document).ready(function() {
-                console.log( window.chart)
-                function openfoose_typeahead(){
-                    //GitHub
-                    $('#typeahead').typeahead()
-                    .on('click', function(ev){
-                        console.log("klik feeld");
-                    })
+    window.chart = null;
+    $(document).ready(function() {
+               
+        function openfoose_typeahead(){
+            //GitHub
+            $('#typeahead').typeahead()
+            .on('click', function(ev){
+                console.log("klik feeld");
+            })
                    
-                    .on('keyup', function(ev){
+            .on('keyup', function(ev){
 
                        
-                        ev.stopPropagation();
-                        ev.preventDefault();
+                ev.stopPropagation();
+                ev.preventDefault();
 
-                        //filter out up/down, tab, enter, and escape keys
-                        if( $.inArray(ev.keyCode,[40,38,9,13,27]) === -1 ){
+                //filter out up/down, tab, enter, and escape keys
+                if( $.inArray(ev.keyCode,[40,38,9,13,27]) === -1 ){
 
-                            var self = $(this);
+                    var self = $(this);
                 
-                            //a empty source
-                            self.data('typeahead').source = [];
+                    //a empty source
+                    self.data('typeahead').source = [];
 
-                            //active used so we aren't triggering duplicate keyup events
-                            if( !self.data('active') && self.val().length > 0){
+                    //active used so we aren't triggering duplicate keyup events
+                    if( !self.data('active') && self.val().length > 0){
 
-                                self.data('active', true);
+                        self.data('active', true);
 
-                                //Do data request. Insert your own API logic here.
-                                $.getJSON("@{Players.allPlayersByUsername()}",{
+                        //Do data request. Insert your own API logic here.
+                        $.getJSON("@{Players.allPlayersByUsername()}",{
                                
                                
-                                    //if we dont use filter vi the typehead can sort list for us. 
-                                    //or change the method sett Like  % var % 
-                                    // filter: $(this).val() use this for PlayerController
+                            //if we dont use filter vi the typehead can sort list for us. 
+                            //or change the method sett Like  % var % 
+                            // filter: $(this).val() use this for PlayerController
                         
                         
                         
-                                }, function(data) {
+                        }, function(data) {
                         
                               
-                                    //set this to true when your callback executes
-                                    self.data('active',true);
+                            //set this to true when your callback executes
+                            self.data('active',true);
 
-                                    //change values
-                                    var arr = [],
+                            //change values
+                            var arr = [],
                         
-                                    i=data.length;
-                                    while(i--){
-                                        arr[i] = data[i].username;
-                                    }
+                            i=data.length;
+                            while(i--){
+                                arr[i] = data[i].username;
+                            }
 
-                                    //set your results into the typehead's source 
-                                    self.data('typeahead').source = arr;
+                            //set your results into the typehead's source 
+                            self.data('typeahead').source = arr;
                                    
 
-                                    //trigger keyup on the typeahead to make it search
-                                    self.trigger('keyup');
+                            //trigger keyup on the typeahead to make it search
+                            self.trigger('keyup');
 
-                                    //All done, set to false to prepare for the next remote query.
+                            //All done, set to false to prepare for the next remote query.
                                 
-                                    self.data('active', false);
+                            self.data('active', false);
 
-                                });
-
-                            }
-                        }
-                    });
-                    
-
-
-                }              
-                function this_clicButton(){
-       
-                    $('#mysub').click(function (){
-        
-                        $.getJSON("@{Players.allPlayersByUsername()}",
-                        { filter : $('#typeahead').val()}, 
-                        function (data){
-             
-                            console.log(data[0].id);
-                       
-                            this_AddTodrawChart(data[0].id,data[0].username);
-                            
                         });
-                    });
+
+                    }
                 }
-                
-                function this_drawChart(id){
+            });
                     
-                    var options =  window.versus_options;
-                    $.getJSON("@{Statistics.data()}", {id : id},function(data){
-                       options.series = new Array();
-                       options.series[0] = new Array();
+
+
+        }              
+        function this_clicButton(){
+       
+            $('#mysub').click(function (){
+        
+                $.getJSON("@{Players.allPlayersByUsername()}",
+                { filter : $('#typeahead').val()}, 
+                function (data){
+             
+                    console.log(data[0].id);
+                       
+                    this_AddTodrawChart(data[0].id,data[0].username);
+                            
+                });
+            });
+        }
+                
+        function this_drawChart(id){
+                    
+            var options =  window.versus_options;
+            $.getJSON("@{Statistics.data()}", {id : id},function(data){
+                options.series = new Array();
+                options.series[0] = new Array();
  
-                        options.series[0].data = [ data.games_playd, data.winns, data.losts ]
-                        options.series[0].name = "${player.username}";
+                options.series[0].data = [ data.games_playd, data.winns, data.losts ]
+                options.series[0].name = "${player.username}";
                         
-                        window.chart = new Highcharts.Chart(options);
-                        console.log("new chart")
-                    });               
-                }
+                window.chart = new Highcharts.Chart(options);
+                console.log("new chart")
+            });               
+        }
                 
                 
                 
                 
                 
 
-                function this_AddTodrawChart(id, username){
+        function this_AddTodrawChart(id, username){
                
-                    $.getJSON("@{Statistics.data()}", {id : "${player.id}"},function(data1){
+            $.getJSON("@{Statistics.data()}", {id : "${player.id}"},function(data1){
  
-                        $.getJSON("@{Statistics.data()}", {id : id},function(data2){
+                $.getJSON("@{Statistics.data()}", {id : id},function(data2){
      
-                            var options = window.versus_options;
+                    var options = window.versus_options;
                             
-                            options.series = new Array();
-                            options.series[0] = new Array();                          
-                            options.series[1] = new Array();
+                    options.series = new Array();
+                    options.series[0] = new Array();                          
+                    options.series[1] = new Array();
                           
                 
-                            options.series[0].data = [ data1.games_playd, data1.winns, data1.losts ]
-                            options.series[0].name = "${player.username}";
+                    options.series[0].data = [ data1.games_playd, data1.winns, data1.losts ]
+                    options.series[0].name = "${player.username}";
                           
-                            options.series[1].data = [ data2.games_playd, data2.winns, data2.losts]
-                            options.series[1].name = username;
+                    options.series[1].data = [ data2.games_playd, data2.winns, data2.losts]
+                    options.series[1].name = username;
                             
-                            chart = new Highcharts.Chart(options);
+                    chart = new Highcharts.Chart(options);
                             
                             
-                        });           
-                    });               
-                }
-                openfoose_typeahead();
-                this_clicButton();
-                this_drawChart("${player.id}");
+                });           
+            });               
+        }
+        openfoose_typeahead();
+        this_clicButton();
+        this_drawChart("${team.id}");
            
                 
                
                
              
-            });
+    });
             
             
             
-        </script>
+</script>
 
 
 
@@ -210,6 +210,13 @@
                         <i class="icon-chevron-right pull-right"></i>
                     </a>
                 </li>
+                #{ if statistic.games_playd >= 1 } 
+                <li>
+                    <a href="#games" data-toggle="tab">Games played
+                        <i class="icon-chevron-right pull-right"></i>
+                    </a>
+                </li>
+                #{/if}
                 #{if team != null}
                 <li>
                     <a href="#test" data-toggle="tab">${team?.team_name}
@@ -228,46 +235,55 @@
                         <button type="submit" class="btn btn-primary">Search</button>
                     </form>
                     <br/><br/>
+
+
+                    #{list items:teams, as:'teams'}
+
                     <ul class="thumbnails center">
                         <li class="span2">
                             <div class="thumbnail">
-                                <img src="http://placehold.it/160x120" alt="">
-                                <h6 class="image-info">Win: <p class="number">60 %</p></h6>
-                                <h3 class="team-name">@ Marcel</h3>
-
+                                <img src="../public/images/medium/${teams?.image}" alt="${teams?.team_name}">
+                                <h6 class="image-info">Win: 
+                                    <p class="number"> ${teams_statistics?.get(teams_index-1).win_prosent} %</p></h6>
+                                <h3 class="team-name">@ ${teams?.team_name}</h3>
 
                             </div>
                         </li>
-                      
+
                     </ul>
+                    #{/list}
                 </div>
+
+
+
+
                 <div id="stat" class="tab-pane">
                     <h2 class="underline section">Statistic</h2>
-                   
-               
-                
-                
-                        <div id="mDiv">
-                    
+
+
+
+
+                    <div id="mDiv">
+
                         <input type="text" class="input-large search-query"
                                id="typeahead" data-provide="typeahead"
                                placeholder="Search for your team mates here">
                         <button type="submit" class="btn btn-primary" id="mysub">Search</button>
-                 
-        </div>
-        <div id="personalia"></div>
-                
-                
-                
-                
+
+                    </div>
+                    <div id="personalia"></div>
+
+
+
+
                 </div>
-                
-                
-                
-                
-                
-                
-                
+
+
+
+
+
+
+
                 <div id="game" class="tab-pane">
                     <h2 class="underline section">Game statistics</h2>
                     #{if statistics.size() >= 1}
@@ -313,9 +329,7 @@
                     </ul>
                     #{/if}<!--  Statistics size() >= 1 -->
 
-                    #{else }
-                    <p>sdfsd</p>
-                    #{/else}
+
 
                 </div>
 
@@ -324,6 +338,85 @@
                     <a href="#">
                         <img src="../public/images/medium/${team.image}" alt="${team.team_name}" />
                     </a>
+
+                    <p>name: @ ${team?.team_name}</p>
+                    <p>bio: ${team?.bio}</p>
+                    <p>arch: ${team?.arch_rival?.team_name}</p>
+                    <p>reg: ${team?.registered}</p>
+                    <p>played ${statistic?.last_three_games_played}</p>
+
+                    <div class="span8" id="stat2">
+                        <h3>Statistikk</h3>
+                    </div><!-- #stat -->
+
+
+                    #{ if statistic.games_playd >= 1 } 
+                    <table >
+                        <tr>
+                            <th>Antall kamper</th>
+
+                        </tr>
+                        <tr>
+                            <td>Played</td>
+                            <td>${statistic?.games_playd}</td>
+                        </tr>
+                        <tr>
+                            <td>Vunnet</td>
+                            <td>${statistic?.winns}</td>
+                        </tr>
+                        <tr>
+                            <td>Tapt</td>
+                            <td>${statistic?.losts}</td>
+                        </tr>
+                        <tr>
+                            <td>total_score_for</td>
+                            <td>${statistic?.score_for}</td>
+                        </tr>
+                        <tr>
+                            <td>score_home_for</td>
+                            <td>${statistic?.score_home_for}</td>
+                        </tr>
+                        <tr>
+                            <td>score_away_for</td>
+                            <td>${statistic?.score_away_for}</td>
+                        </tr>
+
+                        <tr>
+                            <td>total_score_against</td>
+                            <td>${statistic?.score_against}</td>
+                        </tr>
+                        <tr>
+                            <td>score_home_against</td>
+                            <td>${statistic?.score_home_against}</td>
+                        </tr>
+                        <tr>
+                            <td>score_away_against</td>
+                            <td>${statistic?.score_away_against}</td>
+                        </tr>
+
+                        <tr>
+                            <td>average_score_for</td>
+                            <td>${statistic?.average_score_for} </td>
+                        </tr>
+                        <tr>
+                            <td> win_prosent</td>
+                            <td>${statistic?.win_prosent} %</td>
+                        </tr>
+                        <tr>
+                            <td> lost_prosent</td>
+                            <td>${statistic?.lost_prosent} %</td>
+                        </tr>
+                    </table>
+                    #{/if}
+                    #{ if statistic.games_playd <= 0 }
+                    <p>No games played</p>
+                    #{/if}
+
+
+                </div>
+                <div id="games" class="tab-pane">
+                    <h2 class="underline section">Test 4 Content</h2>
+
                 </div>
             </div><!-- /.tab-content -->
         </div><!-- span9 -->

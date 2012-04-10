@@ -16,12 +16,7 @@ public class Statistics extends Controller {
     
     public static void data(Long id) {
 
-
         Statistic statistic = StatisticRepository.getStatistics(id);
         renderJSON(statistic);
-
-
-
-
     }
 }

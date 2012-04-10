@@ -127,9 +127,19 @@ public class Players extends Controller {
         if (player != null) {
             
             Team team = Teams.getTeam(player.id);
-            Statistic statistic = StatisticRepository.getStatistics(player.id);
-            List<Statistic> statistics = new StatisticRepository().getMoreInfo(player.id);
-            render(player,team,statistic,statistics);
+            
+            List<Team> teams = Teams.getTeams(team.id);
+            
+            List<Statistic> teams_statistics = StatisticRepository.getMoreInfoForTeams(teams);
+            
+            Statistic statistic = StatisticRepository.getStatistics(team.id);
+            List<Statistic> statistics = new StatisticRepository().getMoreInfo(team.id);
+            render(player 
+                    ,(team != null ? team : null)
+                    ,(teams != null ? teams : null)
+                    ,(statistic != null ? statistic : null)
+                    ,(statistics != null ? statistics : null)
+                    ,(teams_statistics != null ? teams_statistics : null));
         } else if (player == null) {
 //            controllers.Application.error("Oooobs");
 //            error(666, "Cant find " + username);
