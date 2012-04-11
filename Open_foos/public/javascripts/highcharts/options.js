@@ -11,17 +11,17 @@ window.versus_options = {
         type: 'bar'
     },
     title: {
-        text: 'tuuull'
+        text: 'Your game\'s'
     },
     subtitle: {
-        text: 'Source: Google Analytics'
+        //text: 'Source: Google Analytics'
     },
     xAxis: {
         categories: ['Game\'s played', 'Game\'s won', 'Game\'s lost']
     },
     yAxis: {
         title: {
-            text: 'Gola\'s'
+            text: 'Games played'
         }
     },
 legend: {},

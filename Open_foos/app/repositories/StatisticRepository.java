@@ -158,6 +158,7 @@ public class StatisticRepository {
 
                 team.id = resultset.getLong("id");
                 team.team_name = resultset.getString("team_name");
+                team.image = resultset.getString("image");
                 statistic.count_most_played_against = resultset.getInt("count_matches");
 
             }
@@ -196,6 +197,7 @@ public class StatisticRepository {
 
                 team.id = resultset.getLong("id");
                 team.team_name = resultset.getString("team_name");
+                  team.image = resultset.getString("image");
                 statistic.count_most_lost_against = resultset.getInt("count_matches");
 
             }
@@ -233,6 +235,7 @@ public class StatisticRepository {
 
                 team.id = resultset.getLong("id");
                 team.team_name = resultset.getString("team_name");
+                  team.image = resultset.getString("image");
                 statistic.count_most_won_against = resultset.getInt("count_matches");
 
             }
@@ -272,6 +275,7 @@ public class StatisticRepository {
 
                 team.id = resultset.getLong("id");
                 team.team_name = resultset.getString("team_name");
+                  team.image = resultset.getString("image");
                 statistic.count_most_regular_appearances = resultset.getInt("count_matches");
 
             }
@@ -309,6 +313,7 @@ public class StatisticRepository {
 //
 //                team.id = resultset.getLong("id");
 //                team.team_name = resultset.getString("team_name");
+//                team.image = resultset.getString("image");
 //                statistic.count_most_regular_appearances = resultset.getInt("count_matches");
 //
 //            }

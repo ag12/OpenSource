@@ -17,6 +17,7 @@ import play.db.jpa.Model;
 public class Game extends Model {
 
     public Long winner_id = null;
+    
     public String state = null;
     public Date start_time = null;
     public Date end_time = null;

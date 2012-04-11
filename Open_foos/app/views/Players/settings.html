@@ -1,16 +1,44 @@
 #{extends 'main.html' /}
 #{set page:'settings' /}
+<script type="text/javascript" >
+    
+    $(document).ready(function(){
+        
+        
+         $('#arch-rival').typeahead({
+             
+             
+             
+            source: function(){
+                
+                
+                
+                
+                
+                
+                
+            },
+            onselect: function(obj) { console.log(obj) }
+             
+         });
+        
+        
+        
+        
+    });
+   
+</script>
 <div class="row">
     <div class="dashboard">
         <div class="span4 card section">
             <ul class="thumbnails">
                 <li>
-                    <a href="/profile" class="thumbnail">
-                        <img src="http://placehold.it/40x40" alt="">
+                    <a href="/players/profile/${player?.username}" class="thumbnail">
+                        <img src="@{'/public/images/xsmall'}/${player?.image}" alt="${player?.username}">
                     </a>
                 </li>
                 <li>
-                    <h3>neberd salimi</h3>
+                    <h3>${player?.first_name} ${player?.last_name}</h3>
                     <p class="subheader">View my profile page</p>
                 </li>
             </ul>
@@ -22,11 +50,12 @@
                     <a href="#account" data-toggle="tab">Account
                         <i class="icon-chevron-right pull-right"></i>
                     </a></li>
-                <li><a href="#password" data-toggle="tab">Password
+
+                <li><a href="#team" data-toggle="tab">${team.team_name}
                         <i class="icon-chevron-right pull-right"></i>
                     </a>
                 </li>
-                <li><a href="#team" data-toggle="tab">Your teams
+                <li><a href="#password" data-toggle="tab">Password
                         <i class="icon-chevron-right pull-right"></i>
                     </a>
                 </li>
@@ -41,29 +70,33 @@
                     <h2>Account</h2>
                     <h3 class="title underline section ">Change your basic account.</h3>
 
-                    <form class="form-horizontal">
+
+                    <!-- FOR PLAYER INFO -->
+                    <form id="editformplayer" action="@{Players.edit_player()}"
+                          enctype="multipart/form-data" method="POST" class="form-horizontal">
+                        #{authenticityToken /}
                         <fieldset>
                             <div class="control-group">
                                 <label class="control-label" for="fileInput">Picture</label>
-                                <img src="@{'/public/images/xsmall'}/${player?.image}" style="float: left; margin: 0 20px 0 20px;"></img>
+                                <img src="@{'/public/images/xsmall'}/${player?.image}" style="float: left; margin: 0 20px 0 20px;"/>
                                 <div class="controls">
-                                    <input class="input-file" id="fileInput" type="file"><br/>
-                                    Maximum size of 700k.<br/> 
+                                    <input class="input-file" type="file" name="image" id="image"/><br/>
+                                    Maximum size of 700kb.<br/> 
                                     JPG, GIF, PNG
                                 </div>
                             </div>   
-                             <div class="control-group">
+                            <div class="control-group">
                                 <label class="control-label" for="rfid">Rf-id</label>
                                 <div class="controls">
-                                    <input type="text" class="input-xlarge" id="rfid" placeholder="Type your rfid" 
+                                    <input type="text" class="input-xlarge" id="rfid" placeholder="Scan your rfid" 
                                            value="${player?.rfid}" name="player.rfid" autofocus="autofocus">
-                                    <p class="help-block">Enter your real name, so people can recognize you.</p>
+                                    <p class="help-block">Let the scaner scan you rfid, so you can logon with it.</p>
                                 </div>
                             </div>
                             <div class="control-group">
                                 <label class="control-label" for="fname">First name</label>
                                 <div class="controls">
-                                    <input type="text" class="input-xlarge" id="fname" placeholder="Type your firstname" 
+                                    <input type="text" class="input-xlarge" id="fname" placeholder="Your firstname is missing" 
                                            value="${player?.first_name}" name="player.first_name">
                                     <p class="help-block">Enter your real name, so people can recognize you.</p>
                                 </div>
@@ -71,24 +104,24 @@
                             <div class="control-group">
                                 <label class="control-label" for="lname">Last name</label>
                                 <div class="controls">
-                                    <input type="text" class="input-xlarge" id="lname"
+                                    <input type="text" class="input-xlarge" id="lname" placeholder="Your lastname is missing"
                                            value="${player?.last_name}" name="player.last_name">
-                                    
+
                                     <p class="help-block">Enter your real name, so people can recognize you.</p>
                                 </div>
                             </div>
                             <div class="control-group">
                                 <label class="control-label" for="email">Email</label>
                                 <div class="controls">
-                                    <input type="text" class="input-xlarge" id="email" 
+                                    <input type="text" class="input-xlarge" id="email" placeholder="Your email is missing"
                                            value="${player?.email}" name="player.email"> 
-                                    <p class="help-block">Enter your real name, so people can recognize you.</p>
+                                    <p class="help-block">Enter your email, so people can email you.</p>
                                 </div>
                             </div>
                             <div class="control-group">
                                 <label class="control-label" for="bio">Bio</label>
                                 <div class="controls">
-                                    <textarea id="bio" maxlength="160" name="player.bio">${player.bio}</textarea>
+                                    <textarea id="bio" maxlength="160" name="player.bio" placeholder="Your bio is missing">${player.bio}</textarea>
                                     <p class="help-block">About yourself in fewer than <strong>160</strong> characters.</p>
                                 </div>
                             </div>
@@ -97,6 +130,7 @@
                             </div>
                         </fieldset>
                     </form>
+                    <!-- END PLAYER INFO-->
                 </div>
                 <div class="tab-pane" id="password">
                     <h2>Password</h2>
@@ -108,15 +142,16 @@
                             <div class="control-group">
                                 <label class="control-label" for="current_password">Current password</label>
                                 <div class="controls">
-                                    <input type="password" class="input-xlarge" id="current_password">
-
+                                    <input type="password" class="input-xlarge" id="current_password" placeholder="Enter your current password">
+                                    <p class="help-block">Have you forgotten your password?</p>
                                 </div>
                             </div>
 
                             <div class="control-group">
                                 <label class="control-label" for="new_password">New password</label>
                                 <div class="controls">
-                                    <input type="password" class="input-xlarge" id="new_password">
+                                    <input type="password" class="input-xlarge" id="new_password" placeholder="Make a new password">
+                                    <p class="help-block">Find a smart one.</p>
                                     <small id="password_strength" class="help-inline help-error"
                                            style="display: none;">Too short</small>
                                 </div>
@@ -125,7 +160,8 @@
                             <div class="control-group">
                                 <label class="control-label" for="verify_password">Verify password</label>
                                 <div class="controls">
-                                    <input type="password" class="input-xlarge" id="verify_password">
+                                    <input type="password" class="input-xlarge" id="verify_password" placeholder="Match it">
+                                    
                                     <small id="password_match" class="help-inline help-error"
                                            style="display: none;">Password don't match</small>
                                 </div>
@@ -142,33 +178,43 @@
                     <h2>Your teams</h2>
                     <h3 class="title underline section ">Change your teams basic account.</h3>
 
-                    <form class="form-horizontal">
+                    <form action="@{Teams.edit_team(team.id)}" enctype="multipart/form-data" method="POST" class="form-horizontal">
+                        #{authenticityToken /}
                         <fieldset>
                             <div class="control-group">
                                 <label class="control-label" for="fileInput">Picture</label>
-                                <img src="@{'/public/images/xsmall'}/${team?.image}" style="float: left; margin: 0 20px 0 20px;"></img>
+                                <img src="@{'/public/images/xsmall'}/${team?.image}" style="float: left; margin: 0 20px 0 20px;"/>
                                 <div class="controls">
-                                    <input class="input-file" id="fileInput" type="file"><br/>
+                                    <input type="file" name="image" id="team_image" /><br/>
                                     Maximum size of 700k.<br/> 
                                     JPG, GIF, PNG
                                 </div>
                             </div>  
                             <div class="control-group">
+                                <label class="control-label" for="team_name">Team name</label>
+                                <div class="controls">
+                                    <input type="text" data-provide="typeahead" class="input-xlarge" id="team_name" 
+                                           value="${team?.team_name}" name="team.team_name">
+                                    <p class="help-block"></p>
+                                </div>
+                            </div>
+                            <div class="control-group">
                                 <label class="control-label" for="arch-rival">Arch-rival</label>
                                 <div class="controls">
-                                    <input type="text" data-provide="typeahead" class="input-xlarge" id="arch-rival">
-                                    <p class="help-block"></p>
+                                    <input type="text" data-provide="typeahead" class="input-xlarge" id="arch-rival" 
+                                           value="${team?.arch_rival?.team_name}" name="team.arch_rival.team_name">
+                                   <p class="help-block">Don't worry we will find them for you .</p>
                                 </div>
                             </div>
                             <div class="control-group">
                                 <label class="control-label" for="bio">Bio</label>
                                 <div class="controls">
-                                    <textarea id="bio" maxlength="160" name="user-bio"></textarea>
+                                    <textarea id="team_bio" maxlength="160" name="team.bio">${team?.bio}</textarea>
                                     <p class="help-block">About yourself in fewer than <strong>160</strong> characters.</p>
                                 </div>
                             </div>
                             <div class="form-actions">
-                                <button id="settings_save" type="submit" class="btn btn-primary">Save changes</button>
+                                <button id="settings_save2" type="submit" class="btn btn-primary">Save changes</button>
                             </div>
                         </fieldset>
                     </form>
