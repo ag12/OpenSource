@@ -48,4 +48,14 @@ public class PlayerValidations {
 
         return toRemove;
     }
+    
+    public static String capitalize(String s){
+        if (s != null){
+            char [] chars = s.toLowerCase().toCharArray();
+            chars[0] = Character.toUpperCase(chars[0]);
+            return String.valueOf(chars);
+        }
+        else 
+            return null;
+    }
 }
