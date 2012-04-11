@@ -26,7 +26,7 @@ GET     /public/                                staticDir:public
 # Player pages
 
 GET     /players/profile/{username}                 Players.profile(username: String)
-GET     /settings                                   Players.settings
+GET     /players/settings                                   Players.settings
 
 
 

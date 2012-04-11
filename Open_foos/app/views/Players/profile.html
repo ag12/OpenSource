@@ -157,8 +157,7 @@
 <div class="row section">
     <div id="profile-info-container" class="span12 card">
         <div class="row">
-
-            <img src="../public/images/small/${player.image}" id="profile-image" class="span3" style="width: 128px;" />
+            <img src="@{'/public/images/small'}/${player.image}" id="profile-image" class="span3" style="width: 128px;" />
 
             <div id="profile-description" class="span7">
                 <h1>${player?.first_name} ${player?.last_name}
@@ -242,7 +241,7 @@
                     <ul class="thumbnails center">
                         <li class="span2">
                             <div class="thumbnail">
-                                <img src="../public/images/medium/${teams?.image}" alt="${teams?.team_name}">
+                                <img src="@{'/public/images/medium'}/${teams?.image}" alt="${teams?.team_name}">
                                 <h6 class="image-info">Win: 
                                     <p class="number"> ${teams_statistics?.get(teams_index-1).win_prosent} %</p></h6>
                                 <h3 class="team-name">@ ${teams?.team_name}</h3>
@@ -295,8 +294,9 @@
                         #{if statistics?.target_team != null }
                         <li class="span2">
                             <div class="thumbnail">
-                                <img src="../public/images/medium/${statistics?.target_team.image}" alt="">
+                                <img src="@{'/public/images/medium'}/${statistics?.target_team.image}" alt="">
                                 <h6 class="image-info">
+                                    
                                     #{if statistics?.count_most_played_against != 0}
                                     Played most<p class="number">${statistics?.count_most_played_against}</p> 
                                     #{/if}
@@ -336,7 +336,7 @@
                 <div id="test" class="tab-pane">
                     <h2 class="underline section">Test 4 Content</h2>
                     <a href="#">
-                        <img src="../public/images/medium/${team.image}" alt="${team.team_name}" />
+                        <img src="@{'/public/images/medium'}/${team.image}" alt="${team.team_name}" />
                     </a>
 
                     <p>name: @ ${team?.team_name}</p>

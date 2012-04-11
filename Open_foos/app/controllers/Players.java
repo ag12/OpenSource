@@ -26,7 +26,21 @@ public class Players extends Controller {
     }
 
     public static void settings() {
-        render();
+        
+        Long id = Long.parseLong(session.get("pid"));
+        String username = session.get("pname");
+        if ( id != null && (username != null && !username.equals(""))){
+            
+            
+            Player player = Player.find("id = ? and username = ?", id,username).first();
+            Team team = Team.find("player1_id = ? AND player2_id = NULL", id).first();
+            render(player, team);
+        }
+        else
+            controllers.Application.error();
+        
+        
+       
     }
 
     public static void register_player(@Valid Player player) {

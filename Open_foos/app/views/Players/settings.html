@@ -45,38 +45,50 @@
                         <fieldset>
                             <div class="control-group">
                                 <label class="control-label" for="fileInput">Picture</label>
-                                <img src="https://si0.twimg.com/sticky/default_profile_images/default_profile_2_bigger.png" style="float: left; margin: 0 20px 0 20px;"></img>
+                                <img src="@{'/public/images/xsmall'}/${player?.image}" style="float: left; margin: 0 20px 0 20px;"></img>
                                 <div class="controls">
                                     <input class="input-file" id="fileInput" type="file"><br/>
                                     Maximum size of 700k.<br/> 
                                     JPG, GIF, PNG
                                 </div>
                             </div>   
+                             <div class="control-group">
+                                <label class="control-label" for="rfid">Rf-id</label>
+                                <div class="controls">
+                                    <input type="text" class="input-xlarge" id="rfid" placeholder="Type your rfid" 
+                                           value="${player?.rfid}" name="player.rfid" autofocus="autofocus">
+                                    <p class="help-block">Enter your real name, so people can recognize you.</p>
+                                </div>
+                            </div>
                             <div class="control-group">
                                 <label class="control-label" for="fname">First name</label>
                                 <div class="controls">
-                                    <input type="text" class="input-xlarge" id="fname">
+                                    <input type="text" class="input-xlarge" id="fname" placeholder="Type your firstname" 
+                                           value="${player?.first_name}" name="player.first_name">
                                     <p class="help-block">Enter your real name, so people can recognize you.</p>
                                 </div>
                             </div>
                             <div class="control-group">
                                 <label class="control-label" for="lname">Last name</label>
                                 <div class="controls">
-                                    <input type="text" class="input-xlarge" id="lname">
+                                    <input type="text" class="input-xlarge" id="lname"
+                                           value="${player?.last_name}" name="player.last_name">
+                                    
                                     <p class="help-block">Enter your real name, so people can recognize you.</p>
                                 </div>
                             </div>
                             <div class="control-group">
                                 <label class="control-label" for="email">Email</label>
                                 <div class="controls">
-                                    <input type="text" class="input-xlarge" id="email">
+                                    <input type="text" class="input-xlarge" id="email" 
+                                           value="${player?.email}" name="player.email"> 
                                     <p class="help-block">Enter your real name, so people can recognize you.</p>
                                 </div>
                             </div>
                             <div class="control-group">
                                 <label class="control-label" for="bio">Bio</label>
                                 <div class="controls">
-                                    <textarea id="bio" maxlength="160" name="user-bio"></textarea>
+                                    <textarea id="bio" maxlength="160" name="player.bio">${player.bio}</textarea>
                                     <p class="help-block">About yourself in fewer than <strong>160</strong> characters.</p>
                                 </div>
                             </div>
@@ -134,7 +146,7 @@
                         <fieldset>
                             <div class="control-group">
                                 <label class="control-label" for="fileInput">Picture</label>
-                                <img src="https://si0.twimg.com/sticky/default_profile_images/default_profile_2_bigger.png" style="float: left; margin: 0 20px 0 20px;"></img>
+                                <img src="@{'/public/images/xsmall'}/${team?.image}" style="float: left; margin: 0 20px 0 20px;"></img>
                                 <div class="controls">
                                     <input class="input-file" id="fileInput" type="file"><br/>
                                     Maximum size of 700k.<br/> 
