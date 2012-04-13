@@ -32,5 +32,9 @@ public class Application extends Controller {
         session.clear();
         return true;
     }
+    
+    public static boolean auto(Long id){
+         return Long.parseLong(session.get("pid")) == id; 
+    }
    
 }

@@ -2,10 +2,18 @@
 #{set page:'profile' /}
 <script type="text/javascript" src="/public/javascripts/highcharts/highcharts.js"></script>
 <script type="text/javascript" src="/public/javascripts/highcharts/options.js"></script>
+
+
+
+
+
+
 <script type="text/javascript">
             
     window.chart = null;
     $(document).ready(function() {
+        $('.classPopover').popover('hide');
+        
                
         function openfoose_typeahead(){
             //GitHub
@@ -115,7 +123,7 @@
 
         function this_AddTodrawChart(id, username){
                
-            $.getJSON("@{Statistics.data()}", {id : "${player.id}"},function(data1){
+            $.getJSON("@{Statistics.data()}", {id : "${team.id}"},function(data1){
  
                 $.getJSON("@{Statistics.data()}", {id : id},function(data2){
      
@@ -165,13 +173,20 @@
 
                 </h1>
                 <h2 class="title">@ ${player?.username}
-
+                   
                 </h2>
                 <p>${player?.bio}</p>
             </div>
             <div class="span2 pull-right">
-                <div><a id="openfoose_see_profile" class="btn pull-right" href="/settings">Edit your profile</a></div>
-                <ul class="profile-right-corner">
+                
+                
+               #{if  ( (session.pid && (Long.parseLong(session.pid) == player?.id)) && session.token && session.login)}
+                <div><a id="openfoose_see_profile" class="btn pull-right" href="@{Players.settings()}">Edit your profile</a></div>
+                #{/if}
+               
+               
+               
+               <ul class="profile-right-corner">
                     <li>
                         <h6 class="underline">PLAYED<p class="stat-para">${statistic?.games_playd}</p></h6>
                     </li>
@@ -181,6 +196,7 @@
                     <li>
                         <h6 class="underline">LOST<p class="stat-para">${statistic?.losts}</p></h6>    
                     </li> 
+                    
                 </ul>
 
             </div>
@@ -194,11 +210,19 @@
     <div class="tabbable">
         <div class="span3">
             <ul id="profile-menu" class="nav nav-tabs nav-stacked ">
+                
+                
+                #{if teams.size() >= 1}
                 <li class="active">
                     <a href="#teams" data-toggle="tab">Teams
                         <i class="icon-chevron-right pull-right"></i>
                     </a>
                 </li>
+                #{/if}
+                
+                
+                
+                 #{ if statistic.games_playd >= 1 } 
                 <li>
                     <a href="#stat" data-toggle="tab">Statistic
                         <i class="icon-chevron-right pull-right"></i>
@@ -209,7 +233,7 @@
                         <i class="icon-chevron-right pull-right"></i>
                     </a>
                 </li>
-                #{ if statistic.games_playd >= 1 } 
+      
                 <li>
                     <a href="#games" data-toggle="tab">Games played
                         <i class="icon-chevron-right pull-right"></i>
@@ -227,30 +251,165 @@
         </div>
         <div class="span9"> 
             <div id="profile-menu-info" class="tab-content card section">
-                <div id="teams" class="tab-pane active">
+                <div id="teams" class="tab-pane">
                     <h2 class="underline section">Teams</h2>
-                    <form class="form-search center">
-                        <input type="text" class="input-large search-query" placeholder="Search for your team mates here">
+<!--                    <form class="form-search center">
+                        
+                        
+                               <input type="text" class="input-large search-query" id="typeahead_team" data-provide="typeahead"
+                               placeholder="Search for your team mates here" />
+                      
+                  
+                        
                         <button type="submit" class="btn btn-primary">Search</button>
-                    </form>
-                    <br/><br/>
-
-
-                    #{list items:teams, as:'teams'}
+                    </form>-->
 
                     <ul class="thumbnails center">
+
+
+                        #{list items:teams, as:'teams'}
+
+
                         <li class="span2">
-                            <div class="thumbnail">
+                            <a href="#" rel="popover" class="classPopover"
+                               data-content="
+
+
+
+
+                               #{if teams?.bio != null }
+                               <p>
+                               <strong>Bio</strong><br>
+                               ${teams?.bio}
+                               </p>
+                               <br/>
+                               #{/if}
+
+
+
+
+
+
+                               <table class='table table-striped'>
+                               <thead class='blue-title'>
+                               <tr>
+                               <th>Player one</th>
+                               <th>Player two</th>
+                               </tr>
+                               </thead>
+                               <tbody>
+                               <tr>
+                               <td>${teams?.player1?.username}</td>
+                               <td>${teams?.player2?.username}</td>
+                               </tr>
+                               </tbody>
+                               </table>
+
+
+
+
+
+                               #{if teams?.arch_rival != null}
+                               <table class='table tb-arch-rival'>
+                               <thead>
+                               <tr>
+                               <th>Arch-rival</th>
+                               <th class='prosent'>${teams?.arch_rival?.team_name}</th>
+                               </tr>
+                               </thead>
+                               </table>
+                               #{/if}
+
+
+
+
+                               #{if teams_statistics?.get(teams_index-1).games_playd >= 1 } 
+
+
+
+
+                               <table class='table table-bordered'>
+                               <thead>
+                               <tr class='green-title'>
+                               <th>Played</th>
+                               <th>Won</th>
+                               <th>Lost</th>
+                               </tr>
+                               </thead>
+                               <tbody>
+                               <tr>
+                               <td>${teams_statistics?.get(teams_index-1).games_playd}</td>
+                               <td>${teams_statistics?.get(teams_index-1).winns}</td>
+                               <td>${teams_statistics?.get(teams_index-1).losts}</td>
+                               </tr>
+                               </tbody>
+                               </table>
+
+
+
+
+
+
+                               <table class='table table-striped'>
+                               <thead class='blue-title'>
+                               <tr>
+                               <th>Total score for</th>
+                               <th>Total score against</th>
+                               </tr>
+                               </thead>
+                               <tbody>
+                               <tr>
+                               <td>${teams_statistics?.get(teams_index-1).score_for}</td>
+                               <td>${teams_statistics?.get(teams_index-1).score_against}</td>
+
+                               </tr>
+                               </tbody>
+                               </table>
+                               
+                               
+                               <table class='table'>
+                               <thead class='yellow-title'>
+                               <tr>
+                               <th>Win</th>
+                               <th class='prosent'>${teams_statistics?.get(teams_index-1).win_prosent} %</th>
+                               </tr>
+                               </thead>
+                               </table>
+
+
+
+
+                               #{/if}
+
+
+
+
+
+
+
+                               #{if teams_statistics?.get(teams_index-1).games_playd <= 0 }
+                               <p>
+                               <strong> No games played</strong>
+                               #{/if}
+                               "
+
+                               data-original-title="
+                               <table>
+                               <thead>
+                               <tr>
+                               <th>@${teams?.team_name}  </th>
+                               <th class='prosent'></th>
+                               </tr>
+                               </thead>
+                               </table>">
                                 <img src="@{'/public/images/medium'}/${teams?.image}" alt="${teams?.team_name}">
-                                <h6 class="image-info">Win: 
-                                    <p class="number"> ${teams_statistics?.get(teams_index-1).win_prosent} %</p></h6>
-                                <h3 class="team-name">@ ${teams?.team_name}</h3>
+                                <h3 class="team-name">@${teams?.team_name}</h3>
 
-                            </div>
+                            </a>
                         </li>
-
+                        #{/list}
                     </ul>
-                    #{/list}
+
                 </div>
 
 
@@ -292,37 +451,64 @@
                         #{list items:statistics, as:'statistics'}
 
                         #{if statistics?.target_team != null }
+                        
+                        
+                        
+                        
+                        
+                        
+                        
+                        
                         <li class="span2">
-                            <div class="thumbnail">
-                                <img src="@{'/public/images/medium'}/${statistics?.target_team.image}" alt="">
+                            <a href="#" rel="popover" class="classPopover"
+                               data-content=
                                
-                                <h6 class="image-info">
-                                    
+                               " 
+                              
+                                     <h6 class='image-info'>
+
                                     #{if statistics?.count_most_played_against != 0}
-                                    Played most<p class="number">${statistics?.count_most_played_against}</p> 
+                                    Played most against<p class='number'>${statistics?.count_most_played_against}</p>  
+                                           
+                                    
                                     #{/if}
 
 
                                     #{if statistics?.count_most_lost_against != 0}
-                                    Lost most<p class="number">${statistics?.count_most_lost_against} </p>
+                                    Lost most against <p class='number'>${statistics?.count_most_lost_against} </p>
                                     #{/if}
 
 
                                     #{if statistics?.count_most_won_against != 0}
-                                    won most<p class="number">${statistics?.count_most_won_against}</p>
+                                    Won most against<p class='number'>${statistics?.count_most_won_against}</p>
                                     #{/if}
 
 
 
                                     #{if statistics?.count_most_regular_appearances != 0}
-                                    Regular app<p class="number">${statistics?.count_most_regular_appearances}</p> 
-                                    #{/if}
+                                    Regular appearances (10-9)<p class='number'>${statistics?.count_most_regular_appearances}</p> 
+                                    #{/if}</h6>
+                            
+                            
+                            "
+                               
 
+                               data-original-title="
+                               <table>
+                               <thead>
+                               <tr>
+                               <th>@${statistics?.target_team.team_name}  </th>
+                               <th class='prosent'></th>
+                               </tr>
+                               </thead>
+                               </table>">
+                               
+                                <img src="@{'/public/images/medium'}/${statistics?.target_team.image}" alt="${statistics?.target_team?.team_name}">
+                                
+                                <h3 class="team-name"> @${statistics?.target_team.team_name}</h3>
+       
 
-
-                                </h6>
-                                <h3 class="team-name">@  ${statistics?.target_team.team_name}</h3>
-                            </div>
+                            </a>
                         </li>
 
                         #{/if}<!-- if team != null  -->
@@ -334,7 +520,7 @@
 
                 </div>
 
-                <div id="test" class="tab-pane">
+                <div id="test" class="tab-pane active">
                     <h2 class="underline section">Test 4 Content</h2>
                     <a href="#">
                         <img src="@{'/public/images/medium'}/${team.image}" alt="${team.team_name}" />
@@ -346,15 +532,17 @@
                     <p>reg: ${team?.registered}</p>
                     <p>played ${statistic?.last_three_games_played}</p>
 
+                     #{ if statistic.games_playd >= 1 } 
+                    
                     <div class="span8" id="stat2">
                         <h3>Statistikk</h3>
                     </div><!-- #stat -->
 
 
-                    #{ if statistic.games_playd >= 1 } 
+                 
                     <table >
                         <tr>
-                            <th>Antall kamper</th>
+                            <th>Antall kamper ${statistic?.last_three_games_played}</th>
 
                         </tr>
                         <tr>
@@ -409,15 +597,102 @@
                         </tr>
                     </table>
                     #{/if}
-                    #{ if statistic.games_playd <= 0 }
-                    <p>No games played</p>
-                    #{/if}
+                    
 
 
                 </div>
                 <div id="games" class="tab-pane">
-                    <h2 class="underline section">Test 4 Content</h2>
+                    <h2 class="underline section">Games played by ${team?.team_name}!</h2>
+                    
+              
+                       <ul class="thumbnails center">
 
+                              #{list items:games, as:'games'}
+
+                        
+                        <li class="span2">
+                            <a href="#" rel="popover" class="classPopover"
+                               data-content=
+                               
+                               " 
+                               
+                               <table class='table table-striped'>
+                               <thead class='blue-title'>
+                               <tr>
+                               <th>Home team</th>
+                               <th>Visitor team</th>
+                               </tr>
+                               </thead>
+                               <tbody>
+                               <tr>
+                               <td>${games?.home_team?.team_name}</td>
+                               <td>${games?.visitor_team?.team_name}</td>
+                               </tr>
+                               </tbody>
+                               </table>
+                               
+                               
+                               <table class='table table-bordered'>
+                               <thead>
+                               <tr class='green-title'>
+                               <th>Home score</th>
+                               <th>visitor score</th>
+                       
+                               </tr>
+                               </thead>
+                               <tbody>
+                               <tr>
+                               <td>${games?.home_score}</td>
+                               <td>${games?.visitor_score}</td>
+                             
+                               </tr>
+                               </tbody>
+                               </table>
+                               
+                               
+                               
+                               <table class='table'>
+                               <thead class='red-title'>
+                               <tr>
+                               <th>Length</th>
+                               <th class='prosent'> 120 min</th>
+                               </tr>
+                               </thead>
+                               </table>
+
+                               
+                               
+                               "
+                               
+
+                               data-original-title="
+                               <table>
+                               <thead>
+                               <tr>
+                               <th> </th>
+                               <th class='prosent'></th>
+                               </tr>
+                               </thead>
+                               </table>">
+                               
+                                <img src="@{'/public/images/default/game.png'}" alt="one_game">
+                               
+       
+
+                            </a>
+                        </li>
+
+                         #{/list}                                   
+                    </ul>
+   
+                     
+                    
+                    
+                    
+                    
+                    
+                    
+                    
                 </div>
             </div><!-- /.tab-content -->
         </div><!-- span9 -->

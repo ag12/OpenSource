@@ -10,6 +10,7 @@ package models;
  */
 public class Statistic {
     
+    
     public Long game_id;
     public Long player_id;   
     public Long player2_id;
@@ -45,7 +46,7 @@ public class Statistic {
     
     
     
-    public String last_three_games_played = null;
+    public String last_three_games_played;
     
     public Team target_team = null;
     

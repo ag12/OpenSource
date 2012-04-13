@@ -5,9 +5,9 @@
 package controllers;
 
 import java.io.File;
-import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
+import models.Game;
 import models.Player;
 import models.Statistic;
 import models.Team;
@@ -25,9 +25,9 @@ import validations.PlayerValidations;
  */
 public class Players extends Controller {
 
-    public static void profile() {
-        render();
-    }
+//    public static void profile() {
+//        render();
+//    }
 
     public static void settings() {
 
@@ -149,10 +149,22 @@ public class Players extends Controller {
             List<Team> teams = Teams.getTeams(team.id);
 
             List<Statistic> teams_statistics = StatisticRepository.getMoreInfoForTeams(teams);
-
+            
             Statistic statistic = StatisticRepository.getStatistics(team.id);
+                   
             List<Statistic> statistics = new StatisticRepository().getMoreInfo(team.id);
-            render(player, (team != null ? team : null), (teams != null ? teams : null), (statistic != null ? statistic : null), (statistics != null ? statistics : null), (teams_statistics != null ? teams_statistics : null));
+                            
+            List<Game> games = Games.getTeamGames(team.id);
+            
+            render( (player != null ? player : null), 
+                    (team != null ? team : null), 
+                    (teams != null ? teams : null), 
+                    (statistic != null ? statistic : null), 
+                    (statistics != null ? statistics : null), 
+                    (teams_statistics != null ? teams_statistics : null),
+                    (games != null ? games : null));
+            
+            
         } else if (player == null) {
 //            controllers.Application.error("Oooobs");
 //            error(666, "Cant find " + username);

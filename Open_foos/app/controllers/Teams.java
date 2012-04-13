@@ -200,4 +200,12 @@ public class Teams extends Controller {
     public static void allTeamsByTeam_name(String filter) {
         renderJSON(getTeamsFromDb(filter));
     }
+    
+    
+   
+    public static void getTeamsForPlayer(Long team_id, String filter){
+      
+        List<Team> teams = Team.find("player1_id = ? AND player2_id != NULL", team_id).fetch();
+        renderJSON(teams);
+    }
 }

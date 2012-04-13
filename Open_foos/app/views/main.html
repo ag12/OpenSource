@@ -30,7 +30,7 @@
                         </li>
                         <li class="${page == 'profile' ? 'active' : ''}">
                             <a href="/profile">
-                                Profile
+                                
                             </a>
                         </li>   
                     </ul>
@@ -48,7 +48,7 @@
                             </a>
                             
                             <ul class="dropdown-menu pull-right">
-                                <li><a href="/profile">View my profile page</a></li>
+                                <li><a href="@{Players.profile()}">View my profile page</a></li>
                                 <li><a href="@{Players.settings()}">Settings</a></li>
                                 <li><a href="@{Players.logout_player()}">Sign out</a></li>
                             </ul>

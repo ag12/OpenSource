@@ -95,14 +95,16 @@ public class StatisticRepository {
 
             statistic.lost_prosent = (100 - statistic.win_prosent);
 
-            statistic.last_three_games_played = getLastThreeGameResult(team_id, statistic);
+            statistic.last_three_games_played = getLastThreeGameResult(team_id);
+            System.out.println(statistic.last_three_games_played
+            );
         }
 
         return statistic;
 
     }
 
-    private static String getLastThreeGameResult(Long team_id, Statistic statistic) {
+    private static String getLastThreeGameResult(Long team_id) {
 
 
         StringBuilder sqlToQuery = new StringBuilder("SELECT id, home_team_id, visitor_team_id, winner_id, case winner_id ");
