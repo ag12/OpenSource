@@ -156,6 +156,7 @@ public class Players extends Controller {
                             
             List<Game> games = Games.getTeamGames(team.id);
             
+            
             render( (player != null ? player : null), 
                     (team != null ? team : null), 
                     (teams != null ? teams : null), 
