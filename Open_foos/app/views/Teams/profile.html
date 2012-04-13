@@ -1,0 +1,144 @@
+#{extends 'main.html' /}
+#{set page:'team' /}
+
+<div class="row section">
+    <div id="profile-info-container" class="span12 card">
+        <div class="row">
+            <img src="https://si0.twimg.com/a/1333386813/images/default_profile_add_photo.png" id="profile-image" class="span3" style="width: 128px;" />
+
+            <div id="profile-description" class="span7">
+                <h1>${team.team_name}
+                    <!--<button type="submit" class="btn btn-primary" style="float: right;">Search</button>-->
+
+                </h1>
+                <h2 class="title">${team?.player1?.username} && ${team?.player2?.username}
+
+                </h2>
+                <p>Laget har ikke spilt noen kamper ennå..</p>
+            </div>
+            <div class="span2 pull-right">
+                <div><a id="" class="btn pull-right" href="/team_settings">Edit your profile</a></div>
+                <ul class="profile-right-corner">
+                    <li>
+                        <h6 class="underline">PLAYED<p class="stat-para">0</p></h6>
+                    </li>
+                    <li>
+                        <h6 class="underline">WON<p class="stat-para">0</p></h6>
+                    </li>
+                    <li>
+                        <h6 class="underline">LOST<p class="stat-para">0</p></h6>    
+                    </li> 
+                </ul>
+
+            </div>
+
+        </div>
+    </div>
+</div>
+
+
+<div class="row">
+    <div class="tabbable">
+        <div class="span3">
+            <ul id="profile-menu" class="nav nav-tabs nav-stacked ">
+                <li class="active">
+                    <a href="#teams" data-toggle="tab">Team players
+                        <i class="icon-chevron-right pull-right"></i>
+                    </a>
+                </li>
+                <li>
+                    <a href="#stat" data-toggle="tab">Statistic
+                        <i class="icon-chevron-right pull-right"></i>
+                    </a>
+                </li>
+                <li>
+                    <a href="#game" data-toggle="tab">Game stat
+                        <i class="icon-chevron-right pull-right"></i>
+                    </a>
+                </li>
+            </ul>  
+        </div>
+        <div class="span9"> 
+            <div id="profile-menu-info" class="tab-content card section">
+                <div id="teams" class="tab-pane active">
+                    <h2 class="underline section">Team players</h2>
+
+                    <ul class="thumbnails">
+                        <li class="span3">
+                            <div class="thumbnail">
+                                <img src="http://placehold.it/260x180" alt="">
+                                <h6 class="image-info">Win: <p class="number">60 %</p></h6>
+                                <h3 class="team-name">@ ola</h3>
+
+
+                            </div>
+                        </li>
+                        
+                        <li class="span3" style=" float: right">
+                            <div class="thumbnail">
+                                <img src="http://placehold.it/260x180" alt="">
+                                <h6 class="image-info">Win: <p class="number">60 %</p></h6>
+                                <h3 class="team-name">@ kari</h3>
+                            </div>
+                        </li>
+                        
+                    </ul>
+                </div>
+                <div id="stat" class="tab-pane">
+                    <h2 class="underline section">Statistic</h2>
+                    <p> and so on ...</p>
+                </div>
+                <div id="game" class="tab-pane">
+                    <h2 class="underline section">Game stat</h2>
+                    <ul class="thumbnails center">
+                        <li class="span2">
+                            <p class="section">Spilt mest mot:</p>
+                            <div class="thumbnail">
+
+                                <img src="http://placehold.it/160x120" alt="">
+                                <h3>lag2</h3>
+                                <p>Win: 60%</p>
+                            </div>
+                        </li>
+                        <li class="span2">
+                            <p class="section">Vunnet mest mot:</p>
+                            <div class="thumbnail">
+
+                                <img src="http://placehold.it/160x120" alt="">
+                                <h3>lag3</h3>
+                                <p>Win: 50%</p>
+                            </div>
+                        </li>
+                        <li class="span2">
+                            <p class="section">Tapt mest mot:</p>
+                            <div class="thumbnail">
+
+                                <img src="http://placehold.it/160x120" alt="">
+                                <h3>lag4</h3>
+                                <p>Win: 50%</p>
+                            </div>
+                        </li>
+                        <li class="span2">
+                            <p class="section">Flest gjevne kamper:</p>
+                            <div class="thumbnail">
+
+                                <img src="http://placehold.it/160x120" alt="">
+                                <h3>lag5</h3>
+                                <p>Win: 50%</p>
+                            </div>
+                        </li>
+                    </ul>
+                </div>
+                <div id="test" class="tab-pane">
+                    <h2 class="underline section">Test 4 Content</h2>
+                    <a href="">
+                        <img src="http://placehold.it/160x120" alt=""></img>
+                    </a>
+                </div>
+            </div><!-- /.tab-content -->
+        </div><!-- span9 -->
+    </div><!-- /.tabbable -->   
+</div><!-- .row -->   
+
+
+
