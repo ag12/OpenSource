@@ -5,63 +5,70 @@
     $(document).ready(function(){
         
         
-                $('#arch-rival').typeahead()
-                .on('keyup', function(ev){
+        $('#arch-rival').typeahead()
+        .on('keyup', function(ev){
 
-                    ev.stopPropagation();
-                    ev.preventDefault();
+            ev.stopPropagation();
+            ev.preventDefault();
 
-                    //filter out up/down, tab, enter, and escape keys
-                    if( $.inArray(ev.keyCode,[40,38,9,13,27]) === -1 ){
+            //filter out up/down, tab, enter, and escape keys
+            if( $.inArray(ev.keyCode,[40,38,9,13,27]) === -1 ){
 
-                        var self = $(this);
+                var self = $(this);
                 
-                        //a empty source
-                        self.data('typeahead').source = [];
+                //a empty source
+                self.data('typeahead').source = [];
 
-                        //active used so we aren't triggering duplicate keyup events
-                        if( !self.data('active') && self.val().length > 0){
+                //active used so we aren't triggering duplicate keyup events
+                if( !self.data('active') && self.val().length > 0){
 
-                            self.data('active', true);
+                    self.data('active', true);
 
-                            //Do data request. Insert your own API logic here.
-                            $.getJSON("@{Teams.allTeamsByTeam_name()}",{
+                    //Do data request. Insert your own API logic here.
+                    $.getJSON("@{Teams.allTeamsByTeam_name()}",{
                                
                                
-                                //if we dont use filter vi the typehead can sort list for us. 
-                                //or change the method sett Like  % var % 
-                                // filter: $(this).val() use this for PlayerController
+                        //if we dont use filter vi the typehead can sort list for us. 
+                        //or change the method sett Like  % var % 
+                        // filter: $(this).val() use this for PlayerController
                         
                         
-                            filter: self.val()
-                            }, function(data) {
+                        filter: self.val()
+                    }, function(data) {
                   
-                                //set this to true when your callback executes
-                                self.data('active',true);
+                        //set this to true when your callback executes
+                        self.data('active',true);
 
-                                //change values
-                                var arr = [],
+                        //change values
+                        var arr = [],
                         
-                                i=data.length;
-                                while(i--){
-                                    arr[i] = data[i].team_name
-                                }
-
-                                //set your results into the typehead's source 
-                                self.data('typeahead').source = arr;
-
-                                //trigger keyup on the typeahead to make it search
-                                self.trigger('keyup');
-
-                                //All done, set to false to prepare for the next remote query.
-                                
-                                self.data('active', false);
-
-                            });
-
+                        i=data.length;
+                        while(i--){
+                            arr[i] = data[i].team_name
                         }
-                    }
-                });
+
+                        //set your results into the typehead's source 
+                        self.data('typeahead').source = arr;
+
+                        //trigger keyup on the typeahead to make it search
+                        self.trigger('keyup');
+
+                        //All done, set to false to prepare for the next remote query.
+                                
+                        self.data('active', false);
+
+                    });
+
+                }
+            }
+        });
+                
+                
+       var allInputs = $(":input");
+       if( allInputs.val() != null){
+       
+      alert(allInputs.html())
+       }
         
         
         
@@ -201,7 +208,7 @@
                                 <label class="control-label" for="verify_password">Verify password</label>
                                 <div class="controls">
                                     <input type="password" class="input-xlarge" id="verify_password" placeholder="Match it">
-                                    
+
                                     <small id="password_match" class="help-inline help-error"
                                            style="display: none;">Password don't match</small>
                                 </div>
@@ -243,7 +250,7 @@
                                 <div class="controls">
                                     <input type="text" data-provide="typeahead" class="input-xlarge" id="arch-rival" 
                                            value="${team?.arch_rival?.team_name}" name="team.arch_rival.team_name">
-                                   <p class="help-block">Don't worry we will find them for you .</p>
+                                    <p class="help-block">Don't worry we will find them for you .</p>
                                 </div>
                             </div>
                             <div class="control-group">

@@ -44,7 +44,7 @@
                             </a>
                             
                             <ul class="dropdown-menu pull-right">
-                                <li><a href="@{Players.profile()}">View my profile page</a></li>
+                                <li><a href="@{Players.profile(session.pname)}">View my profile page</a></li>
                                 <li><a href="@{Players.settings()}">Settings</a></li>
                                 <li><a href="@{Players.logout_player()}">Sign out</a></li>
                             </ul>

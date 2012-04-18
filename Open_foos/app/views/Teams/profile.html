@@ -1,5 +1,158 @@
 #{extends 'main.html' /}
 #{set page:'team' /}
+<script type="text/javascript" src="/public/javascripts/highcharts/highcharts.js"></script>
+<script type="text/javascript" src="/public/javascripts/highcharts/options.js"></script>
+<script type="text/javascript">
+            
+    window.chart = null;
+    $(document).ready(function() {
+        $('.classPopover').popover('hide');
+        
+               
+        function openfoose_typeahead(){
+            //GitHub
+            $('#typeahead').typeahead()
+            .on('click', function(ev){
+                console.log("klik feeld");
+            })
+                   
+            .on('keyup', function(ev){
+
+                       
+                ev.stopPropagation();
+                ev.preventDefault();
+
+                //filter out up/down, tab, enter, and escape keys
+                if( $.inArray(ev.keyCode,[40,38,9,13,27]) === -1 ){
+
+                    var self = $(this);
+                
+                    //a empty source
+                    self.data('typeahead').source = [];
+
+                    //active used so we aren't triggering duplicate keyup events
+                    if( !self.data('active') && self.val().length > 0){
+
+                        self.data('active', true);
+
+                        //Do data request. Insert your own API logic here.
+                        $.getJSON("@{Players.allPlayersByUsername()}",{
+                               
+                               
+                            //if we dont use filter vi the typehead can sort list for us. 
+                            //or change the method sett Like  % var % 
+                            // filter: $(this).val() use this for PlayerController
+                        
+                        
+                        
+                        }, function(data) {
+                        
+                              
+                            //set this to true when your callback executes
+                            self.data('active',true);
+
+                            //change values
+                            var arr = [],
+                        
+                            i=data.length;
+                            while(i--){
+                                arr[i] = data[i].username;
+                            }
+
+                            //set your results into the typehead's source 
+                            self.data('typeahead').source = arr;
+                                   
+
+                            //trigger keyup on the typeahead to make it search
+                            self.trigger('keyup');
+
+                            //All done, set to false to prepare for the next remote query.
+                                
+                            self.data('active', false);
+
+                        });
+
+                    }
+                }
+            });
+                    
+
+
+        }              
+        function this_clicButton(){
+       
+            $('#mysub').click(function (){
+        
+                $.getJSON("@{Players.allPlayersByUsername()}",
+                { filter : $('#typeahead').val()}, 
+                function (data){
+             
+                    console.log(data[0].id);
+                       
+                    this_AddTodrawChart(data[0].id,data[0].username);
+                            
+                });
+            });
+        }
+                
+        function this_drawChart(id){
+                    
+            var options =  window.versus_options;
+            $.getJSON("@{Statistics.data()}", {id : id},function(data){
+                options.series = new Array();
+                options.series[0] = new Array();
+ 
+                options.series[0].data = [ data.games_playd, data.winns, data.losts ]
+                options.series[0].name = "${team.team_name}";
+                        
+                window.chart = new Highcharts.Chart(options);
+                console.log("new chart")
+            });               
+        }
+                
+                
+                
+                
+                
+
+        function this_AddTodrawChart(id, username){
+               
+            $.getJSON("@{Statistics.data()}", {id : "${team.id}"},function(data1){
+ 
+                $.getJSON("@{Statistics.data()}", {id : id},function(data2){
+     
+                    var options = window.versus_options;
+                            
+                    options.series = new Array();
+                    options.series[0] = new Array();                          
+                    options.series[1] = new Array();
+                          
+                
+                    options.series[0].data = [ data1.games_playd, data1.winns, data1.losts ]
+                    options.series[0].name = "${team.team_name}";
+                          
+                    options.series[1].data = [ data2.games_playd, data2.winns, data2.losts]
+                    options.series[1].name = username;
+                            
+                    chart = new Highcharts.Chart(options);
+                            
+                            
+                });           
+            });               
+        }
+        openfoose_typeahead();
+        this_clicButton();
+        this_drawChart("${team.id}");
+           
+                
+               
+               
+             
+    });
+            
+            
+            
+</script>
 
 <div class="row section">
     <div id="profile-info-container" class="span12 card">
@@ -14,7 +167,9 @@
                 #{/if}
             </div>
             <div class="span2 pull-right">
-
+                #{if  ( (session.pid && ((Long.parseLong(session.pid) == team?.player1?.id)||(Long.parseLong(session.pid) == team?.player2?.id))) && session.token && session.login)}
+                <div><a id="openfoose_see_profile" class="btn pull-right" href="@{Players.settings()}">Edit your profile</a></div>
+                #{/if}
                 <ul class="profile-right-corner">
                     <li>
                         <h6 class="underline">PLAYED<p class="stat-para">${statistic?.games_playd}</p></h6>
@@ -44,16 +199,24 @@
                         <i class="icon-chevron-right pull-right"></i>
                     </a>
                 </li>
+                   #{ if statistic.games_playd >= 1 } 
                 <li>
-                    <a href="#stat" data-toggle="tab">Statistic
+                    <a href="#stat" data-toggle="tab">Statistic maps
                         <i class="icon-chevron-right pull-right"></i>
                     </a>
                 </li>
                 <li>
-                    <a href="#game" data-toggle="tab">Game stat
+                    <a href="#game" data-toggle="tab">Game statistic
                         <i class="icon-chevron-right pull-right"></i>
                     </a>
                 </li>
+
+                <li>
+                    <a href="#games" data-toggle="tab">Games played
+                        <i class="icon-chevron-right pull-right"></i>
+                    </a>
+                </li>
+                #{/if}
             </ul>  
         </div>
         <div class="span9"> 
@@ -82,50 +245,130 @@
 
                     </ul>
                 </div>
-                <div id="stat" class="tab-pane">
+                
+                
+                
+                
+                
+               <div id="stat" class="tab-pane">
                     <h2 class="underline section">Statistic</h2>
-                    <p> and so on ...</p>
+                    <div id="mDiv">
+                        <input type="text" class="input-large search-query"
+                               id="typeahead" data-provide="typeahead"
+                               placeholder="Search for your team mates here">
+                        <button type="submit" class="btn btn-primary" id="mysub">Search</button>
+                    </div>
+                    <div id="personalia"></div>
                 </div>
-                <div id="game" class="tab-pane">
-                    <h2 class="underline section">Game stat</h2>
+                
+                
+                
+                
+                
+            <div id="game" class="tab-pane">
+                    <h2 class="underline section">Game statistics</h2>
+                    #{if statistics.size() >= 1}
                     <ul class="thumbnails center">
-                        <li class="span2">
-                            <p class="section">Spilt mest mot:</p>
-                            <div class="thumbnail">
 
-                                <img src="http://placehold.it/160x120" alt="">
-                                <h3>lag2</h3>
-                                <p>Win: 60%</p>
-                            </div>
-                        </li>
-                        <li class="span2">
-                            <p class="section">Vunnet mest mot:</p>
-                            <div class="thumbnail">
 
-                                <img src="http://placehold.it/160x120" alt="">
-                                <h3>lag3</h3>
-                                <p>Win: 50%</p>
-                            </div>
-                        </li>
-                        <li class="span2">
-                            <p class="section">Tapt mest mot:</p>
-                            <div class="thumbnail">
+                        #{list items:statistics, as:'statistics'}
 
-                                <img src="http://placehold.it/160x120" alt="">
-                                <h3>lag4</h3>
-                                <p>Win: 50%</p>
-                            </div>
-                        </li>
-                        <li class="span2">
-                            <p class="section">Flest gjevne kamper:</p>
-                            <div class="thumbnail">
+                        #{if statistics?.target_team != null }
 
-                                <img src="http://placehold.it/160x120" alt="">
-                                <h3>lag5</h3>
-                                <p>Win: 50%</p>
-                            </div>
+
+
+
+
+
+
+
+                        <li class="span2">
+                           
+                         
+                              #{if statistics?.count_most_played_against != 0}
+                          
+                               <p class="section">  <strong>Played most against </strong> </p>
+
+
+                               #{/if}
+
+
+                               #{if statistics?.count_most_lost_against != 0}
+                                       <p class="section">  <strong> Lost most against</strong></p>
+                              
+                               #{/if}
+
+
+                               #{if statistics?.count_most_won_against != 0}
+                               <p class="section">  <strong>Won most against</strong> </p>
+                            
+                               #{/if}
+
+
+
+                               #{if statistics?.count_most_regular_appearances != 0}
+                                <p class="section">   <strong>  Regular appearances (10-9)</strong></p>
+                           
+                               #{/if}
+
+                            <a href="#" rel="popover" class="classPopover"
+                               data-content=
+
+                               " 
+
+                               <h6 class='image-info'>
+
+                               #{if statistics?.count_most_played_against != 0}
+                               Played most against<p class='number'>${statistics?.count_most_played_against}</p>  
+
+
+                               #{/if}
+
+
+                               #{if statistics?.count_most_lost_against != 0}
+                               Lost most against <p class='number'>${statistics?.count_most_lost_against} </p>
+                               #{/if}
+
+
+                               #{if statistics?.count_most_won_against != 0}
+                               Won most against<p class='number'>${statistics?.count_most_won_against}</p>
+                               #{/if}
+
+
+
+                               #{if statistics?.count_most_regular_appearances != 0}
+                               Regular appearances (10-9)<p class='number'>${statistics?.count_most_regular_appearances}</p> 
+                               #{/if}</h6>
+
+
+                               "
+
+
+                               data-original-title="
+                               <table>
+                               <thead>
+                               <tr>
+                               <th>@${statistics?.target_team.team_name}  </th>
+                               <th class='prosent'></th>
+                               </tr>
+                               </thead>
+                               </table>">
+
+                                <img src="@{'/public/images/medium'}/${statistics?.target_team.image}" alt="${statistics?.target_team?.team_name}">
+
+                                <h3 class="team-name"> @${statistics?.target_team.team_name}</h3>
+
+
+                            </a>
                         </li>
+
+                        #{/if}<!-- if team != null  -->
+                        #{/list}<!-- list -->                                            
                     </ul>
+                    #{/if}<!--  Statistics size() >= 1 -->
+
+
+
                 </div>
                 <div id="test" class="tab-pane">
                     <h2 class="underline section">Test 4 Content</h2>
@@ -133,6 +376,90 @@
                         <img src="http://placehold.it/160x120" alt=""></img>
                     </a>
                 </div>
+                    <div id="games" class="tab-pane">
+                    <h2 class="underline section">Games played by ${team?.team_name}!</h2>
+
+
+                    <ul class="thumbnails center">
+
+                        #{list items:games, as:'games'}
+
+
+                        <li class="span2">
+                            <a href="#" rel="popover" class="classPopover"
+                               data-content=
+
+                               " 
+
+                               <table class='table table-striped'>
+                               <thead class='blue-title'>
+                               <tr>
+                               <th>Home team</th>
+                               <th>Visitor team</th>
+                               </tr>
+                               </thead>
+                               <tbody>
+                               <tr>
+                               <td>${games?.home_team?.team_name}</td>
+                               <td>${games?.visitor_team?.team_name}</td>
+                               </tr>
+                               </tbody>
+                               </table>
+
+
+                               <table class='table table-bordered'>
+                               <thead>
+                               <tr class='green-title'>
+                               <th>Home score</th>
+                               <th>visitor score</th>
+
+                               </tr>
+                               </thead>
+                               <tbody>
+                               <tr>
+                               <td>${games?.home_score}</td>
+                               <td>${games?.visitor_score}</td>
+
+                               </tr>
+                               </tbody>
+                               </table>
+
+
+
+                               <table class='table'>
+                               <thead class='red-title'>
+                               <tr>
+                               <th>Length</th>
+                               <th class='prosent'> 120 min</th>
+                               </tr>
+                               </thead>
+                               </table>
+
+
+
+                               "
+
+
+                               data-original-title="
+                               <table>
+                               <thead>
+                               <tr>
+                               <th> </th>
+                               <th class='prosent'></th>
+                               </tr>
+                               </thead>
+                               </table>">
+
+                                <img src="@{'/public/images/default/game.png'}" alt="one_game">
+
+
+
+                            </a>
+                        </li>
+
+                        #{/list}                                   
+                    </ul>
+                </div> <!-- games -->
             </div><!-- /.tab-content -->
         </div><!-- span9 -->
     </div><!-- /.tabbable -->   
