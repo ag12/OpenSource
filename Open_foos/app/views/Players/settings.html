@@ -87,6 +87,15 @@
                     <p class="subheader">View my profile page</p>
                 </li>
             </ul>
+            #{if (player?.first_name != null && player?.last_name != null && player?.email != null && 
+            player?.rfid != null && player?.bio != null)}
+            <div class="progress progress-striped
+                 active">
+                <div class="bar"
+                     style="width: 100%;"></div>
+            </div>
+            #{/if}
+         
         </div>
 
         <div class="span4">

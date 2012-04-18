@@ -36,5 +36,25 @@ public class Application extends Controller {
     public static boolean auto(Long id){
          return Long.parseLong(session.get("pid")) == id; 
     }
+    
+    
+    public static List<Object> teamsAndPlayers(){
+        
+        List<Object> teamsAndPlayers = new ArrayList<Object>();
+        List<Team> teams = Team.findAll();
+        List<Player> players = Player.findAll();
+        for( int i = 0; i < teams.size(); i ++){
+            teamsAndPlayers.add(teams.get(i));
+        }
+        for( int i= 0; i < players.size(); i++){
+            teamsAndPlayers.add(players.get(i));
+        }
+        return teamsAndPlayers;    
+    }
+    public static void autocomplete(){
+       
+        List<Object> list = teamsAndPlayers();
+        renderJSON(list);
+    }
    
 }
