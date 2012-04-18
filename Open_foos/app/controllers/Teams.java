@@ -8,6 +8,7 @@ import java.io.File;
 import java.util.ArrayList;
 import java.util.List;
 import models.Game;
+import models.Player;
 import models.Statistic;
 import models.Team;
 import play.Play;
@@ -21,46 +22,63 @@ import repositories.StatisticRepository;
  */
 public class Teams extends Controller {
 
-    public static void oko(){
-        
+    public static void oko() {
+
         long id = 1;
         long id2 = 2;
         long id3 = 3;
         long id4 = 4;
         long id5 = 5;
-        
-       Statistic statistic = StatisticRepository.getStatistics(id);
-       System.out.println(statistic.last_three_games_played + " id 1");
-       
-       statistic = StatisticRepository.getStatistics(id2);
-       System.out.println(statistic.last_three_games_played + " id 2");
-       statistic = StatisticRepository.getStatistics(id3);
-       System.out.println(statistic.last_three_games_played + " id 3 ");
-       statistic = StatisticRepository.getStatistics(id4);
-       System.out.println(statistic.last_three_games_played + " id 4");
-        
-         statistic = StatisticRepository.getStatistics(id5);
-       System.out.println(statistic.last_three_games_played + " id 5");
+
+        Statistic statistic = StatisticRepository.getStatistics(id);
+        System.out.println(statistic.last_three_games_played + " id 1");
+
+        statistic = StatisticRepository.getStatistics(id2);
+        System.out.println(statistic.last_three_games_played + " id 2");
+        statistic = StatisticRepository.getStatistics(id3);
+        System.out.println(statistic.last_three_games_played + " id 3 ");
+        statistic = StatisticRepository.getStatistics(id4);
+        System.out.println(statistic.last_three_games_played + " id 4");
+
+        statistic = StatisticRepository.getStatistics(id5);
+        System.out.println(statistic.last_three_games_played + " id 5");
     }
-    
-    public static void profile(String teamname){
-       
+
+    public static void profile(String teamname) {
+
         Team team = Team.find("byTeam_name", teamname).first();
-        Statistic statistic = StatisticRepository.getStatistics(team.id);
-        
-        List<Statistic> statistics = new StatisticRepository().getMoreInfo(team.id);
-                            
-        List<Game> games = Games.getTeamGames(team.id);
-        
-        
-        render((team != null ? team : null),
-                (statistic != null ? statistic : null),
-                (statistics != null ? statistics : null), 
-                (games != null ? games : null));
+        if (team != null) {
+            
+            //This teams statistic
+            Statistic statistic = StatisticRepository.getStatistics(team.id);
+
+            
+            //This team morestatistic, as most played against and so on
+            List<Statistic> statistics = new StatisticRepository().getMoreInfo(team.id);
+
+            //This team have 100% two players, and them have their own teams as well
+            //So we get them too
+            List<Team> teams  = new ArrayList<Team>();
+            teams.add(getTeam(team.player1.id));
+            teams.add(getTeam(team.player2.id));
+            
+            //uses the players to get statistic about them
+            List<Statistic> teams_statistics = StatisticRepository.getMoreInfoForTeams(teams);
+            
+            //This teams played games
+            List<Game> games = Games.getTeamGames(team.id);
+
+
+            render((team != null ? team : null),
+                    (statistic != null ? statistic : null),
+                    (statistics != null ? statistics : null),
+                    (games != null ? games : null),
+                    (teams_statistics != null ? teams_statistics : null),
+                    (teams != null ? teams : null));
+        } else if (team == null) {
+        }
     }
-    
-    
-    
+
     //Players own team
     public static Team getTeam(Long player_id) {
         Team team = Team.find("player1_id = ? AND player2_id = NULL", player_id).first();
@@ -220,6 +238,12 @@ public class Teams extends Controller {
         controllers.Players.settings();
 
 
+    }
+
+    public static void settings(Long team_id) {
+        System.out.println(team_id);
+        Team team = Team.findById(team_id);
+        render(team);
     }
 
     public static List<Team> getTeamsFromDb(String filter) {

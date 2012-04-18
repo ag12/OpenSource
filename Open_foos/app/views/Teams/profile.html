@@ -168,7 +168,7 @@
             </div>
             <div class="span2 pull-right">
                 #{if  ( (session.pid && ((Long.parseLong(session.pid) == team?.player1?.id)||(Long.parseLong(session.pid) == team?.player2?.id))) && session.token && session.login)}
-                <div><a id="openfoose_see_profile" class="btn pull-right" href="@{Players.settings()}">Edit your profile</a></div>
+                <div><a id="openfoose_see_profile" class="btn pull-right" href="@{Teams.settings(team?.id)}">Edit your profile</a></div>
                 #{/if}
                 <ul class="profile-right-corner">
                     <li>
@@ -222,28 +222,174 @@
         <div class="span9"> 
             <div id="profile-menu-info" class="tab-content card section">
                 <div id="teams" class="tab-pane active">
-                    <h2 class="underline section">Team players</h2>
+  
+                    
+                    <h2 class="underline section">Team members</h2>
 
-                    <ul class="thumbnails">
-                        <li class="span3">
-                            <div class="thumbnail">
-                                <img src="http://placehold.it/260x180" alt="">
-                                <h6 class="image-info">Win: <p class="number">60 %</p></h6>
-                                <h3 class="team-name">@ ola</h3>
+                    
+                    
+                    
+                    
+                    
+                    
+                    
+                    
+                                        <ul class="thumbnails center">
 
 
-                            </div>
+                        #{list items:teams, as:'teams'}
+
+
+                        <li class="span2">
+                            <a href="@{Teams.profile(teams?.team_name)}" rel="popover" class="classPopover"
+                               data-content="
+                               #{if teams?.bio != null }
+                               <p>
+                               <strong>Bio</strong><br>
+                               ${teams?.bio}
+                               </p>
+                               <br/>
+                               #{/if}
+
+
+
+
+
+
+                               <table class='table table-striped'>
+                               <thead class='blue-title'>
+                               <tr>
+                               <th>Player one</th>
+                              
+                               </tr>
+                               </thead>
+                               <tbody>
+                               <tr>
+                               <td>@${teams?.player1?.username}</td>
+                              
+                               </tr>
+                               </tbody>
+                               </table>
+
+
+
+
+
+                               #{if teams?.arch_rival != null}
+                               <table class='table tb-arch-rival'>
+                               <thead>
+                               <tr>
+                               <th>Arch-rival</th>
+                               <th class='prosent'>${teams?.arch_rival?.team_name}</th>
+                               </tr>
+                               </thead>
+                               </table>
+                               #{/if}
+
+
+
+
+                               #{if teams_statistics?.get(teams_index-1).games_playd >= 1 } 
+
+
+
+
+                               <table class='table table-bordered'>
+                               <thead>
+                               <tr class='green-title'>
+                               <th>Played</th>
+                               <th>Won</th>
+                               <th>Lost</th>
+                               </tr>
+                               </thead>
+                               <tbody>
+                               <tr>
+                               <td>${teams_statistics?.get(teams_index-1).games_playd}</td>
+                               <td>${teams_statistics?.get(teams_index-1).winns}</td>
+                               <td>${teams_statistics?.get(teams_index-1).losts}</td>
+                               </tr>
+                               </tbody>
+                               </table>
+                               <table class='table table-striped'>
+                               <thead class='blue-title'>
+                               <tr>
+                               <th>Total score for</th>
+                               <th>Total score against</th>
+                               </tr>
+                               </thead>
+                               <tbody>
+                               <tr>
+                               <td>${teams_statistics?.get(teams_index-1).score_for}</td>
+                               <td>${teams_statistics?.get(teams_index-1).score_against}</td>
+
+                               </tr>
+                               </tbody>
+                               </table>
+
+
+                               <table class='table'>
+                               <thead class='yellow-title'>
+                               <tr>
+                               <th>Win</th>
+                               <th class='prosent'>${teams_statistics?.get(teams_index-1).win_prosent} %</th>
+                               </tr>
+                               </thead>
+                               </table>
+
+
+
+
+                               #{/if}
+
+
+
+
+
+
+
+                               #{if teams_statistics?.get(teams_index-1).games_playd <= 0 }
+                               <p>
+                               <strong> No games played</strong>
+                               #{/if}
+                               "
+
+                               data-original-title="
+                               <table>
+                               <thead>
+                               <tr>
+                               <th>@${teams?.team_name}  </th>
+                               <th class='prosent'></th>
+                               </tr>
+                               </thead>
+                               </table>">
+                                <img src="@{'/public/images/medium'}/${teams?.image}" alt="${teams?.team_name}">
+                                <h3 class="team-name">@ ${teams?.team_name}</h3>
+
+                            </a>
                         </li>
-
-                        <li class="span3" style=" float: right">
-                            <div class="thumbnail">
-                                <img src="http://placehold.it/260x180" alt="">
-                                <h6 class="image-info">Win: <p class="number">60 %</p></h6>
-                                <h3 class="team-name">@ kari</h3>
-                            </div>
-                        </li>
-
+                        #{/list}
                     </ul>
+                    
+                    
+                    
+                    
+                    
+                    
+                    
+                    
+                    
+                    
+                    
+                    
+                    
+                    
+                    
+                    
+                    
+                    
+ 
+                    
+                    
                 </div>
                 
                 
@@ -311,7 +457,7 @@
                            
                                #{/if}
 
-                            <a href="#" rel="popover" class="classPopover"
+                            <a href="@{Teams.profile(statistics?.target_team?.team_name)}" rel="popover" class="classPopover"
                                data-content=
 
                                " 
