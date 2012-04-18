@@ -289,8 +289,8 @@ public class Players extends Controller {
             Images.resize(image, new File(small_path), 127, 80, false);
             //medium 85x120 
             Images.resize(image, new File(medium_path), 85, 120, false);
-            //Large 
-            Images.resize(image, new File(large_path), 600, 600, false);
+            //Large 260x180
+            Images.resize(image, new File(large_path), 180, 260, false);
 
 
             hasChanged = true;

@@ -16,8 +16,8 @@ import models.Team;
  * @author Santonas
  */
 public class StatisticRepository {
-    
-        public static Statistic getStatistics(Long team_id) {
+
+    public static Statistic getStatistics(Long team_id) {
 
         StringBuilder sqlToQuery = new StringBuilder("SELECT (SELECT SUM(home_score) from Game where home_team_id = ");
         sqlToQuery.append(team_id);
@@ -96,8 +96,6 @@ public class StatisticRepository {
             statistic.lost_prosent = (100 - statistic.win_prosent);
 
             statistic.last_three_games_played = getLastThreeGameResult(team_id);
-            System.out.println(statistic.last_three_games_played
-            );
         }
 
         return statistic;
@@ -107,17 +105,80 @@ public class StatisticRepository {
     private static String getLastThreeGameResult(Long team_id) {
 
 
-        StringBuilder sqlToQuery = new StringBuilder("SELECT id, home_team_id, visitor_team_id, winner_id, case winner_id ");
-        // if you want to se the home or visitor team, and the winner
-        sqlToQuery.append(" when winner_id = ");
+//        StringBuilder sqlToQuery = new StringBuilder("SELECT id, home_team_id, visitor_team_id, winner_id, case winner_id ");
+//        // if you want to se the home or visitor team, and the winner
+//        sqlToQuery.append(" when winner_id = ");
+//        sqlToQuery.append(team_id);
+//        sqlToQuery.append(" and ( home_team_id = ");
+//        sqlToQuery.append(team_id);
+//        sqlToQuery.append(" and visitor_team_id != ");
+//        sqlToQuery.append(team_id);
+//
+//        sqlToQuery.append(" ) or ( ");
+//        sqlToQuery.append("home_team_id != ");
+//        sqlToQuery.append(team_id);
+//        sqlToQuery.append(" and visitor_team_id = ");
+//        sqlToQuery.append(team_id);
+//        sqlToQuery.append(" ))");
+//        
+//        sqlToQuery.append(" then 'W' ");
+//        sqlToQuery.append(" else 'L' ");
+//        sqlToQuery.append(" end FROM Game where home_team_id = ");
+//        sqlToQuery.append(team_id);
+//        sqlToQuery.append(" or visitor_team_id = ");
+//        sqlToQuery.append(team_id);
+//        sqlToQuery.append(" order by id desc limit 3");
+
+
+
+
+//
+//     when ( winner_id !=
+//      1 and (home_team_id = 1 and visitor_team_id != 1)  or ( home_team_id != 1 and visitor_team_id = 1)          ) 
+//      then 'L' 
+//      else 'W' 
+
+
+
+
+
+
+//       end FROM Game where  ( (home_team_id = 1 and visitor_team_id != 1)
+//                             or ( visitor_team_id = 1 and home_team_id != 1)  ) 
+//        order by id desc limit 3
+
+
+        StringBuilder sqlToQuery = new StringBuilder("SELECT case winner_id ");
+        sqlToQuery.append("when ( winner_id != ");
         sqlToQuery.append(team_id);
-        sqlToQuery.append(" then 'W' ");
-        sqlToQuery.append(" else 'L' ");
-        sqlToQuery.append(" end FROM Game where home_team_id = ");
+
+
+        sqlToQuery.append(" and ( home_team_id = ");
         sqlToQuery.append(team_id);
-        sqlToQuery.append(" or visitor_team_id = ");
+        sqlToQuery.append(" and visitor_team_id != ");
         sqlToQuery.append(team_id);
-        sqlToQuery.append(" order by id desc limit 3");
+        sqlToQuery.append(" ) or ( home_team_id != ");
+
+
+        sqlToQuery.append(team_id);
+        sqlToQuery.append(" and visitor_team_id = ");
+        sqlToQuery.append(team_id);
+        sqlToQuery.append(" ) ) ");
+
+        sqlToQuery.append(" then 'L' ");
+        sqlToQuery.append(" else 'W' ");
+        sqlToQuery.append(" end FROM Game where  ( ( home_team_id = ");
+        sqlToQuery.append(team_id);
+        sqlToQuery.append(" and visitor_team_id != ");
+        sqlToQuery.append(team_id);
+        sqlToQuery.append(" ) or ( visitor_team_id = ");
+        sqlToQuery.append(team_id);
+
+        sqlToQuery.append(" and home_team_id != ");
+        sqlToQuery.append(team_id);
+        sqlToQuery.append(" ) ) order by id desc");
+
+
 
         StringBuilder last_three_games_played = new StringBuilder();
         ResultSet resultset = OpenFoosDatabase.executeQueryToFoosBase(sqlToQuery.toString());
@@ -126,7 +187,7 @@ public class StatisticRepository {
 
             while (resultset.next()) {
 
-                last_three_games_played.append(resultset.getString(5));
+                last_three_games_played.append(resultset.getString(1));
                 last_three_games_played.append(" / ");
             }
             resultset.close();
@@ -165,8 +226,8 @@ public class StatisticRepository {
 
             }
             resultset.close();
-         if ( team.id != null && team.team_name != null){
-            statistic.target_team = team;
+            if (team.id != null && team.team_name != null) {
+                statistic.target_team = team;
             }
         } catch (SQLException e) {
         } finally {
@@ -199,13 +260,13 @@ public class StatisticRepository {
 
                 team.id = resultset.getLong("id");
                 team.team_name = resultset.getString("team_name");
-                  team.image = resultset.getString("image");
+                team.image = resultset.getString("image");
                 statistic.count_most_lost_against = resultset.getInt("count_matches");
 
             }
             resultset.close();
-           if ( team.id != null && team.team_name != null){
-            statistic.target_team = team;
+            if (team.id != null && team.team_name != null) {
+                statistic.target_team = team;
             }
         } catch (SQLException e) {
         } finally {
@@ -237,13 +298,13 @@ public class StatisticRepository {
 
                 team.id = resultset.getLong("id");
                 team.team_name = resultset.getString("team_name");
-                  team.image = resultset.getString("image");
+                team.image = resultset.getString("image");
                 statistic.count_most_won_against = resultset.getInt("count_matches");
 
             }
             resultset.close();
-            if ( team.id != null && team.team_name != null){
-            statistic.target_team = team;
+            if (team.id != null && team.team_name != null) {
+                statistic.target_team = team;
             }
         } catch (SQLException e) {
         } finally {
@@ -277,13 +338,13 @@ public class StatisticRepository {
 
                 team.id = resultset.getLong("id");
                 team.team_name = resultset.getString("team_name");
-                  team.image = resultset.getString("image");
+                team.image = resultset.getString("image");
                 statistic.count_most_regular_appearances = resultset.getInt("count_matches");
 
             }
             resultset.close();
-            if ( team.id != null && team.team_name != null){
-            statistic.target_team = team;
+            if (team.id != null && team.team_name != null) {
+                statistic.target_team = team;
             }
         } catch (SQLException e) {
         } finally {
@@ -326,27 +387,25 @@ public class StatisticRepository {
 //        }
 //        return statistic;
 //    }
-    
-    
-    public List<Statistic> getMoreInfo(Long team_id){
-           
-        List<Statistic> statistics = new ArrayList<Statistic>(); 
+
+    public List<Statistic> getMoreInfo(Long team_id) {
+
+        List<Statistic> statistics = new ArrayList<Statistic>();
         statistics.add(this.getMostPlayedAgainst(team_id));
         statistics.add(this.getMostWonAgainst(team_id));
         statistics.add(this.getMostLostAgainst(team_id));
         statistics.add(this.getMostRegularAppearances(team_id));
         return statistics;
     }
-    
-    public static List<Statistic> getMoreInfoForTeams(List<Team> teams){
-        
-        List<Statistic> statistics = new ArrayList<Statistic>(); 
-        for ( int i = 0; i < teams.size(); i++){
-            
+
+    public static List<Statistic> getMoreInfoForTeams(List<Team> teams) {
+
+        List<Statistic> statistics = new ArrayList<Statistic>();
+        for (int i = 0; i < teams.size(); i++) {
+
             statistics.add(getStatistics(teams.get(i).id));
-        }  
-        
+        }
+
         return statistics;
     }
-    
 }

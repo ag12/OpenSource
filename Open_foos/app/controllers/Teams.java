@@ -7,10 +7,13 @@ package controllers;
 import java.io.File;
 import java.util.ArrayList;
 import java.util.List;
+import models.Game;
+import models.Statistic;
 import models.Team;
 import play.Play;
 import play.libs.Images;
 import play.mvc.Controller;
+import repositories.StatisticRepository;
 
 /**
  *
@@ -18,11 +21,42 @@ import play.mvc.Controller;
  */
 public class Teams extends Controller {
 
+    public static void oko(){
+        
+        long id = 1;
+        long id2 = 2;
+        long id3 = 3;
+        long id4 = 4;
+        long id5 = 5;
+        
+       Statistic statistic = StatisticRepository.getStatistics(id);
+       System.out.println(statistic.last_three_games_played + " id 1");
+       
+       statistic = StatisticRepository.getStatistics(id2);
+       System.out.println(statistic.last_three_games_played + " id 2");
+       statistic = StatisticRepository.getStatistics(id3);
+       System.out.println(statistic.last_three_games_played + " id 3 ");
+       statistic = StatisticRepository.getStatistics(id4);
+       System.out.println(statistic.last_three_games_played + " id 4");
+        
+         statistic = StatisticRepository.getStatistics(id5);
+       System.out.println(statistic.last_three_games_played + " id 5");
+    }
+    
     public static void profile(String teamname){
+       
         Team team = Team.find("byTeam_name", teamname).first();
-        System.out.println("asdadsasdasdasdasdadsasdasd");
-        System.out.println(team.team_name);
-        render((team != null ? team : null));
+        Statistic statistic = StatisticRepository.getStatistics(team.id);
+        
+        List<Statistic> statistics = new StatisticRepository().getMoreInfo(team.id);
+                            
+        List<Game> games = Games.getTeamGames(team.id);
+        
+        
+        render((team != null ? team : null),
+                (statistic != null ? statistic : null),
+                (statistics != null ? statistics : null), 
+                (games != null ? games : null));
     }
     
     

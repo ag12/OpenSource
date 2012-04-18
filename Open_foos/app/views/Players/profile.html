@@ -175,7 +175,7 @@
                 <h2 class="title">@ ${player?.username}
 
                 </h2>
-                <p>${player?.bio}</p>
+                <p><strong>${player?.bio}</strong></p>
             </div>
             <div class="span2 pull-right">
 
@@ -212,14 +212,14 @@
             <ul id="profile-menu" class="nav nav-tabs nav-stacked ">
 
                 #{if team != null}
-                <li>
-                    <a href="#test" data-toggle="tab">${team?.team_name}
+                <li class="active">
+                    <a href="#team" data-toggle="tab">${team?.team_name}
                         <i class="icon-chevron-right pull-right"></i>
                     </a>
                 </li>
                 #{/if}
                 #{if teams.size() >= 1}
-                <li class="active">
+                <li>
                     <a href="#teams" data-toggle="tab">Teams
                         <i class="icon-chevron-right pull-right"></i>
                     </a>
@@ -270,7 +270,7 @@
 
 
                         <li class="span2">
-                            <a href="@{Teams.profile(teams.team_name)}" rel="popover" class="classPopover"
+                            <a href="@{Teams.profile(teams?.team_name)}" rel="popover" class="classPopover"
                                data-content="
 
 
@@ -459,6 +459,34 @@
 
 
                         <li class="span2">
+                           
+                         
+                              #{if statistics?.count_most_played_against != 0}
+                          
+                               <p class="section">  <strong>Played most against </strong> </p>
+
+
+                               #{/if}
+
+
+                               #{if statistics?.count_most_lost_against != 0}
+                                       <p class="section">  <strong> Lost most against</strong></p>
+                              
+                               #{/if}
+
+
+                               #{if statistics?.count_most_won_against != 0}
+                               <p class="section">  <strong>Won most against</strong> </p>
+                            
+                               #{/if}
+
+
+
+                               #{if statistics?.count_most_regular_appearances != 0}
+                                <p class="section">   <strong>  Regular appearances (10-9)</strong></p>
+                           
+                               #{/if}
+
                             <a href="#" rel="popover" class="classPopover"
                                data-content=
 
@@ -519,18 +547,32 @@
 
                 </div>
 
-                <div id="test" class="tab-pane active">
+                <div id="team" class="tab-pane active">
+                   
+                    
+                    
+                    
+                    
+                    
                     <h2 class="underline section">${team?.team_name}</h2>
-                    <a href="#">
-                        <img src="@{'/public/images/medium'}/${team.image}" alt="${team.team_name}" />
-                    </a>
+                   
+                
+                   <img src="@{'/public/images/large'}/${team.image}" alt="${team.team_name}" width="180" height="260"/>
+                 
 
-                    <p>name: @ ${team?.team_name}</p>
-                    <p>bio: ${team?.bio}</p>
-                    <p>arch: ${team?.arch_rival?.team_name}</p>
-                    <p>reg: ${team?.registered}</p>
+                    <p>@${team?.team_name}</p>
+                    <p>${team?.bio}</p>
+                    #{if team?.arch_rival != null}
+                    <strong>Arch rival:</strong> <a href="@{Teams.profile(team?.arch_rival?.team_name)}"> ${team?.arch_rival?.team_name}</a>
+                    #{/if}
+                    <p>Registered: ${team?.registered}</p>
 
 
+                    
+                    
+                    
+                    
+                    
                 </div>
                 <div id="games" class="tab-pane">
                     <h2 class="underline section">Games played by ${team?.team_name}!</h2>
@@ -615,15 +657,6 @@
 
                         #{/list}                                   
                     </ul>
-
-
-
-
-
-
-
-
-
                 </div>
             </div><!-- /.tab-content -->
         </div><!-- span9 -->
