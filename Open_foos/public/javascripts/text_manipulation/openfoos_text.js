@@ -5,6 +5,7 @@
 
 function doInputfeltTricks(){
 
+
     $('input:text').focus(
         function(){
             $(this).css({
@@ -18,7 +19,21 @@ function doInputfeltTricks(){
                 'background-color' : '#FFFFFF'
             });
         });
-            
+        
+    $('input:password').focus(
+        function(){
+            $(this).css({
+                'background-color' : '#FFFFCC'
+            });
+        });
+
+    $('input: password').blur(
+        function(){
+            $(this).css({
+                'background-color' : '#FFFFFF'
+            });
+        });
+           
     $('textarea').focus(
         function(){
             $(this).css({

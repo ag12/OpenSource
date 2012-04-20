@@ -247,14 +247,15 @@
                 </li>
                 #{/if}
             </ul> 
-
-<!-- alert alert-error alert-block -->
+            #{if session.login == null}
+            <!-- alert alert-error alert-block -->
             <div class="alert alert-block">
                 <a class="close" data-dismiss="alert">×</a>
                 <h4 class="alert-heading">Warning!</h4>
                <br/>
-                if missing info
+                Login here
             </div>
+           #{/if}
 
 
 

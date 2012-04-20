@@ -157,7 +157,7 @@
 <div class="row section">
     <div id="profile-info-container" class="span12 card">
         <div class="row">
-            <img src="@{'/public/images/small'}/player.png" id="profile-image" class="span3" style="width: 128px;" />
+            <img src="@{'/public/images/small'}/${team?.image}" id="profile-image" class="span3" style="width: 128px;" />
 
             <div id="profile-description" class="span7">
                 <h1>@ ${team.team_name}</h1>
@@ -165,10 +165,14 @@
                 #{if team?.bio != null}
                 <p><strong>${team?.bio}</strong></p>
                 #{/if}
+                 #{if team?.arch_rival != null}
+                <p><strong> Arch rival </strong>@ ${team?.arch_rival?.team_name}</p>
+                #{/if}
+                
             </div>
             <div class="span2 pull-right">
                 #{if  ( (session.pid && ((Long.parseLong(session.pid) == team?.player1?.id)||(Long.parseLong(session.pid) == team?.player2?.id))) && session.token && session.login)}
-                <div><a id="openfoose_see_profile" class="btn pull-right" href="@{Teams.settings(team?.id)}">Edit your profile</a></div>
+                <div><a id="openfoose_see_profile" class="btn pull-right" href="@{Teams.settings(team?.team_name)}">Edit your profile</a></div>
                 #{/if}
                 <ul class="profile-right-corner">
                     <li>
@@ -241,7 +245,7 @@
 
 
                         <li class="span2">
-                            <a href="@{Teams.profile(teams?.team_name)}" rel="popover" class="classPopover"
+                            <a href="@{Players.profile(teams?.player1?.username)}" rel="popover" class="classPopover"
                                data-content="
                                #{if teams?.bio != null }
                                <p>
@@ -363,7 +367,7 @@
                                </thead>
                                </table>">
                                 <img src="@{'/public/images/medium'}/${teams?.image}" alt="${teams?.team_name}">
-                                <h3 class="team-name">@ ${teams?.team_name}</h3>
+                                <h3 class="team-name">@ ${teams?.player1?.username}</h3>
 
                             </a>
                         </li>

@@ -72,39 +72,47 @@
     });
    
 </script>
+#{if  ( (session.pid && ((Long.parseLong(session.pid) == team?.player1?.id)||(Long.parseLong(session.pid) == team?.player2?.id))) && session.token && session.login)}
 <div class="row">
     <div class="dashboard">
         <div class="span4 card section">
             <ul class="thumbnails">
+               
+<!--                /teams/profile/${team?.team_name}-->
                 <li>
-                    <a href="/team" class="thumbnail">
-                        <img src="http://placehold.it/40x40" alt="">
+                    <a href="@{Teams.profile(team?.team_name)}" class="thumbnail">
+                        <img src="@{'/public/images/xsmall'}/${team?.image}" alt="${team?.team_name}">
                     </a>
                 </li>
                 <li>
                     <h3>${team.team_name}</h3>
-                    <p class="subheader">View my profile page</p>
+                    <p class="subheader">View your profile page</p>
                 </li>
             </ul>
+              <div class="progress progress-striped
+                 active">
+                <div class="bar"
+                     style="width: 100%;"></div>
+            </div>
         </div>
 
         <div class="span4">
-            <ul id="profile-menu" class="nav nav-tabs nav-stacked ">
+<!--            <ul id="profile-menu" class="nav nav-tabs nav-stacked ">
                 <li class="active">
                     <a href="#account" data-toggle="tab">Account
                         <i class="icon-chevron-right pull-right"></i>
                     </a></li>
-                <li><a href="#password" data-toggle="tab">Password
-                        <i class="icon-chevron-right pull-right"></i>
-                    </a>
-                </li>
-                <!--
-                <li><a href="#team" data-toggle="tab">Your teams
-                        <i class="icon-chevron-right pull-right"></i>
-                    </a>
-                </li>
-                -->
-            </ul>
+            </ul>-->
+
+            #{if team?.arch_rival == null}
+            <!-- alert alert-error alert-block -->
+            <div class="alert alert-block">
+                <a class="close" data-dismiss="alert">×</a>
+                <h4 class="alert-heading">Warning!</h4>
+                <br/>
+                You don't have a arch rival!
+            </div>
+            #{/if}
         </div>
 
     </div>
@@ -115,45 +123,58 @@
                     <h2>Your teams</h2>
                     <h3 class="title underline section ">Change your teams basic account.</h3>
 
-                    <form class="form-horizontal">
+
+
+
+
+                    <form action="@{Teams.edit_team(team.id)}" enctype="multipart/form-data" method="POST" class="form-horizontal">
+                        #{authenticityToken /}
                         <fieldset>
                             <div class="control-group">
                                 <label class="control-label" for="fileInput">Picture</label>
-                                <img src="https://si0.twimg.com/sticky/default_profile_images/default_profile_2_bigger.png" style="float: left; margin: 0 20px 0 20px;"></img>
+                                <img src="@{'/public/images/xsmall'}/${team?.image}" style="float: left; margin: 0 20px 0 20px;"/>
                                 <div class="controls">
-                                    <input class="input-file" id="fileInput" type="file"><br/>
+                                    <input type="file" name="image" id="team_image" /><br/>
                                     Maximum size of 700k.<br/> 
                                     JPG, GIF, PNG
                                 </div>
                             </div>  
                             <div class="control-group">
-                                <label class="control-label" for="team-name">Team name</label>
+                                <label class="control-label" for="team_name">Team name</label>
                                 <div class="controls">
-                                    <input type="text" data-provide="typeahead" class="input-xlarge" id="team-name">
+                                    <input type="text" data-provide="typeahead" class="input-xlarge" id="team_name" 
+                                           value="${team?.team_name}" name="team.team_name">
                                     <p class="help-block"></p>
                                 </div>
                             </div>
                             <div class="control-group">
                                 <label class="control-label" for="arch-rival">Arch-rival</label>
                                 <div class="controls">
-                                    <input type="text" data-provide="typeahead" class="input-xlarge" id="arch-rival">
-                                    <p class="help-block"></p>
+                                    <input type="text" data-provide="typeahead" class="input-xlarge" id="arch-rival" 
+                                           value="${team?.arch_rival?.team_name}" name="team.arch_rival.team_name">
+                                    <p class="help-block">Don't worry we will find them for you .</p>
                                 </div>
                             </div>
                             <div class="control-group">
                                 <label class="control-label" for="bio">Bio</label>
                                 <div class="controls">
-                                    <textarea id="bio" maxlength="160" name="user-bio"></textarea>
+                                    <textarea id="team_bio" maxlength="160" name="team.bio">${team?.bio}</textarea>
                                     <p class="help-block">About yourself in fewer than <strong>160</strong> characters.</p>
                                 </div>
                             </div>
                             <div class="form-actions">
-                                <button id="settings_save" type="submit" class="btn btn-primary">Save changes</button>
+                                <button id="settings_save2" type="submit" class="btn btn-primary">Save changes</button>
                             </div>
                         </fieldset>
                     </form>
+
+
+
+
+
                 </div>
             </div>
         </div>
     </div>
 </div>
+#{/if}

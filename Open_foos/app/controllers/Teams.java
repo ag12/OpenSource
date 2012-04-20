@@ -47,24 +47,24 @@ public class Teams extends Controller {
     public static void profile(String teamname) {
 
         Team team = Team.find("byTeam_name", teamname).first();
-        if (team != null) {
-            
+        if (team != null && team.memberCount() == 2) {
+
             //This teams statistic
             Statistic statistic = StatisticRepository.getStatistics(team.id);
 
-            
+
             //This team morestatistic, as most played against and so on
             List<Statistic> statistics = new StatisticRepository().getMoreInfo(team.id);
 
             //This team have 100% two players, and them have their own teams as well
             //So we get them too
-            List<Team> teams  = new ArrayList<Team>();
+            List<Team> teams = new ArrayList<Team>();
             teams.add(getTeam(team.player1.id));
             teams.add(getTeam(team.player2.id));
-            
+
             //uses the players to get statistic about them
             List<Statistic> teams_statistics = StatisticRepository.getMoreInfoForTeams(teams);
-            
+
             //This teams played games
             List<Game> games = Games.getTeamGames(team.id);
 
@@ -75,7 +75,12 @@ public class Teams extends Controller {
                     (games != null ? games : null),
                     (teams_statistics != null ? teams_statistics : null),
                     (teams != null ? teams : null));
-        } else if (team == null) {
+        } else if (team != null && team.memberCount() == 1) {
+
+            // send user to player profile site, where the player team info is available
+            controllers.Players.profile(team.player1.username);
+        } else {
+            // send user to error site ? 
         }
     }
 
@@ -234,16 +239,36 @@ public class Teams extends Controller {
             existingTeam.save();
 
         }
-
-        controllers.Players.settings();
+        if ( existingTeam.memberCount() == 1){
+             controllers.Players.settings();
+        }
+        else 
+            profile(existingTeam.team_name);
+       
 
 
     }
 
-    public static void settings(Long team_id) {
-        System.out.println(team_id);
-        Team team = Team.findById(team_id);
-        render(team);
+    public static void settings(String teamname) {
+
+        Team team = Team.find("byTeam_name", teamname).first();
+        if (team != null) {
+            
+            
+            
+            if (team.memberCount() == 2) {
+                long pid = Long.parseLong(session.get("pid"));
+                if (team.player1.id == pid || team.player2.id == pid) {
+                    render(team);
+                }else{
+                    error("You dont have the rights to bee here");
+                }
+            }
+        } 
+        else 
+            error("HOMO, how did you got here ");
+        
+
     }
 
     public static List<Team> getTeamsFromDb(String filter) {

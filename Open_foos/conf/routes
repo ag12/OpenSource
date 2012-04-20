@@ -34,4 +34,4 @@ GET     /players/settings                           Players.settings
 
 
 GET     /teams/profile/{teamname}                   Teams.profile(teamname: String)
-GET     /teams/settings                            Teams.settings
+GET     /teams/settings/{teamname}                  Teams.settings(teamname: String)
