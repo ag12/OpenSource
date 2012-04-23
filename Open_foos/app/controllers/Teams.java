@@ -6,6 +6,7 @@ package controllers;
 
 import java.io.File;
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.List;
 import models.Game;
 import models.Player;
@@ -42,6 +43,18 @@ public class Teams extends Controller {
 
         statistic = StatisticRepository.getStatistics(id5);
         System.out.println(statistic.last_three_games_played + " id 5");
+    }
+
+    public static void register_team(Player player) {
+
+        Team team = new Team();
+        team.team_name = "Team_" + player.username;
+        team.player1 = player;
+        team.registered = new Date();
+        team.save();
+
+
+
     }
 
     public static void profile(String teamname) {
@@ -239,12 +252,12 @@ public class Teams extends Controller {
             existingTeam.save();
 
         }
-        if ( existingTeam.memberCount() == 1){
-             controllers.Players.settings();
-        }
-        else 
+        if (existingTeam.memberCount() == 1) {
+            controllers.Players.settings();
+        } else {
             profile(existingTeam.team_name);
-       
+        }
+
 
 
     }
@@ -253,21 +266,21 @@ public class Teams extends Controller {
 
         Team team = Team.find("byTeam_name", teamname).first();
         if (team != null) {
-            
-            
-            
+
+
+
             if (team.memberCount() == 2) {
                 long pid = Long.parseLong(session.get("pid"));
                 if (team.player1.id == pid || team.player2.id == pid) {
                     render(team);
-                }else{
+                } else {
                     error("You dont have the rights to bee here");
                 }
             }
-        } 
-        else 
+        } else {
             error("HOMO, how did you got here ");
-        
+        }
+
 
     }
 

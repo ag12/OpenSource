@@ -66,12 +66,9 @@ public class Players extends Controller {
             player = PlayerValidations.trimAtRegistr(player);
             player.registered = new Date();
             player.password = securities.Security.enc_password(player.password);
-            Team team = new Team();
-            team.team_name = "Team_" + player.username;
-            team.player1 = player;
-            team.registered = new Date();
+           
             player.save();
-            team.save();
+            Teams.register_team(player);
             controllers.Application.afterLogin(player);
             profile(player.username);
 

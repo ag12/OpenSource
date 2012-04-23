@@ -13,6 +13,10 @@ public class Application extends Controller {
         render();
     }
     
+    public static void game() {
+        render();
+    }
+    
     public static void main_page(){
         render();
     }
@@ -51,6 +55,7 @@ public class Application extends Controller {
         }
         return teamsAndPlayers;    
     }
+    
     public static void autocomplete(){
        
         List<Object> list = teamsAndPlayers();

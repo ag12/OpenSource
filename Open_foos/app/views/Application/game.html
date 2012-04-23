@@ -1,0 +1,156 @@
+
+<!DOCTYPE html>
+<html>
+    <head>
+        <title></title>
+        <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+        <script src="@{'/public/javascripts/jquery-1.7.2.js'}" type="text/javascript" charset="${_response_encoding}"></script>
+        <script src="@{'/public/javascripts/underscore.js'}" type="text/javascript" charset="${_response_encoding}"></script>
+        <script src="@{'/public/javascripts/json2.js'}" type="text/javascript" charset="${_response_encoding}"></script>
+        <script src="@{'/public/javascripts/backbone.js'}" type="text/javascript" charset="${_response_encoding}"></script>
+        <link rel="stylesheet" href="@{'/public/bootstrap/css/bootstrap.min.css'}" />
+        <link rel="stylesheet" href="@{'/public/stylesheets/game.css'}" />
+
+    </head>
+    <body>
+        <div id="request-indicator"><img src="@{'/public/images/game/loader.gif'}" /></div>
+        <div id="messages" style="display:none;"></div>
+        
+        <div class="container">        
+            <div id="field">
+                <div id="playfield">
+                    <div id="home-team">
+                    </div>  
+                    <div id="visitor-team">
+                    </div>
+                    <div id="game-state">
+                       <button id="start-game-button" class="button green">start!</button>
+                    </div>
+                </div><!-- END #playfield --> 
+            </div><!-- END field -->
+                
+                <div id="board">
+                </div><!-- END #board --> 
+        </div><!-- END .container --> 
+        
+        <div id="board-container"></div>
+        
+
+        <script type="text/template" id="player-template">
+            <% 
+
+            var playerClass = '',
+                playerStatus = '';
+                
+            if(typeof id === 'undefined')
+            {
+                playerClass = 'player-login'; 
+                playerStatus = 'tap to login';
+            }
+            
+            else
+            {
+                var state = game.get('state');                    
+                if(state === 'new')
+                {
+                    playerClass = 'player-logout'; 
+                    playerStatus = 'tap to logout';
+                }
+
+                else if(state === 'started')
+                {
+                    playerClass = 'player-score'; 
+                    playerStatus = 'score!';
+                }
+            }
+            %>
+            <div class="<%= playerClass %>">
+                <div class="goal-options">
+                    <div class="goal-options-score"><span class="goal-options-label">score!</span></div>
+                    <div class="goal-options-backfire"><span class="goal-options-label">own<br/>goal!</span></div>
+                    <div class="goal-options-unscore"><span class="goal-options-label">regret<br/>goal!</span></div>
+                    <div class="goal-options-cancel"><span class="goal-options-label">cancel</span></div>
+                </div>
+                <div class="player-image"></div>
+                <div class="player-status"><%= playerStatus %></div>
+            </div><!-- END .player-class --> 
+            <h2 class="player-name"><%= username %></h2>
+        </script>
+
+        <script type="text/template" id="login-template">
+            <div id="login-container">
+                <input type="text" id="username" class="shadow" placeholder="username" data-provide="typeahead" />
+                <input type="password" id="password" class="shadow" placeholder="password"/>
+                <button id="login" class="button green">Login</button>
+                <button id="register" class="button yellow">Register</button>
+            </div>
+        </script>
+
+        <script type="text/template" id="result-template">
+            <div id="result-container">
+            <h2 id="result-title">Game ended !</h2>
+            <div id="result-teams">
+            <div id="result-home">
+                <div class="result-medal">
+                    <%
+                    if(winner === 'homeTeam')
+                    {
+                     %>
+                     <img src="/public/images/game/medal.png" />
+                     <%
+                     }
+                     %>
+                </div>
+                <div class="result-info">
+                    <h3><%= homeTeam %></h3>
+                </div>
+            </div>
+            <div id="result-visitor">
+                <div class="result-medal">
+                    <%
+                    if(winner === 'visitorTeam')
+                    {
+                     %>
+                     <img src="/public/images/game/medal.png" />
+                     <%
+                     }
+                     %>
+                </div>
+                <div class="result-info">
+                    <h3><%= visitorTeam %></h3>
+                </div>
+            </div>
+            </div><!-- END #result-teams --> 
+            <div class="clear"></div>
+            <div id="result-buttons">
+                <button id="finish-button" class="button yellow">Finish</button>    
+                <button id="restart-button" class="button yellow">Re-match</button>    
+            </div>
+            </div><!-- END #result-container --> 
+        </script>
+        
+        <script type="text/template" id="scoreboard-template">
+            
+                <div id="home">
+                    <h4 class="score-label">Home</h4>
+                    <p class="score"><span id="home-score"><%= homeScore %></span></p>
+                </div>
+                <div id="visitor">
+                    <h4 class="score-label">Visitors</h4>
+                    <p class="score"><span id="visitor-score"><%= visitorScore %></span></p>
+                </div>
+                <button id="regret-goal" style="margin-left: 35px" class="button yellow">Reject goal!</button>
+            
+        </script>
+
+        <script type="text/template" id="message-template">
+            <div id="message" class="<%= type %>">
+            <%= message %>
+             </div>
+        </script>
+
+        <script src="@{'/public/bootstrap/js/typeahead.js'}" type="text/javascript" charset="${_response_encoding}" ></script>
+        <script src="@{'/public/javascripts/application.js'}" type="text/javascript" charset="${_response_encoding}"></script>
+        
+    </body>
+</html>

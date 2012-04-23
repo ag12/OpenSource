@@ -18,13 +18,12 @@ import play.db.jpa.Model;
 @Entity
 public class Team extends Model {
     
-    @Column(unique=true)
+    //@Column(unique=true)
     public String team_name = null;
     
     public String bio = null;
     
     public Date registered = null;
-    //default "team.png"
     public String image = "team.png";
    
     @ManyToOne

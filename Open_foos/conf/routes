@@ -7,10 +7,30 @@
 
 
 
+# API
+
+GET     /api/player/autocomplete/{username}           Api.autocomplete
+GET     /api/player/login/{username}/{password}       Api.fetchPlayer
+POST    /api/player/register                          Api.registerPlayer
+POST    /api/team                                     Api.fetchTeam
+POST    /api/game                                     Api.initGame  
+PUT     /api/game                                     Api.updateGame  
+
+GET    /api/test                                      Api.test
+
+
+
+
+
+
+
+
+
 
 # Home page
 GET     /                                           Application.index
 GET     /main                                       Application.main_page
+GET     /game                                       Application.game
 
 
 # Ignore favicon requests
