@@ -88,6 +88,9 @@ public class Api extends Controller
           //Logger.info("I registered " + username, null);
           player.password = Security.enc_password(player.password);
           player.save();
+          // 
+          Team team = Teams.register_team(player);
+          team.save();
           renderJSON(player);
        }
     }

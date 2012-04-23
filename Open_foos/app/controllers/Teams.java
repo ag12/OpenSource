@@ -45,15 +45,13 @@ public class Teams extends Controller {
         System.out.println(statistic.last_three_games_played + " id 5");
     }
 
-    public static void register_team(Player player) {
+    public static Team register_team(Player player) {
 
         Team team = new Team();
         team.team_name = "Team_" + player.username;
         team.player1 = player;
         team.registered = new Date();
-        team.save();
-
-
+        return team;
 
     }
 

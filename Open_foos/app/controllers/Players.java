@@ -68,7 +68,8 @@ public class Players extends Controller {
             player.password = securities.Security.enc_password(player.password);
            
             player.save();
-            Teams.register_team(player);
+            Team team = Teams.register_team(player);
+            team.save();
             controllers.Application.afterLogin(player);
             profile(player.username);
 
@@ -142,13 +143,17 @@ public class Players extends Controller {
         if (player != null) {
 
             Team team = Teams.getTeam(player.id);
-
+            
+            System.out.println(team.id);
+            
             List<Team> teams = Teams.getTeams(team.id);
 
             List<Statistic> teams_statistics = StatisticRepository.getMoreInfoForTeams(teams);
             
             Statistic statistic = StatisticRepository.getStatistics(team.id);
                    
+            System.out.println(statistic.games_playd);
+            
             List<Statistic> statistics = new StatisticRepository().getMoreInfo(team.id);
                             
             List<Game> games = Games.getTeamGames(team.id);
