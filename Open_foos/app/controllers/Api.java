@@ -140,7 +140,15 @@ public class Api extends Controller
        //We tried to look for the team
        //specified, if we coult not find it, then we will create it;
        if(verifiedTeam == null)
-          verifiedTeam = team.save();
+       {
+         String name = team.player1.username; 
+         if(team.memberCount() > 1) 
+             name += " & " + team.player2.username;
+                     
+         team.team_name = name;  
+         verifiedTeam = team.save();
+       }
+        
        
        if(verifiedTeam == null)
            error("Could not find or create the team"); 
