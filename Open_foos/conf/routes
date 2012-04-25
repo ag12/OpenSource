@@ -3,7 +3,7 @@
 # ~~~~
 
 # Import Secure routes
-#*      /                module:secure
+*      /                module:secure
 
 
 
