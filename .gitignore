@@ -43,8 +43,8 @@ project.xml
 
 #conf files#
 #########
-Open_foos/conf/application.conf
-
+*.conf
+application.conf
 #test files#
 ########
 Open_foos/test-result/*
