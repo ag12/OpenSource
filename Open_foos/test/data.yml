@@ -5,3 +5,123 @@
 #   email: bob@gmail.com
 #   password: secret
 #   fullname: Bob
+
+#******************************************
+#         PLAYER
+#******************************************
+#@Column(unique = true)
+#    @Required(message = "")
+#    @MinSize(3)
+#    public String username = null;
+#    @Required(message = "")
+#    @MinSize(6)
+#    public String password = null;
+#    @Column(unique = true)
+#    public Long rfid = null;
+#    
+#    public String first_name = null;
+#    
+#    public String last_name = null;
+
+#    @Email
+#    public String email = null;
+#    //default "player.png"
+#    public String image = "player.png";
+#    public String bio = null;
+#    public Date registered = null;
+
+Player(amir):
+  username:   amir
+  password:   5ebe2294ecd0e0f08eab7690d2a6ee69  #secret
+  rfid:       111111111
+  first_name: amir
+  last_name:  g.
+  email:      amir@gmail.com
+  image:      amir.png
+  bio:        Spiller bra!!
+  registered: 2007-05-05
+    
+Player(marcel):
+  username:   marcel
+  password:   5ebe2294ecd0e0f08eab7690d2a6ee69  #secret
+  rfid:       111111111
+  first_name: marcel
+  last_name:  e.
+  email:      marcel@gmail.com
+  image:      marcel.png
+  bio:        Spiller ganske bra!!
+  registered: 2007-05-05
+    
+Player(neberd):
+  username:   neberd
+  password:   5ebe2294ecd0e0f08eab7690d2a6ee69  #secret
+  rfid:       111111111
+  first_name: neberd
+  last_name:  s.
+  email:      neberd@gmail.com
+  image:      neberd.png
+  bio:        Spiller aldeles bra!!
+  registered: 2007-05-05
+    
+Player(valen):
+  username:   valen
+  password:   5ebe2294ecd0e0f08eab7690d2a6ee69  #secret
+  rfid:       111111111
+  first_name: valen
+  last_name:  r.
+  email:      valen@gmail.com
+  image:      valen.png
+  bio:        Spiller utrolig bra!!
+  registered: 2007-05-05
+  
+Player(diego):
+  username:   diego
+  password:   5ebe2294ecd0e0f08eab7690d2a6ee69  #secret
+  rfid:       111111111
+  first_name: diego
+  last_name:  maradona
+  email:      diego@gmail.com
+  image:      diego.png
+  bio:        D10S
+  registered: 2007-05-05
+  
+
+#*******************************************
+#               TEAM
+#*******************************************
+#
+#    public String team_name = null;
+#    
+#    public String bio = null;
+#    
+#    public Date registered = null;
+#    public String image = "team.png";
+#   
+#    @ManyToOne
+#    public Player player1 = null;
+#    @ManyToOne
+#    public Player player2 = null;
+#    
+#    
+#    @OneToOne
+#    public Team arch_rival = null;
+
+
+Team(rain):
+  team_name:  rain
+  bio:        Bra team
+  registered: 2010-05-05
+  image:      rain.png
+  player1:    
+  player2:    
+  arch_rival:
+  
+Team(bow):
+  team_name:  bow
+  bio:        Bra team
+  registered: 2010-05-05
+  image:      bow.png
+  player1:    
+  player2:    
+  arch_rival: 
+  

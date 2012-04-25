@@ -41,3 +41,6 @@ Thumbs.db
 
 project.xml
 
+#conf files#
+#########
+Open_foos/conf/application.conf

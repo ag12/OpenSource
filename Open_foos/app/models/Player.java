@@ -35,8 +35,6 @@ public class Player extends Model {
     public String last_name = null;
     
     
-    
-    
     @Email
     public String email = null;
     //default "player.png"
