@@ -23,7 +23,7 @@ nbproject
 tmp
 bytecode
 private
-
+test-result
 # Logs and databases #
 ######################
 *.log

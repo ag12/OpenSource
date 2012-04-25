@@ -26,23 +26,35 @@ public class Teams extends Controller {
     public static void oko() {
 
         long id = 1;
-        long id2 = 2;
-        long id3 = 3;
-        long id4 = 4;
-        long id5 = 5;
+        long id2 = 7;
+        long id3 = 13;
+        long id4 = 14;
+        long id5 = 20;
 
-        Statistic statistic = StatisticRepository.getStatistics(id);
-        System.out.println(statistic.last_three_games_played + " id 1");
-
+        Statistic statistic = StatisticRepository.getStatistics(id);       
+        System.out.println(statistic.last_three_games_played+ " id 1");
+        
+        
         statistic = StatisticRepository.getStatistics(id2);
-        System.out.println(statistic.last_three_games_played + " id 2");
+        System.out.println(statistic.last_three_games_played + " id 7");
+        
+        
         statistic = StatisticRepository.getStatistics(id3);
-        System.out.println(statistic.last_three_games_played + " id 3 ");
+        System.out.println(statistic.last_three_games_played + " id 13 ");
+        
+        
         statistic = StatisticRepository.getStatistics(id4);
-        System.out.println(statistic.last_three_games_played + " id 4");
+        System.out.println(statistic.last_three_games_played + " id 14");
 
+        
         statistic = StatisticRepository.getStatistics(id5);
-        System.out.println(statistic.last_three_games_played + " id 5");
+        System.out.println(statistic.last_three_games_played + " id 20");
+        
+        System.out.println();
+        System.out.println();System.out.println();System.out.println();System.out.println();
+        
+        
+        
     }
 
     public static Team register_team(Player player) {
