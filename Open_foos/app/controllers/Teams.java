@@ -314,7 +314,8 @@ public class Teams extends Controller {
         if (existingTeam.memberCount() == 1) {
             controllers.Players.settings();
         } else {
-            profile(existingTeam.team_name);
+           // profile(existingTeam.team_name);
+            settings(existingTeam.team_name);
         }
 
 
@@ -335,7 +336,7 @@ public class Teams extends Controller {
             if (team.memberCount() == 2) {
                 long pid = Long.parseLong(session.get("pid"));
                 if (team.player1.id == pid || team.player2.id == pid) {
-                    int compeleted = compeletedProfile(team);
+                    int compeleted = (compeletedProfile(team) + 60);
                     render(team,compeleted);
                 } else {
                     error("You dont have the rights to bee here");

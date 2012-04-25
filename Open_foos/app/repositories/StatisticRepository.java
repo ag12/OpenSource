@@ -22,25 +22,25 @@ public class StatisticRepository {
         StringBuilder sqlToQuery = new StringBuilder("SELECT (SELECT SUM(home_score) from Game where home_team_id = ");
         sqlToQuery.append(team_id);
         sqlToQuery.append(" ) AS score_home_for, ");
-        sqlToQuery.append("(SELECT SUM( visitor_score ) from Game where visitor_team_id = ");
+        sqlToQuery.append("(SELECT SUM( visitor_score ) from Game where end_time != NULL and visitor_team_id = ");
         sqlToQuery.append(team_id);
         sqlToQuery.append(" ) AS score_away_for, ");
         sqlToQuery.append("(SELECT ( score_home_for + score_away_for )) AS score_for, ");
-        sqlToQuery.append("(SELECT count(Game.id) FROM Game WHERE home_team_id = ");
+        sqlToQuery.append("(SELECT count(Game.id) FROM Game WHERE end_time != NULL and home_team_id = ");
         sqlToQuery.append(team_id);
         sqlToQuery.append(" ) AS home_games, ");
-        sqlToQuery.append("(SELECT count(Game.id) FROM Game WHERE visitor_team_id = ");
+        sqlToQuery.append("(SELECT count(Game.id) FROM Game WHERE end_time != NULL and visitor_team_id = ");
         sqlToQuery.append(team_id);
         sqlToQuery.append(" ) AS away_games, ");
         sqlToQuery.append("(SELECT ( home_games + away_games )) AS games_playd, ");
-        sqlToQuery.append("(SELECT count(Game.id) FROM Game WHERE winner_id = ");
+        sqlToQuery.append("(SELECT count(Game.id) FROM Game WHERE end_time != NULL and winner_id = ");
         sqlToQuery.append(team_id);
         sqlToQuery.append(" ) AS winns, ");
         sqlToQuery.append("(SELECT (games_playd-winns)) as losts,  ");
-        sqlToQuery.append(" (SELECT SUM(visitor_score) FROM Game WHERE home_team_id = ");
+        sqlToQuery.append(" (SELECT SUM(visitor_score) FROM Game WHERE end_time != NULL and home_team_id = ");
         sqlToQuery.append(team_id);
         sqlToQuery.append(" ) AS score_home_against, ");
-        sqlToQuery.append("(SELECT SUM(home_score) FROM Game WHERE visitor_team_id = ");
+        sqlToQuery.append("(SELECT SUM(home_score) FROM Game WHERE end_time != NULL and visitor_team_id = ");
         sqlToQuery.append(team_id);
         sqlToQuery.append(" ) as score_away_against, ");
         sqlToQuery.append("(select sum(score_home_against + score_away_against)) as score_against ");
@@ -103,50 +103,6 @@ public class StatisticRepository {
     }
 
     private static String getLastThreeGameResult(Long team_id) {
-
-
-//        StringBuilder sqlToQuery = new StringBuilder("SELECT id, home_team_id, visitor_team_id, winner_id, case winner_id ");
-//        // if you want to se the home or visitor team, and the winner
-//        sqlToQuery.append(" when winner_id = ");
-//        sqlToQuery.append(team_id);
-//        sqlToQuery.append(" and ( home_team_id = ");
-//        sqlToQuery.append(team_id);
-//        sqlToQuery.append(" and visitor_team_id != ");
-//        sqlToQuery.append(team_id);
-//
-//        sqlToQuery.append(" ) or ( ");
-//        sqlToQuery.append("home_team_id != ");
-//        sqlToQuery.append(team_id);
-//        sqlToQuery.append(" and visitor_team_id = ");
-//        sqlToQuery.append(team_id);
-//        sqlToQuery.append(" ))");
-//        
-//        sqlToQuery.append(" then 'W' ");
-//        sqlToQuery.append(" else 'L' ");
-//        sqlToQuery.append(" end FROM Game where home_team_id = ");
-//        sqlToQuery.append(team_id);
-//        sqlToQuery.append(" or visitor_team_id = ");
-//        sqlToQuery.append(team_id);
-//        sqlToQuery.append(" order by id desc limit 3");
-
-
-
-
-//
-//     when ( winner_id !=
-//      1 and (home_team_id = 1 and visitor_team_id != 1)  or ( home_team_id != 1 and visitor_team_id = 1)          ) 
-//      then 'L' 
-//      else 'W' 
-
-
-
-
-
-
-//       end FROM Game where  ( (home_team_id = 1 and visitor_team_id != 1)
-//                             or ( visitor_team_id = 1 and home_team_id != 1)  ) 
-//        order by id desc limit 3
-
 
         StringBuilder sqlToQuery = new StringBuilder("SELECT case winner_id ");
         sqlToQuery.append("when ( winner_id != ");
