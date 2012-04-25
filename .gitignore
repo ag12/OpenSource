@@ -19,11 +19,14 @@
 *.rar
 *.tar
 *.zip
+
 nbproject
 tmp
 bytecode
 private
 test-result
+
+
 # Logs and databases #
 ######################
 *.log
@@ -32,6 +35,7 @@ test-result
 
 # OS generated files #
 ######################
+
 .DS_Store*
 ehthumbs.db
 Icon?
@@ -41,10 +45,15 @@ Thumbs.db
 
 project.xml
 
-#conf files#
-#########
+# conf files#
+####################
+
 *.conf
 application.conf
+
+
 #test files#
+
 ########
+
 Open_foos/test-result/*
