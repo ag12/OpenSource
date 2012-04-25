@@ -23,6 +23,10 @@ import repositories.StatisticRepository;
  */
 public class Teams extends Controller {
 
+    
+    /*
+     * This is just a TEST
+     */
     public static void oko() {
 
         long id = 1;
@@ -59,17 +63,56 @@ public class Teams extends Controller {
 
 
     }
+    
+    
+    
+    
+   
+    
+    
+    
+    
+    
+    
+    
 
-    public static Team register_team(Player player) {
+    /*
+     * 
+     * 
+     * 
+     * 
+     */
+    public static Team register_team(Player player1, Player player2) {
 
+        if ( player2 == null){
+            
+        
         Team team = new Team();
-        team.team_name = "Team_" + player.username;
-        team.player1 = player;
+        team.team_name = "Team_" + player1.username;
+        team.player1 = player1;
         team.registered = new Date();
         return team;
+        }
+        else if ( player1 != null && player2 != null){
+            
+            
+            Team team = new Team();
+            team.team_name = player1.username + " and " + player2.username;
+            team.player1 = player1;
+            team.player2 = player2;
+            team.registered = new Date();
+            return team;
+        }
+        return null;
 
     }
 
+    
+    
+    /*
+     * 
+     * 
+     */
     public static void profile(String teamname) {
 
         Team team = Team.find("byTeam_name", teamname).first();
@@ -119,11 +162,15 @@ public class Teams extends Controller {
     //Teams where player are a member of
     public static List<Team> getTeams(Long player1_id) {
 
-        List<Team> teams = Team.find("(player1_id = ? or player2_id = ?) and (player2_id != NULL)",
+        List<Team> teams = Team.find("(player1_id = ? or player2_id = ?) and (player1_id != NULL and player2_id != NULL)",
                 player1_id, player1_id).fetch();
         return teams;
     }
 
+    
+    /*
+     * 
+     */
     public static void edit_Team(Long id, Team team, File image) {
 
 
@@ -211,7 +258,6 @@ public class Teams extends Controller {
 
                 if (existingTeam.id != arch_rival.id) {
 
-                    if (arch_rival != null) {
                         if (existingTeam.arch_rival != null) {
 
 
@@ -255,8 +301,6 @@ public class Teams extends Controller {
                                 }
                             }
                         }
-
-                    }
                 }
             }
 
@@ -279,6 +323,10 @@ public class Teams extends Controller {
 
     public static void settings(String teamname) {
 
+//        if ( teamname == null || teamname.equals("") || session.get("login") == null){
+//             error("HOMO, how did you got here n");
+//        }
+//        
         Team team = Team.find("byTeam_name", teamname).first();
         if (team != null) {
 
@@ -287,7 +335,8 @@ public class Teams extends Controller {
             if (team.memberCount() == 2) {
                 long pid = Long.parseLong(session.get("pid"));
                 if (team.player1.id == pid || team.player2.id == pid) {
-                    render(team);
+                    int compeleted = compeletedProfile(team);
+                    render(team,compeleted);
                 } else {
                     error("You dont have the rights to bee here");
                 }

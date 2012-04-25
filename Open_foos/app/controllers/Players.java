@@ -32,16 +32,24 @@ public class Players extends Controller {
         return player;
     }
     
-    public static Player doPlayerExist(Player player){
+    //check if
+    public static Player dosPlayerExist(Player player){
         
         Player exist = Player.find("byUsernameAndPassword",
                 player.username, player.password).first();
         return exist;
     }
+    
+    //used in froms
+    public static Player getPlayer(Player player){
+        Player registered = Player.find("byUsername", player.username).first();
+        return registered;
+    }
+    
 
     
     /*
-     * 
+     * Here the player can change settings, the actuale code is edit();
      */
     public static void settings() {
 
@@ -77,7 +85,7 @@ public class Players extends Controller {
         }
 
 
-        Player exist = Player.find("byUsername", player.username).first();
+        Player exist = getPlayer(player);
         if (exist != null) {
             Validation.addError("message", "The username have been used.", player.username);
             Validation.keep();
@@ -88,8 +96,9 @@ public class Players extends Controller {
             player.registered = new Date();
             player.password = securities.Security.enc_password(player.password);
 
+            
             player.save();
-            Team team = Teams.register_team(player);
+            Team team = Teams.register_team(player,null);
             team.save();
             controllers.Application.afterLogin(player);
             profile(player.username);
@@ -138,7 +147,7 @@ public class Players extends Controller {
         }
 
         player.password = securities.Security.enc_password(player.password);
-        Player exist = doPlayerExist(player);
+        Player exist = dosPlayerExist(player);
 
         if (exist == null) {
             Validation.addError("message", "The system cant find u, rigister ur self", player.username);
