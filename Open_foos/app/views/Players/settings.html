@@ -67,7 +67,7 @@
         
         doInputfeltTricks();
         
-        
+        $('.bar').css('width', '${compeleted}%')
         
         
     });
@@ -87,14 +87,14 @@
                     <p class="subheader">View your profile page</p>
                 </li>
             </ul>
-            #{if (player?.first_name != null && player?.last_name != null && player?.email != null && 
-            player?.rfid != null && player?.bio != null)}
+            ${compeleted}%
             <div class="progress progress-striped
                  active">
-                <div class="bar"
-                     style="width: 100%;"></div>
-            </div>
-            #{/if}
+                
+                <div class="bar" 
+                    
+                     style="width: "></div>
+                </div>
          
         </div>
 

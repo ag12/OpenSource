@@ -25,20 +25,41 @@ import validations.PlayerValidations;
  */
 public class Players extends Controller {
 
-//    public static void profile() {
-//        render();
-//    }
 
+    public static Player getPlayer(Long id, String username) {
+
+        Player player = Player.find("id = ? and username = ?", id, username).first();
+        return player;
+    }
+    
+    public static Player doPlayerExist(Player player){
+        
+        Player exist = Player.find("byUsernameAndPassword",
+                player.username, player.password).first();
+        return exist;
+    }
+
+    
+    /*
+     * 
+     */
     public static void settings() {
 
         Long id = Long.parseLong(session.get("pid"));
+       
         String username = session.get("pname");
+        
         if (id != null && (username != null && !username.equals(""))) {
 
+            Player player = getPlayer(id, username);
 
-            Player player = Player.find("id = ? and username = ?", id, username).first();
-            Team team = Team.find("player1_id = ? AND player2_id = NULL", id).first();
-            render(player, team);
+            Team team = Teams.getTeam(id);
+
+            int compeleted = (compeletedProfile(player) + 
+                    controllers.Teams.compeletedProfile(team));
+            
+            render(player, team, compeleted);
+
         } else {
             controllers.Application.error();
         }
@@ -66,7 +87,7 @@ public class Players extends Controller {
             player = PlayerValidations.trimAtRegistr(player);
             player.registered = new Date();
             player.password = securities.Security.enc_password(player.password);
-           
+
             player.save();
             Team team = Teams.register_team(player);
             team.save();
@@ -117,8 +138,7 @@ public class Players extends Controller {
         }
 
         player.password = securities.Security.enc_password(player.password);
-        Player exist = Player.find("byUsernameAndPassword",
-                player.username, player.password).first();
+        Player exist = doPlayerExist(player);
 
         if (exist == null) {
             Validation.addError("message", "The system cant find u, rigister ur self", player.username);
@@ -143,27 +163,27 @@ public class Players extends Controller {
         if (player != null) {
 
             Team team = Teams.getTeam(player.id);
-                       
+
             List<Team> teams = Teams.getTeams(team.id);
 
             List<Statistic> teams_statistics = StatisticRepository.getMoreInfoForTeams(teams);
-            
+
             Statistic statistic = StatisticRepository.getStatistics(team.id);
-                              
+
             List<Statistic> statistics = new StatisticRepository().getMoreInfo(team.id);
-                            
+
             List<Game> games = Games.getTeamGames(team.id);
-            
-            
-            render( (player != null ? player : null), 
-                    (team != null ? team : null), 
-                    (teams != null ? teams : null), 
-                    (statistic != null ? statistic : null), 
-                    (statistics != null ? statistics : null), 
+
+
+            render((player != null ? player : null),
+                    (team != null ? team : null),
+                    (teams != null ? teams : null),
+                    (statistic != null ? statistic : null),
+                    (statistics != null ? statistics : null),
                     (teams_statistics != null ? teams_statistics : null),
                     (games != null ? games : null));
-            
-            
+
+
         } else if (player == null) {
 //            controllers.Application.error("Oooobs");
 //            error(666, "Cant find " + username);
@@ -191,11 +211,11 @@ public class Players extends Controller {
 
         //indicates if player have changed any info
         boolean hasChanged = false;
-        
-        
-        
-        
-         //FIRST_NAME
+
+
+
+
+        //FIRST_NAME
         if ((!player.first_name.equals("") && player.first_name != null)) {
 
             if (existingplayer.first_name == null || !existingplayer.first_name.equals(player.first_name)) {
@@ -205,7 +225,7 @@ public class Players extends Controller {
             }
 
         }
-        
+
         //LAST_NAME
         if ((!player.last_name.equals("") && player.last_name != null)) {
 
@@ -216,13 +236,13 @@ public class Players extends Controller {
             }
 
         }
-        
-        
-        
-        
-        
-        
-        
+
+
+
+
+
+
+
         //BIO
         if ((!player.bio.equals("") && player.bio != null)) {
 
@@ -233,8 +253,8 @@ public class Players extends Controller {
             }
 
         }
-        
-        
+
+
         //EMAIL
         if ((!player.email.equals("") && player.email != null)) {
 
@@ -278,8 +298,8 @@ public class Players extends Controller {
             String xsmall_path = main_path + "xsmall/" + playerImage;
             String medium_path = main_path + "medium/" + playerImage;
             String large_path = main_path + "large/" + playerImage;
-            
-           
+
+
             //since the image name i uniqe here, the system wil auto change players image if exists
             //xsmall 72x72       
             Images.resize(image, new File(xsmall_path), 72, 72, false);
@@ -326,5 +346,35 @@ public class Players extends Controller {
             List<Player> players = Player.findAll();
             return players;
         }
+    }
+
+    /*
+     * This method returns how much data player have about him/her self the
+     * return value wil be used as % Max return value == 60
+     *
+     * Same method is used for teams with a max return value == 40
+     */
+    public static int compeletedProfile(Player player) {
+
+        int notNull = 0;
+        if (player.rfid != null) {
+            notNull += 10;
+        }
+        if (player.first_name != null && !player.first_name.equals("")) {
+            notNull += 10;
+        }
+        if (player.last_name != null && !player.last_name.equals("")) {
+            notNull += 10;
+        }
+        if (player.bio != null && !player.bio.equals("")) {
+            notNull += 10;
+        }
+        if (player.email != null && !player.email.equals("")) {
+            notNull += 10;
+        }
+        if (!player.image.equalsIgnoreCase("player.png")) {
+            notNull += 10;
+        }
+        return notNull;
     }
 }

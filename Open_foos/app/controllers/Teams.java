@@ -31,30 +31,33 @@ public class Teams extends Controller {
         long id4 = 14;
         long id5 = 20;
 
-        Statistic statistic = StatisticRepository.getStatistics(id);       
-        System.out.println(statistic.last_three_games_played+ " id 1");
-        
-        
+        Statistic statistic = StatisticRepository.getStatistics(id);
+        System.out.println(statistic.last_three_games_played + " id 1");
+
+
         statistic = StatisticRepository.getStatistics(id2);
         System.out.println(statistic.last_three_games_played + " id 7");
-        
-        
+
+
         statistic = StatisticRepository.getStatistics(id3);
         System.out.println(statistic.last_three_games_played + " id 13 ");
-        
-        
+
+
         statistic = StatisticRepository.getStatistics(id4);
         System.out.println(statistic.last_three_games_played + " id 14");
 
-        
+
         statistic = StatisticRepository.getStatistics(id5);
         System.out.println(statistic.last_three_games_played + " id 20");
-        
+
         System.out.println();
-        System.out.println();System.out.println();System.out.println();System.out.println();
-        
-        
-        
+        System.out.println();
+        System.out.println();
+        System.out.println();
+        System.out.println();
+
+
+
     }
 
     public static Team register_team(Player player) {
@@ -201,57 +204,59 @@ public class Teams extends Controller {
 
         //User picks arch rival from the list
         if (team.arch_rival.team_name != null && !team.arch_rival.team_name.equals("")) {
+
             Team arch_rival = Team.find("byTeam_name", team.arch_rival.team_name).first();
 
+            if (arch_rival != null) {
+
+                if (existingTeam.id != arch_rival.id) {
+
+                    if (arch_rival != null) {
+                        if (existingTeam.arch_rival != null) {
 
 
-            if (existingTeam.id != arch_rival.id) {
-
-                if (arch_rival != null) {
-                    if (existingTeam.arch_rival != null) {
-
-
-                        if (existingTeam.memberCount() == 2) {
-                            if (existingTeam.arch_rival.id != arch_rival.id
-                                    && existingTeam.player1.id != arch_rival.id
-                                    && existingTeam.player2.id != arch_rival.id) {
+                            if (existingTeam.memberCount() == 2) {
+                                if (existingTeam.arch_rival.id != arch_rival.id
+                                        && existingTeam.player1.id != arch_rival.id
+                                        && existingTeam.player2.id != arch_rival.id) {
 
 
-                                existingTeam.arch_rival = arch_rival;
-                                hasChanged = true;
+                                    existingTeam.arch_rival = arch_rival;
+                                    hasChanged = true;
+                                }
+                            } else if (existingTeam.memberCount() == 1) {
+                                if (existingTeam.arch_rival.id != arch_rival.id
+                                        && existingTeam.player1.id != arch_rival.id) {
+
+
+                                    existingTeam.arch_rival = arch_rival;
+                                    hasChanged = true;
+                                }
                             }
-                        } else if (existingTeam.memberCount() == 1) {
-                            if (existingTeam.arch_rival.id != arch_rival.id
-                                    && existingTeam.player1.id != arch_rival.id) {
+
+                        }
+                        if (existingTeam.arch_rival == null) {
 
 
-                                existingTeam.arch_rival = arch_rival;
-                                hasChanged = true;
+                            if (existingTeam.memberCount() == 2) {
+                                if (existingTeam.player1.id != arch_rival.id
+                                        && existingTeam.player2.id != arch_rival.id) {
+
+
+                                    existingTeam.arch_rival = arch_rival;
+                                    hasChanged = true;
+                                }
+                            }
+                            if (existingTeam.memberCount() == 1) {
+                                if (existingTeam.player1.id != arch_rival.id) {
+
+                                    existingTeam.arch_rival = arch_rival;
+                                    hasChanged = true;
+                                }
                             }
                         }
 
                     }
-                    if (existingTeam.arch_rival == null) {
-
-
-                        if (existingTeam.memberCount() == 2) {
-                            if (existingTeam.player1.id != arch_rival.id
-                                    && existingTeam.player2.id != arch_rival.id) {
-
-
-                                existingTeam.arch_rival = arch_rival;
-                                hasChanged = true;
-                            }
-                        }
-                        if (existingTeam.memberCount() == 1) {
-                            if (existingTeam.player1.id != arch_rival.id) {
-
-                                existingTeam.arch_rival = arch_rival;
-                                hasChanged = true;
-                            }
-                        }
-                    }
-
                 }
             }
 
@@ -314,5 +319,20 @@ public class Teams extends Controller {
 
         List<Team> teams = Team.find("player1_id = ? AND player2_id != NULL", team_id).fetch();
         renderJSON(teams);
+    }
+
+    public static int compeletedProfile(Team team) {
+
+        int notNull = 10;
+        if (team.bio != null && !team.bio.equals("")) {
+            notNull += 10;
+        }
+        if (!team.image.equalsIgnoreCase("team.png")) {
+            notNull += 10;
+        }
+        if (team.arch_rival != null) {
+            notNull += 10;
+        }
+        return notNull;
     }
 }
