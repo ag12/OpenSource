@@ -45,13 +45,6 @@ Thumbs.db
 
 project.xml
 
-# conf files#
-####################
-
-*.conf
-application.conf
-
-
 #test files#
 
 ########
