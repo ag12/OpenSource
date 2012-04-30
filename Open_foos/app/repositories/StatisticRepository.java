@@ -21,35 +21,35 @@ public class StatisticRepository {
 
         StringBuilder sqlToQuery = new StringBuilder("SELECT (SELECT SUM(home_score) from Game where home_team_id = ");
         sqlToQuery.append(team_id);
-        sqlToQuery.append(" ) AS score_home_for, ");
-        sqlToQuery.append("(SELECT SUM( visitor_score ) from Game where end_time != NULL and visitor_team_id = ");
+        sqlToQuery.append(" and end_time != 0) AS score_home_for, ");
+        sqlToQuery.append("(SELECT SUM( visitor_score ) from Game where visitor_team_id = ");
         sqlToQuery.append(team_id);
-        sqlToQuery.append(" ) AS score_away_for, ");
+        sqlToQuery.append(" and end_time != 0) AS score_away_for, ");
         sqlToQuery.append("(SELECT ( score_home_for + score_away_for )) AS score_for, ");
-        sqlToQuery.append("(SELECT count(Game.id) FROM Game WHERE end_time != NULL and home_team_id = ");
+        sqlToQuery.append("(SELECT count(Game.id) FROM Game WHERE home_team_id = ");
         sqlToQuery.append(team_id);
-        sqlToQuery.append(" ) AS home_games, ");
-        sqlToQuery.append("(SELECT count(Game.id) FROM Game WHERE end_time != NULL and visitor_team_id = ");
+        sqlToQuery.append(" and end_time != 0) AS home_games, ");
+        sqlToQuery.append("(SELECT count(Game.id) FROM Game WHERE visitor_team_id = ");
         sqlToQuery.append(team_id);
-        sqlToQuery.append(" ) AS away_games, ");
+        sqlToQuery.append(" and end_time != 0) AS away_games, ");
         sqlToQuery.append("(SELECT ( home_games + away_games )) AS games_playd, ");
-        sqlToQuery.append("(SELECT count(Game.id) FROM Game WHERE end_time != NULL and winner_id = ");
+        sqlToQuery.append("(SELECT count(Game.id) FROM Game WHERE winner_id = ");
         sqlToQuery.append(team_id);
-        sqlToQuery.append(" ) AS winns, ");
+        sqlToQuery.append(" and end_time != 0) AS winns, ");
         sqlToQuery.append("(SELECT (games_playd-winns)) as losts,  ");
-        sqlToQuery.append(" (SELECT SUM(visitor_score) FROM Game WHERE end_time != NULL and home_team_id = ");
+        sqlToQuery.append(" (SELECT SUM(visitor_score) FROM Game WHERE home_team_id = ");
         sqlToQuery.append(team_id);
-        sqlToQuery.append(" ) AS score_home_against, ");
-        sqlToQuery.append("(SELECT SUM(home_score) FROM Game WHERE end_time != NULL and visitor_team_id = ");
+        sqlToQuery.append(" and end_time != 0) AS score_home_against, ");
+        sqlToQuery.append("(SELECT SUM(home_score) FROM Game WHERE visitor_team_id = ");
         sqlToQuery.append(team_id);
-        sqlToQuery.append(" ) as score_away_against, ");
-        sqlToQuery.append("(select sum(score_home_against + score_away_against)) as score_against ");
+        sqlToQuery.append(" and end_time != 0) as score_away_against, ");
+        sqlToQuery.append("(select sum(score_home_against + score_away_against)) as score_against; ");
 
         ResultSet resultset = OpenFoosDatabase.executeQueryToFoosBase(sqlToQuery.toString());
         Statistic statistic = new Statistic();
         try {
             while (resultset.next()) {
-
+                
                 statistic.games_playd = resultset.getInt("games_playd");
                 statistic.home_games = resultset.getInt("home_games");
                 statistic.away_games = resultset.getInt("away_games");
@@ -160,10 +160,10 @@ public class StatisticRepository {
 
         StringBuilder sqlToQuery =
                 new StringBuilder("SELECT DISTINCT Team.id, Team.team_name, Team.image, COUNT(*) AS count_matches from Team, Game ");
-        sqlToQuery.append("WHERE ( Team.id = Game.home_team_id AND Game.visitor_team_id = ");
+        sqlToQuery.append("WHERE (end_time != 0 AND Team.id = Game.home_team_id AND Game.visitor_team_id = ");
         sqlToQuery.append(team_id);
         sqlToQuery.append(" ) ");
-        sqlToQuery.append("OR (Game.home_team_id = ");
+        sqlToQuery.append("OR (end_time != 0 AND Game.home_team_id = ");
         sqlToQuery.append(team_id);
         sqlToQuery.append(" And Team.id = Game.visitor_team_id ) ");
         sqlToQuery.append("Group BY Team.id ORDER BY count_matches DESC LIMIT 1;");
@@ -197,12 +197,15 @@ public class StatisticRepository {
 
         StringBuilder sqlToQuery =
                 new StringBuilder("SELECT DISTINCT Team.id, Team.team_name, Team.image, COUNT(*) AS count_matches from Team, Game ");
-        sqlToQuery.append("Where ( Team.id = Game.home_team_id and Game.visitor_team_id = ");
+        sqlToQuery.append("WHERE ( winner_id != ");
+        sqlToQuery.append(team_id);
+        sqlToQuery.append(" AND end_time != 0 ) AND");
+        sqlToQuery.append("(( Team.id = Game.home_team_id and Game.visitor_team_id = ");
         sqlToQuery.append(team_id);
         sqlToQuery.append(" ) ");
         sqlToQuery.append("OR ( Game.home_team_id = ");
         sqlToQuery.append(team_id);
-        sqlToQuery.append(" AND Team.id = Game.visitor_team_id ) ");
+        sqlToQuery.append(" AND Team.id = Game.visitor_team_id ))");
         sqlToQuery.append("AND winner_id != ");
         sqlToQuery.append(team_id);
         sqlToQuery.append(" GROUP BY Team.id ORDER BY count_matches DESC LIMIT 1;");

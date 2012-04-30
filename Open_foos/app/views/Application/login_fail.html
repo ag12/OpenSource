@@ -1,0 +1,46 @@
+#{extends 'main.html' /}
+#{set page:'login_fail' /}
+
+<div class="row">
+
+    <div class="alert alert-error">
+        <!--<button class="close" data-dismiss="alert">×</button>-->
+        <strong>Warning!</strong> Wrong username and password combination.
+    </div>
+
+    <div class="span12">
+        <div class="signin-wrapper">
+            <h1>Sign in to Openfoos</h1>
+            <form class="form-horizontal">
+                <fieldset>
+                    <div class="control-group">
+                        <div class="controls">
+                            <input type="text" class="input-xlarge" id="input01" placeholder="Username">
+                            <p class="help-inline">
+                                Forgot your <a href="/account/resend_password" title="" tabindex="-1">username</a>?
+                            </p>
+                        </div>
+                    </div>
+                    <div class="control-group">
+                        <div class="controls">
+                            <input type="text" class="input-xlarge" id="input02" placeholder="Password">
+                            <p class="help-inline">
+                                Forgot your <a href="/account/resend_password" title="" tabindex="-1">password</a>?
+                            </p>
+                        </div>
+                    </div>
+
+                    <div class="form-actions">
+                        <button type="submit" class="btn btn-primary">Sign in</button>
+                        <label class="checkbox inline">
+                            <input type="checkbox"> Remember me
+                        </label>
+                    </div>
+                </fieldset>
+            </form>
+            <div class="bottom-box">
+
+            </div>
+        </div>
+    </div>
+</div>

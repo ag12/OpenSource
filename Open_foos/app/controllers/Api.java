@@ -144,7 +144,7 @@ public class Api extends Controller
        //specified, if we coult not find it, then we will create it;
        if(verifiedTeam == null)
        {
-         String name = team.player1.username; 
+         String name = "Team " + team.player1.username; 
          if(team.memberCount() > 1) 
              name += " & " + team.player2.username;
                      

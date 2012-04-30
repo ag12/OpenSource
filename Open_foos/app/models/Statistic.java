@@ -11,9 +11,9 @@ package models;
 public class Statistic {
     
     
-    public Long game_id;
-    public Long player_id;   
-    public Long player2_id;
+//    public Long game_id;
+//    public Long player_id;   
+//    public Long player2_id;
     
     
     
@@ -57,5 +57,16 @@ public class Statistic {
     public int count_most_lost_against;
     public int count_most_won_against;  
     public int count_most_regular_appearances;
+
+    @Override
+    public String toString() {
+        return "Statistic{ games_playd=" + games_playd + ", home_games=" + home_games + ", away_games=" + away_games + ", winns=" + winns + ", losts=" + losts + ", score_for=" + score_for + ", score_home_for=" + score_home_for + ", score_away_for=" + score_away_for + ", score_against=" + score_against + ", score_home_against=" + score_home_against + ", score_away_against=" + score_away_against + ", average_score_for=" + average_score_for + ", average_score_against=" + average_score_against + ", win_prosent=" + win_prosent + ", lost_prosent=" + lost_prosent + ", last_three_games_played=" + last_three_games_played + ", target_team=" + target_team + ", count_most_played_against=" + count_most_played_against + ", count_most_lost_against=" + count_most_lost_against + ", count_most_won_against=" + count_most_won_against + ", count_most_regular_appearances=" + count_most_regular_appearances + '}';
+    }
+    
+    
+    
+    
+    
+    
     
 }

@@ -177,8 +177,9 @@ public class Players extends Controller {
 
             List<Statistic> teams_statistics = StatisticRepository.getMoreInfoForTeams(teams);
 
+            System.out.println(team.id);
             Statistic statistic = StatisticRepository.getStatistics(team.id);
-
+            System.out.println(statistic.toString());
             List<Statistic> statistics = new StatisticRepository().getMoreInfo(team.id);
 
             List<Game> games = Games.getTeamGames(team.id);
@@ -225,7 +226,7 @@ public class Players extends Controller {
 
 
         //FIRST_NAME
-        if ((!player.first_name.equals("") && player.first_name != null)) {
+        if ((/*!player.first_name.equals("") &&*/ player.first_name != null)) {
 
             if (existingplayer.first_name == null || !existingplayer.first_name.equals(player.first_name)) {
 
@@ -311,13 +312,13 @@ public class Players extends Controller {
 
             //since the image name i uniqe here, the system wil auto change players image if exists
             //xsmall 72x72       
-            Images.resize(image, new File(xsmall_path), 72, 72, false);
+            Images.resize(image, new File(xsmall_path), 72, 72, true);
             //small 127x80
-            Images.resize(image, new File(small_path), 127, 80, false);
+            Images.resize(image, new File(small_path), 127, 80, true);
             //medium 85x120 
-            Images.resize(image, new File(medium_path), 85, 120, false);
+            Images.resize(image, new File(medium_path), 85, 120, true);
             //Large 260x180
-            Images.resize(image, new File(large_path), 180, 260, false);
+            Images.resize(image, new File(large_path), 180, 260, true);
 
 
             hasChanged = true;

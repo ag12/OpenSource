@@ -235,13 +235,13 @@ public class Teams extends Controller {
 
             //since the image name i uniqe here, the system wil auto change players image if exists
             //xsmall 72x72       
-            Images.resize(image, new File(xsmall_path), 72, 72, false);
+            Images.resize(image, new File(xsmall_path), 72, 72, true);
             //small 127x80
-            Images.resize(image, new File(small_path), 127, 80, false);
+            Images.resize(image, new File(small_path), 127, 80, true);
             //medium 85x120 
-            Images.resize(image, new File(medium_path), 85, 120, false);
-            //Large 
-            Images.resize(image, new File(large_path), 600, 600, false);
+            Images.resize(image, new File(medium_path), 85, 120, true);
+            //Large 260x180
+            Images.resize(image, new File(large_path), 180, 260, true);
             hasChanged = true;
 
 
