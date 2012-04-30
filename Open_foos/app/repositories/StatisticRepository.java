@@ -104,35 +104,16 @@ public class StatisticRepository {
 
     private static String getLastThreeGameResult(Long team_id) {
 
-        StringBuilder sqlToQuery = new StringBuilder("SELECT case winner_id ");
-        sqlToQuery.append("when ( winner_id != ");
+        StringBuilder sqlToQuery = new StringBuilder("SELECT CASE winner_id ");
+        sqlToQuery.append("WHEN ");
         sqlToQuery.append(team_id);
-
-
-        sqlToQuery.append(" and ( home_team_id = ");
+        sqlToQuery.append(" THEN 'W' ");
+        sqlToQuery.append(" ELSE 'L' ");
+        sqlToQuery.append(" END AS 'status' FROM Game WHERE ( Game.end_time != 0 ) AND ( home_team_id = ");
         sqlToQuery.append(team_id);
-        sqlToQuery.append(" and visitor_team_id != ");
+        sqlToQuery.append(" OR visitor_team_id = ");
         sqlToQuery.append(team_id);
-        sqlToQuery.append(" ) or ( home_team_id != ");
-
-
-        sqlToQuery.append(team_id);
-        sqlToQuery.append(" and visitor_team_id = ");
-        sqlToQuery.append(team_id);
-        sqlToQuery.append(" ) ) ");
-
-        sqlToQuery.append(" then 'L' ");
-        sqlToQuery.append(" else 'W' ");
-        sqlToQuery.append(" end FROM Game where  ( ( home_team_id = ");
-        sqlToQuery.append(team_id);
-        sqlToQuery.append(" and visitor_team_id != ");
-        sqlToQuery.append(team_id);
-        sqlToQuery.append(" ) or ( visitor_team_id = ");
-        sqlToQuery.append(team_id);
-
-        sqlToQuery.append(" and home_team_id != ");
-        sqlToQuery.append(team_id);
-        sqlToQuery.append(" ) ) order by id desc");
+        sqlToQuery.append(" ) ORDER BY id DESC LIMIT 3;");
 
 
 
