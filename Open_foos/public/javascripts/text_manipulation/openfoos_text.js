@@ -27,7 +27,7 @@ function doInputfeltTricks(){
             });
         });
 
-    $('input: password').blur(
+    $('input:password').blur(
         function(){
             $(this).css({
                 'background-color' : '#FFFFFF'

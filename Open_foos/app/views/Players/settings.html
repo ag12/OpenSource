@@ -99,6 +99,15 @@
          You have compeleted ${compeleted}% of you profile
         </div>
 
+ #{if errors}
+<div class="alert alert-info">
+ <ul>
+#{errors}
+    <li>${error}</li>
+#{/errors}
+</ul>
+</div>
+ #{/if}
         <div class="span4">
             <ul id="profile-menu" class="nav nav-tabs nav-stacked ">
                 <li class="active">
@@ -193,12 +202,15 @@
                     <h3 class="title underline section ">Change your password.</h3>
 
 
-                    <form class="form-horizontal">
+                    <form action="@{Players.changePassword()}"  method="POST" class="form-horizontal">
+                        #{authenticityToken /}
                         <fieldset>
                             <div class="control-group">
                                 <label class="control-label" for="current_password">Current password</label>
                                 <div class="controls">
-                                    <input type="password" class="input-xlarge" id="current_password" placeholder="Enter your current password">
+                                    <input type="password" class="input-xlarge" id="current_password" 
+                                           placeholder="Enter your current password" name="player.password">
+                                    
                                     <p class="help-block">Have you forgotten your password?</p>
                                 </div>
                             </div>
@@ -206,7 +218,8 @@
                             <div class="control-group">
                                 <label class="control-label" for="new_password">New password</label>
                                 <div class="controls">
-                                    <input type="password" class="input-xlarge" id="new_password" placeholder="Make a new password">
+                                    <input type="password" class="input-xlarge" id="new_password" 
+                                           placeholder="Make a new password" name="newPassword">
                                     <p class="help-block">Find a smart one.</p>
                                     <small id="password_strength" class="help-inline help-error"
                                            style="display: none;">Too short</small>
@@ -216,7 +229,8 @@
                             <div class="control-group">
                                 <label class="control-label" for="verify_password">Verify password</label>
                                 <div class="controls">
-                                    <input type="password" class="input-xlarge" id="verify_password" placeholder="Match it">
+                                    <input type="password" class="input-xlarge" id="verify_password"
+                                           placeholder="Match it" name="newPassword2">
 
                                     <small id="password_match" class="help-inline help-error"
                                            style="display: none;">Password don't match</small>

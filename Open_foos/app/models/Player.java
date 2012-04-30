@@ -41,4 +41,14 @@ public class Player extends Model {
     public String image = "player.png";
     public String bio = null;
     public Date registered = null;
+
+    @Override
+    public String toString() {
+        return "Player{" + "username=" + username + ", password=" + password + ", rfid=" + rfid + ", first_name=" + first_name + ", last_name=" + last_name + ", email=" + email + ", image=" + image + ", bio=" + bio + ", registered=" + registered + '}';
+    }
+    
+    
+    
+    
 }
+
