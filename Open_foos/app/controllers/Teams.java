@@ -193,7 +193,7 @@ public class Teams extends Controller {
 
 
         }
-        if (team.bio != null && !"".equals(team.bio)) {
+        if (team.bio != null /*&& !"".equals(team.bio)*/) {
 
 
             if (existingTeam.bio == null || !existingTeam.bio.equals(team.bio)) {
