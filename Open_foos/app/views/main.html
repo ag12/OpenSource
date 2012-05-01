@@ -15,77 +15,29 @@
 
 
 
+
         <script type="text/javascript" >
     
             $(document).ready(function(){
         
         
-                $('#main_typeahead').typeahead()
-                .on('keyup', function(ev){
-            
-                    ev.stopPropagation();
-                    ev.preventDefault();
-            
-                    //filter out up/down, tab, enter, and escape keys
-                    if( $.inArray(ev.keyCode,[40,38,9,13,27]) === -1 ){
-                
-                        var self = $(this);
-                
-                        //a empty source
-                        self.data('typeahead').source = [];
-                
-                        //active used so we aren't triggering duplicate keyup events
-                        if( !self.data('active') && self.val().length > 0){
-                    
-                            self.data('active', true);
-                    
-                            //Do data request. Insert your own API logic here.
-                            $.getJSON("@{Application.autocomplete()}"
-                        
-                        
-                                //if we dont use filter vi the typehead can sort list for us. 
-                                //or change the method sett Like  % var % 
-                                // filter: $(this).val() use this for PlayerController
-                        
-                        
-                                , function(data) {
-                        
-                                //set this to true when your callback executes
-                                self.data('active',true);
-                        
-                                //change values
-                                var arr = [],
-                        
-                                i=data.length;
-                                while(i--){
-                            
-                            
-                                    if (data[i].team_name != null ){
-                                        arr[i] = data[i].team_name
-                                    }
-                                     if (data[i].username != null ){
-                                        arr[i] = data[i].username
-                                    }
-                                }
-                        
-                                //set your results into the typehead's source 
-                                self.data('typeahead').source = arr;
-                        
-                                //trigger keyup on the typeahead to make it search
-                                self.trigger('keyup');
-                        
-                                //All done, set to false to prepare for the next remote query.
-                        
-                                self.data('active', false);
-                        
-                            });
-                    
-                        }
-                    }
-                });
-        
-      
-        
+                $('#main_typeahead').typeahead({
+                items: 3, 
+                source: function (typeahead) {
+                    return $.get('/application/everybody ',  function (data) 
+                    {
+                        return typeahead.process(data);
+                    });
+                },
+                onselect: function (data){
+                  
+                  $.get('@{Application.whoIsIt()}', {who : data}, function(data){
+                       //$('#mainBody').html(data)
+                       window.location = data;
+                     console.log(data)
+                  });
+                }
+            });
         
         
         
@@ -101,7 +53,7 @@
     </head>
 
 
-    <body>
+    <body id="mainBody">
         <div class="navbar navbar-fixed-top" >
             <div class="navbar-inner">
                 <div class="container">
@@ -124,9 +76,9 @@
                         #{/if}
                     </ul>
 
-                    <form class="navbar-search pull-right">
+                    <div class="navbar-search pull-right">
                         <input type="text" data-provide="typeahead" class="search-query span3" placeholder="Search" id="main_typeahead">   
-                    </form>
+                    </div>
                     #{if session.login}
                     <ul class="nav pull-right">
                         <li class="dropdown ${page == 'settings' ? 'active' : ''}">
@@ -157,6 +109,6 @@
 
         </div><!-- END .container -->
 
-
+        <script src="@{'/public/bootstrap/js/search_typeahead.js'}" type="text/javascript" charset="${_response_encoding}" ></script>
     </body>
 </html>

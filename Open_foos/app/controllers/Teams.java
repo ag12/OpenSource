@@ -135,7 +135,7 @@ public class Teams extends Controller {
             List<Statistic> teams_statistics = StatisticRepository.getMoreInfoForTeams(teams);
 
             //This teams played games
-            List<Game> games = Games.getTeamGames(team.id);
+            List<Game> games = Games.getTeamGames(team.id,20);
 
 
             render((team != null ? team : null),
@@ -249,8 +249,12 @@ public class Teams extends Controller {
 
 
 
+        if ( team.arch_rival.team_name.equals("")){
+            existingTeam.arch_rival = null;
+            hasChanged = true;
+        }
         //User picks arch rival from the list
-        if (team.arch_rival.team_name != null && !team.arch_rival.team_name.equals("")) {
+        if (team.arch_rival.team_name != null /*&& !team.arch_rival.team_name.equals("")*/) {
 
             Team arch_rival = Team.find("byTeam_name", team.arch_rival.team_name).first();
 

@@ -16,9 +16,9 @@ import play.mvc.Controller;
  */
 public class Games extends Controller {
 
-    public static List<Game> getTeamGames(Long team_id) {
+    public static List<Game> getTeamGames(Long team_id, int limit) {
 
-        List<Game> games = Game.find("(home_team_id = ? or visitor_team_id = ?) and (end_time != 0 )order by id desc", team_id, team_id).fetch();
+        List<Game> games = Game.find("(home_team_id = ? or visitor_team_id = ?) and (end_time != 0 )order by id desc", team_id, team_id).fetch(limit);
         return games;
 
     }

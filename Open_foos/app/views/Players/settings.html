@@ -99,15 +99,7 @@
          You have compeleted ${compeleted}% of you profile
         </div>
 
- #{if errors}
-<div class="alert alert-info">
- <ul>
-#{errors}
-    <li>${error}</li>
-#{/errors}
-</ul>
-</div>
- #{/if}
+
         <div class="span4">
             <ul id="profile-menu" class="nav nav-tabs nav-stacked ">
                 <li class="active">
@@ -124,6 +116,19 @@
                     </a>
                 </li>
             </ul>
+             #{if errors}
+<div class="alert alert-block">
+  <a class="close" data-dismiss="alert" href="#">×</a>
+  <h4 class="alert-heading">Warning!</h4>
+ <ul>
+#{errors}
+    <li>${error}</li>
+#{/errors}
+</ul>
+</div>
+ #{/if}
+            
+            
         </div>
 
     </div>

@@ -175,12 +175,12 @@ public class Players extends Controller {
 
             List<Statistic> teams_statistics = StatisticRepository.getMoreInfoForTeams(teams);
 
-            System.out.println(team.id);
             Statistic statistic = StatisticRepository.getStatistics(team.id);
-            System.out.println(statistic.toString());
+           
+          
             List<Statistic> statistics = new StatisticRepository().getMoreInfo(team.id);
 
-            List<Game> games = Games.getTeamGames(team.id);
+            List<Game> games = Games.getTeamGames(team.id,20);
 
 
             render((player != null ? player : null),
@@ -223,7 +223,7 @@ public class Players extends Controller {
 
 
         }
-         //indicates if player have changed any info
+        //indicates if player have changed any info
         boolean hasChanged = false;
         if (existingplayer != null) {
 
@@ -355,45 +355,55 @@ public class Players extends Controller {
     }
 
     public static void changePassword(Player player, String newPassword, String newPassword2) {
-  
-        
-        if ( (player.password == null || player.password.equals("")) || newPassword == null || newPassword2 == null){
-             Validation.addError("message", "Missing informasjon", player.password);
-             Validation.keep();
-             settings();
+
+
+        if ((player.password == null || player.password.equals("")) || newPassword == null || newPassword2 == null) {
+            Validation.addError("message", "Missing informasjon", player.password);
+            params.flash();
+            Validation.keep();
+            settings();
         }
-        
-        
-        
-  
-        if ( !newPassword.equals(newPassword2) ){
-            
+
+
+
+
+        if (!newPassword.equals(newPassword2)) {
+
             Validation.addError("message", "Your passwords must bee the same.", player.password);
-             Validation.keep();
-             settings();
-            
-        }else if (newPassword.equals(newPassword2) && ( player.password != null || !player.password.equals(""))){
-            
-            if ( session.get("pname") != null && session.get("pid") != null){
+            params.flash();
+            Validation.keep();
+            settings();
+
+        } else if (newPassword.equals(newPassword2) && (player.password != null || !player.password.equals(""))) {
+
+            if (session.get("pname") != null && session.get("pid") != null) {
                 //ONLIE
-                
+
                 player.password = Security.enc_password(player.password);
                 player.username = session.get("pname");
                 player = dosPlayerExist(player);
-                if (player != null){
-                    
+                if (player != null) {
+
                     newPassword = Security.enc_password(newPassword);
                     player.password = newPassword;
                     player.save();
+                    settings();
+                }
+                if (player == null) {
+
+                    Validation.addError("message", "Your password is inncoret.", "error");
+              
+                    params.flash();
+                    Validation.keep();
                     settings();
                 }
 
             }
 
         }
-       
-        
-   
+
+
+
     }
 
     /*

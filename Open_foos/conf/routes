@@ -3,7 +3,7 @@
 # ~~~~
 
 # Import Secure routes
-*      /                module:secure
+#*      /                module:secure
 
 
 
@@ -18,7 +18,7 @@ PUT     /api/game                                     Api.updateGame
 
 GET    /api/test                                      Api.test
 
-
+GET     /application/everybody                        Application.autocomplete      
 
 
 
@@ -31,6 +31,7 @@ GET    /api/test                                      Api.test
 GET     /                                           Application.index
 GET     /main                                       Application.main_page
 GET     /game                                       Application.game
+GET     /login                                      Application.login
 
 
 # Ignore favicon requests
