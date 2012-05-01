@@ -16,10 +16,12 @@ POST    /api/team                                     Api.fetchTeam
 POST    /api/game                                     Api.initGame  
 PUT     /api/game                                     Api.updateGame  
 
-GET    /api/test                                      Api.test
+
+
+GET     /api/test                                      Api.test
 
 GET     /application/everybody                        Application.autocomplete      
-
+GET     /error                                        Application.of_error      
 
 
 

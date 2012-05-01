@@ -23,7 +23,7 @@ body {
 }
 
 .error404_main {
-    background: url(/public/images/error404_main.jpg) no-repeat;
+    background: url(/public/images/default/error404_main.jpg) no-repeat;
     width: 960px;
     height: 550px;
     /*
