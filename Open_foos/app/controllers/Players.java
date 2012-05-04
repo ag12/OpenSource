@@ -54,13 +54,16 @@ public class Players extends CRUD {
         
         //TEMP KODE SLUTTER
         object = player;
+        Player chekPlayer = Player.find("byUsername", player.username).first();
+        if ( chekPlayer == null){
         object._save();
         
         //OG HER. PLAYER MÅ "SAVES" først
         team.save();
-        
-        
         flash.success(play.i18n.Messages.get("crud.created", type.modelName));
+        }if( chekPlayer != null){
+        flash.error(type.modelName + " Username have been used, and it's not uniq", "PROBLEM");}
+        
         if (params.get("_save") != null) {
             redirect(request.controller + ".list");
         }
