@@ -49,7 +49,7 @@ public class Api extends Controller
           error(Http.StatusCode.BAD_REQUEST, "Username or password cannot be empty"); 
        }   
         
-       Player player = Player.find("username = ? and password = ?", username, Security.enc_password(password)).first();
+       Player player = Player.find("username = ? and password = ?", username, Security.encPassword(password)).first();
        
        if(player == null)
        {
@@ -86,10 +86,10 @@ public class Api extends Controller
        else
        {
           //Logger.info("I registered " + username, null);
-          player.password = Security.enc_password(player.password);
+          player.password = Security.encPassword(player.password);
           player.save();
           // 
-          Team team = Teams.register_team(player,null);
+          Team team = TeamController.register_team(player,null);
           team.save();
           renderJSON(player);
        }

@@ -36,7 +36,7 @@
                         self.data('active', true);
 
                         //Do data request. Insert your own API logic here.
-                        $.getJSON("@{Players.allPlayersByUsername()}",{
+                        $.getJSON("@{PlayerController.allPlayersByUsername()}",{
                                
                                
                             //if we dont use filter vi the typehead can sort list for us. 
@@ -83,7 +83,7 @@
        
             $('#mysub').click(function (){
         
-                $.getJSON("@{Players.allPlayersByUsername()}",
+                $.getJSON("@{PlayerController.allPlayersByUsername()}",
                 { filter : $('#typeahead').val()}, 
                 function (data){
              
@@ -157,7 +157,8 @@
 <div class="row section">
     <div id="profile-info-container" class="span12 card">
         <div class="row">
-            <img src="@{'/public/images/small'}/${team?.image}" id="profile-image" class="span3" style="width: 128px;" />
+            <img src="@{'/public/images/medium'}/${team?.image}" id="profile-image" class="span3 small-image" />
+
 
             <div id="profile-description" class="span7">
                 <h1>@ ${team.team_name}</h1>
@@ -165,14 +166,14 @@
                 #{if team?.bio != null}
                 <p><strong>${team?.bio}</strong></p>
                 #{/if}
-                 #{if team?.arch_rival != null}
+                #{if team?.arch_rival != null}
                 <p><strong> Arch rival </strong>@ ${team?.arch_rival?.team_name}</p>
                 #{/if}
-                
+
             </div>
             <div class="span2 pull-right">
                 #{if  ( (session.pid && ((Long.parseLong(session.pid) == team?.player1?.id)||(Long.parseLong(session.pid) == team?.player2?.id))) && session.token && session.login)}
-                <div><a id="openfoose_see_profile" class="btn pull-right" href="@{Teams.settings(team?.team_name)}">Edit your profile</a></div>
+                <div><a id="openfoose_see_profile" class="btn pull-right" href="@{TeamController.settings(team?.team_name)}">Edit your profile</a></div>
                 #{/if}
                 <ul class="profile-right-corner">
                     <li>
@@ -203,13 +204,13 @@
                         <i class="icon-chevron-right pull-right"></i>
                     </a>
                 </li>
-                   #{ if statistic.games_playd >= 1 } 
+                #{ if statistic.games_playd >= 1 } 
                 <li>
                     <a href="#stat" data-toggle="tab">Statistic maps
                         <i class="icon-chevron-right pull-right"></i>
                     </a>
                 </li>
-                  <li>
+                <li>
                     <a href="#info" data-toggle="tab">All info
                         <i class="icon-chevron-right pull-right"></i>
                     </a>
@@ -231,26 +232,26 @@
         <div class="span9"> 
             <div id="profile-menu-info" class="tab-content card section">
                 <div id="teams" class="tab-pane active">
-  
-                    
+
+
                     <h2 class="underline section">Team members</h2>
 
-                    
-                    
-                    
-                    
-                    
-                    
-                    
-                    
-                                        <ul class="thumbnails center">
+
+
+
+
+
+
+
+
+                    <ul class="thumbnails center">
 
 
                         #{list items:teams, as:'teams'}
 
 
                         <li class="span2">
-                            <a href="@{Players.profile(teams?.player1?.username)}" rel="popover" class="classPopover"
+                            <a href="@{PlayerController.profile(teams?.player1?.username)}" rel="popover" class="classPopover"
                                data-content="
                                #{if teams?.bio != null }
                                <p>
@@ -269,13 +270,13 @@
                                <thead class='blue-title'>
                                <tr>
                                <th>Player one</th>
-                              
+
                                </tr>
                                </thead>
                                <tbody>
                                <tr>
                                <td>@${teams?.player1?.username}</td>
-                              
+
                                </tr>
                                </tbody>
                                </table>
@@ -371,41 +372,42 @@
                                </tr>
                                </thead>
                                </table>">
-                                <img src="@{'/public/images/medium'}/${teams?.player1?.image}" alt="${teams?.team_name}">
+                                <img src="@{'/public/images/medium'}/${teams?.image}" alt="${teams?.team_name}" class="small-image" />
+
                                 <h3 class="team-name">@ ${teams?.player1?.username}</h3>
 
                             </a>
                         </li>
                         #{/list}
                     </ul>
-                    
-                    
-                    
-                    
-                    
-                    
-                    
-                    
-                    
-                    
-                    
-                    
-                    
-                    
-                    
-                    
-                    
-                    
- 
-                    
-                    
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
                 </div>
-                
-                
-                
-                
-                
-               <div id="stat" class="tab-pane">
+
+
+
+
+
+                <div id="stat" class="tab-pane">
                     <h2 class="underline section">Statistic</h2>
                     <div id="mDiv">
                         <input type="text" class="input-large search-query"
@@ -415,12 +417,12 @@
                     </div>
                     <div id="personalia"></div>
                 </div>
-                
-                
-                
-                
-                
-            <div id="game" class="tab-pane">
+
+
+
+
+
+                <div id="game" class="tab-pane">
                     <h2 class="underline section">Game statistics</h2>
                     #{if statistics.size() >= 1}
                     <ul class="thumbnails center">
@@ -438,35 +440,35 @@
 
 
                         <li class="span2">
-                           
-                         
-                              #{if statistics?.count_most_played_against > 0}
-                          
-                               <p class="section">  <strong>Played most against </strong> </p>
 
 
-                               #{/if}
+                            #{if statistics?.count_most_played_against > 0}
+
+                            <p class="section">  <strong>Played most against </strong> </p>
 
 
-                               #{if statistics?.count_most_lost_against > 0}
-                                       <p class="section">  <strong> Lost most against</strong></p>
-                              
-                               #{/if}
+                            #{/if}
 
 
-                               #{if statistics?.count_most_won_against > 0}
-                               <p class="section">  <strong>Won most against</strong> </p>
-                            
-                               #{/if}
+                            #{if statistics?.count_most_lost_against > 0}
+                            <p class="section">  <strong> Lost most against</strong></p>
+
+                            #{/if}
+
+
+                            #{if statistics?.count_most_won_against > 0}
+                            <p class="section">  <strong>Won most against</strong> </p>
+
+                            #{/if}
 
 
 
-                               #{if statistics?.count_most_regular_appearances > 0}
-                                <p class="section">   <strong>  Regular appearances </strong></p>
-                           
-                               #{/if}
+                            #{if statistics?.count_most_regular_appearances > 0}
+                            <p class="section">   <strong>  Regular appearances </strong></p>
 
-                            <a href="@{Teams.profile(statistics?.target_team?.team_name)}" rel="popover" class="classPopover"
+                            #{/if}
+
+                            <a href="@{TeamController.profile(statistics?.target_team?.team_name)}" rel="popover" class="classPopover"
                                data-content=
 
                                " 
@@ -509,7 +511,8 @@
                                </thead>
                                </table>">
 
-                                <img src="@{'/public/images/medium'}/${statistics?.target_team.image}" alt="${statistics?.target_team?.team_name}">
+                                  <img src="@{'/public/images/medium'}/${statistics?.target_team.image}" alt="${statistics?.target_team?.team_name}" class="small-image" />
+
 
                                 <h3 class="team-name"> @${statistics?.target_team.team_name}</h3>
 
@@ -531,7 +534,7 @@
                         <img src="http://placehold.it/160x120" alt=""></img>
                     </a>
                 </div>
-                    <div id="games" class="tab-pane">
+                <div id="games" class="tab-pane">
                     <h2 class="underline section">Games played by ${team?.team_name}!</h2>
 
 
@@ -615,39 +618,95 @@
                         #{/list}                                   
                     </ul>
                 </div> <!-- games -->
-                
-                
-                 <div id="info" class="tab-pane"><!-- INFO -->
+
+
+   <!-- DETTE ER NYTT PSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSS -->
+                <div id="info" class="tab-pane">
                     <h2 class="underline section">All info</h2>
+                    
+                    <!-- ***************************************************************************
+                    DETTE ER NYTT DATO 01.MAI.2012
+                    ***************************************************************************/ -->
+                    <h3>Played Games</h3>
                     <div class="span8">
                         <table id ="all-info" class="table table-striped table-bordered table-condensed">
                             <thead>
                                 <tr>
-                                    <th>Home-games</th>
-                                    <th>Away-games</th>
-                                    <th>Home score</th>
-                                    <th>Away score</th>
-                                    <th>Home score against</th>
-                                    <th>Away score against</th>
+                                    <th></th>
+                                    <th>Home Games</th>
+                                    <th>Away Games</th>
+                                    <th>Total</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <tr>
+                                    <th>Match</th>
+                                    <td>1</td>
+                                    <td>2</td>
+                                    <td>3</td>
+                                </tr>
+                                <tr>
+                                    <th>Lost</th>
+                                    <td>1</td>
+                                    <td>2</td>
+                                    <td>3</td>
+                                </tr>
+                                <tr>
+                                    <th>Winn</th>
+                                    <td>1</td>
+                                    <td>2</td>
+                                    <td>3</td>
+                                </tr>
+                                <tr>
+                                    <th>Score for</th>
+                                    <td>1</td>
+                                    <td>2</td>
+                                    <td>3</td>
+                                </tr>
+                                <tr>
+                                    <th>Score against</th>
+                                    <td>1</td>
+                                    <td>2</td>
+                                    <td>3</td>
+                                </tr>
+                            </tbody>
+                        </table>
+
+
+                        <table class="table table-striped table-bordered table-condensed" style="width: auto; display: inline-block; float: left">
+                            <thead>
+                                <tr>
                                     <th>Average score for</th>
                                     <th>Average score against</th>
                                 </tr>
                             </thead>
                             <tbody>
                                 <tr>
-                                    <td>${statistic?.games_playd}</td>
-                                    <td>1</td>
-                                    <td>1</td>
-                                    <td>1</td>
-                                    <td>1</td>
-                                    <td>1</td>
-                                    <td>1</td>
-                                    <td>1</td>
+                                    <td>10</td>
+                                    <td>20</td>
                                 </tr>
                             </tbody>
                         </table>
+
+
+
+                        <table class="table table-striped table-bordered table-condensed" style="width: auto;display: inline-block; float: right;">
+                            <thead>
+                                <tr>
+                                    <th>WINN%</th>    
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <tr>
+                                    <td>50%</td>
+                                </tr>
+                            </tbody>
+                        </table>
+
+
                     </div>
                 </div><!-- info -->
+
 
             </div><!-- /.tab-content -->
         </div><!-- span9 -->

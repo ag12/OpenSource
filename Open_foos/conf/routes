@@ -4,7 +4,7 @@
 
 # Import Secure routes
 #*      /                module:secure
-
+ *      /admin           module:crud
 
 
 # API
@@ -48,13 +48,13 @@ GET     /public/                                staticDir:public
 
 # Player pages
 
-GET     /players/profile/{username}                 Players.profile(username: String)
-GET     /players/settings                           Players.settings
+GET     /players/profile/{username}                 PlayerController.profile(username: String)
+GET     /players/settings                           PlayerController.settings
 
 
 
 #  Team pages 
 
 
-GET     /teams/profile/{teamname}                   Teams.profile(teamname: String)
-GET     /teams/settings/{teamname}                  Teams.settings(teamname: String)
+GET     /teams/profile/{teamname}                   TeamController.profile(teamname: String)
+GET     /teams/settings/{teamname}                  TeamController.settings(teamname: String)

@@ -1,4 +1,4 @@
-import controllers.Players;
+import controllers.PlayerController;
 import org.junit.*;
 import java.util.*;
 import play.test.*;
@@ -23,7 +23,7 @@ public void setup() {
         Fixtures.loadYaml("data.yml");
         
         //assertEquals(5, Player.count());
-        assertNotNull(Players.getPlayersFromDb("barbaqu"));
+        assertNotNull(PlayerController.getPlayersFromDb("barbaqu"));
         
     }
 

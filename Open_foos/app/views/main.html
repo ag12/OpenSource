@@ -86,10 +86,10 @@
                             </a>
 
                             <ul class="dropdown-menu pull-right">
-                                <li><a href="@{Players.profile(session.pname)}" ><i class="icon-user"></i> View my profile page</a></li>
-                                <li><a href="@{Players.settings()}"><i class="icon-pencil"></i> Settings</a></li>
+                                <li><a href="@{PlayerController.profile(session.pname)}" ><i class="icon-user"></i> View my profile page</a></li>
+                                <li><a href="@{PlayerController.settings()}"><i class="icon-pencil"></i> Settings</a></li>
                                 <li class="divider"></li>
-                                <li><a href="@{Players.logout_player()}"><i class="icon-remove"></i> Sign out</a></li>
+                                <li><a href="@{PlayerController.logoutPlayer()}"><i class="icon-remove"></i> Sign out</a></li>
                             </ul>
 
                         </li>

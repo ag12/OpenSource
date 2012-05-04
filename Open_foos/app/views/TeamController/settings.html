@@ -26,7 +26,7 @@
                     self.data('active', true);
 
                     //Do data request. Insert your own API logic here.
-                    $.getJSON("@{Teams.allTeamsByTeam_name()}",{
+                    $.getJSON("@{TeamController.allTeamsByTeam_name()}",{
                                
                                
                         //if we dont use filter vi the typehead can sort list for us. 
@@ -81,8 +81,8 @@
                
 <!--                /teams/profile/${team?.team_name}-->
                 <li>
-                    <a href="@{Teams.profile(team?.team_name)}" class="thumbnail">
-                        <img src="@{'/public/images/xsmall'}/${team?.image}" alt="${team?.team_name}">
+                    <a href="@{TeamController.profile(team?.team_name)}" class="thumbnail">
+                        <img src="@{'/public/images/medium'}/${team?.image}" alt="${team?.team_name}">
                     </a>
                 </li>
                 <li>
@@ -115,7 +115,7 @@
 
 
 
-                    <form action="@{Teams.edit_team(team.id)}" enctype="multipart/form-data" method="POST" class="form-horizontal">
+                    <form action="@{TeamController.editTeam(team.id)}" enctype="multipart/form-data" method="POST" class="form-horizontal">
                         #{authenticityToken /}
                         <fieldset>
                             <div class="control-group">
@@ -155,11 +155,6 @@
                             </div>
                         </fieldset>
                     </form>
-
-
-
-
-
                 </div>
             </div>
         </div>

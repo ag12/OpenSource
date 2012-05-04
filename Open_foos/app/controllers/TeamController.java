@@ -21,67 +21,8 @@ import repositories.StatisticRepository;
  *
  * @author Santonas
  */
-public class Teams extends Controller {
+public class TeamController extends Controller {
 
-    
-    /*
-     * This is just a TEST
-     */
-    public static void oko() {
-
-        long id = 1;
-        long id2 = 7;
-        long id3 = 13;
-        long id4 = 14;
-        long id5 = 20;
-
-        Statistic statistic = StatisticRepository.getStatistics(id);
-        System.out.println(statistic.last_three_games_played + " id 1");
-
-
-        statistic = StatisticRepository.getStatistics(id2);
-        System.out.println(statistic.last_three_games_played + " id 7");
-
-
-        statistic = StatisticRepository.getStatistics(id3);
-        System.out.println(statistic.last_three_games_played + " id 13 ");
-
-
-        statistic = StatisticRepository.getStatistics(id4);
-        System.out.println(statistic.last_three_games_played + " id 14");
-
-
-        statistic = StatisticRepository.getStatistics(id5);
-        System.out.println(statistic.last_three_games_played + " id 20");
-
-        System.out.println();
-        System.out.println();
-        System.out.println();
-        System.out.println();
-        System.out.println();
-
-
-
-    }
-    
-    
-    
-    
-   
-    
-    
-    
-    
-    
-    
-    
-
-    /*
-     * 
-     * 
-     * 
-     * 
-     */
     public static Team register_team(Player player1, Player player2) {
 
         if ( player2 == null){
@@ -147,7 +88,7 @@ public class Teams extends Controller {
         } else if (team != null && team.memberCount() == 1) {
 
             // send user to player profile site, where the player team info is available
-            controllers.Players.profile(team.player1.username);
+            controllers.PlayerController.profile(team.player1.username);
         } else {
             // send user to error site ? 
         }
@@ -171,7 +112,7 @@ public class Teams extends Controller {
     /*
      * 
      */
-    public static void edit_Team(Long id, Team team, File image) {
+    public static void editTeam(Long id, Team team, File image) {
 
 
 
@@ -228,7 +169,6 @@ public class Teams extends Controller {
             existingTeam.image = teamImage;
             String main_path = Play.applicationPath + "/public/images/";
             String xsmall_path = main_path + "xsmall/" + teamImage;
-            String small_path = main_path + "small/" + teamImage;
             String medium_path = main_path + "medium/" + teamImage;
             String large_path = main_path + "large/" + teamImage;
 
@@ -237,18 +177,12 @@ public class Teams extends Controller {
             //xsmall 72x72       
             Images.resize(image, new File(xsmall_path), 72, 72, true);
             //small 127x80
-            Images.resize(image, new File(small_path), 127, 80, true);
             //medium 85x120 
             Images.resize(image, new File(medium_path), 85, 120, true);
             //Large 260x180
             Images.resize(image, new File(large_path), 180, 260, true);
             hasChanged = true;
-
-
         }
-
-
-
         if ( team.arch_rival.team_name.equals("")){
             existingTeam.arch_rival = null;
             hasChanged = true;
@@ -316,9 +250,8 @@ public class Teams extends Controller {
 
         }
         if (existingTeam.memberCount() == 1) {
-            controllers.Players.settings();
+            controllers.PlayerController.settings();
         } else {
-           // profile(existingTeam.team_name);
             settings(existingTeam.team_name);
         }
 
@@ -328,10 +261,6 @@ public class Teams extends Controller {
 
     public static void settings(String teamname) {
 
-//        if ( teamname == null || teamname.equals("") || session.get("login") == null){
-//             error("HOMO, how did you got here n");
-//        }
-//        
         Team team = Team.find("byTeam_name", teamname).first();
         if (team != null) {
 

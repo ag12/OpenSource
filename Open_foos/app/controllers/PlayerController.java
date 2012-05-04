@@ -24,7 +24,7 @@ import validations.PlayerValidations;
  *
  * @author Santonas
  */
-public class Players extends Controller {
+public class PlayerController extends Controller {
 
     public static Player getPlayer(Long id, String username) {
 
@@ -59,10 +59,10 @@ public class Players extends Controller {
 
             Player player = getPlayer(id, username);
 
-            Team team = Teams.getTeam(id);
+            Team team = TeamController.getTeam(id);
 
             int compeleted = (compeletedProfile(player)
-                    + controllers.Teams.compeletedProfile(team));
+                    + controllers.TeamController.compeletedProfile(team));
 
             render(player, team, compeleted);
 
@@ -74,7 +74,7 @@ public class Players extends Controller {
 
     }
 
-    public static void register_player(@Valid Player player) {
+    public static void registerPlayer(@Valid Player player) {
 
         if (Validation.hasErrors()) {
             params.flash(); // add http parameters to the flash scope
@@ -92,11 +92,11 @@ public class Players extends Controller {
 
             player = PlayerValidations.trimAtRegistr(player);
             player.registered = new Date();
-            player.password = securities.Security.enc_password(player.password);
+            player.password = securities.Security.encPassword(player.password);
 
 
             player.save();
-            Team team = Teams.register_team(player, null);
+            Team team = TeamController.register_team(player, null);
             team.save();
             controllers.Application.afterLogin(player);
             profile(player.username);
@@ -104,7 +104,7 @@ public class Players extends Controller {
         }
     }
 
-    public static void login_player(@Valid Player player) {
+    public static void loginPlayer(@Valid Player player) {
 
         boolean b = Boolean.parseBoolean(session.get("login"));
         if (b) {
@@ -144,7 +144,7 @@ public class Players extends Controller {
             controllers.Application.main_page();
         }
 
-        player.password = securities.Security.enc_password(player.password);
+        player.password = securities.Security.encPassword(player.password);
         Player exist = dosPlayerExist(player);
 
         if (exist == null) {
@@ -169,9 +169,9 @@ public class Players extends Controller {
         Player player = Player.find("byUsername", username).first();
         if (player != null) {
 
-            Team team = Teams.getTeam(player.id);
+            Team team = TeamController.getTeam(player.id);
 
-            List<Team> teams = Teams.getTeams(team.id);
+            List<Team> teams = TeamController.getTeams(team.id);
 
             List<Statistic> teams_statistics = StatisticRepository.getMoreInfoForTeams(teams);
 
@@ -198,13 +198,13 @@ public class Players extends Controller {
         }
     }
 
-    public static void logout_player() {
+    public static void logoutPlayer() {
 
         controllers.Application.afterLogout();
         controllers.Application.main_page();
     }
 
-    public static void edit_player(Player player, File image) {
+    public static void editPlayer(Player player, File image) {
 
         Player existingplayer = null;
         Long id = null;
@@ -300,7 +300,7 @@ public class Players extends Controller {
                 String playerImage = "openfoos_player_" + id + imageEnd;
                 existingplayer.image = playerImage;
                 String main_path = Play.applicationPath + "/public/images/";
-                String small_path = main_path + "small/" + playerImage;
+                //String small_path = main_path + "small/" + playerImage;
                 String xsmall_path = main_path + "xsmall/" + playerImage;
                 String medium_path = main_path + "medium/" + playerImage;
                 String large_path = main_path + "large/" + playerImage;
@@ -310,7 +310,7 @@ public class Players extends Controller {
                 //xsmall 72x72       
                 Images.resize(image, new File(xsmall_path), 72, 72, true);
                 //small 127x80
-                Images.resize(image, new File(small_path), 127, 80, true);
+                // Images.resize(image, new File(small_path), 127, 80, true);
                 //medium 85x120 
                 Images.resize(image, new File(medium_path), 85, 120, true);
                 //Large 260x180
@@ -379,12 +379,12 @@ public class Players extends Controller {
             if (session.get("pname") != null && session.get("pid") != null) {
                 //ONLIE
 
-                player.password = Security.enc_password(player.password);
+                player.password = Security.encPassword(player.password);
                 player.username = session.get("pname");
                 player = dosPlayerExist(player);
                 if (player != null) {
 
-                    newPassword = Security.enc_password(newPassword);
+                    newPassword = Security.encPassword(newPassword);
                     player.password = newPassword;
                     player.save();
                     settings();

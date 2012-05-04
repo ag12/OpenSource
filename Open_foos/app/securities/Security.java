@@ -21,7 +21,7 @@ public class Security extends Secure.Security {
         return (player != null && player.password.equals(password));
     }
 
-    public static String enc_password(String password) {
+    public static String encPassword(String password) {
 
         return Crypto.passwordHash(password);
     }

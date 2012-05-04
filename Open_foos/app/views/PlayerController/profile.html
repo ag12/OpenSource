@@ -42,7 +42,7 @@
                         self.data('active', true);
 
                         //Do data request. Insert your own API logic here.
-                        $.getJSON("@{Players.allPlayersByUsername()}",{
+                        $.getJSON("@{PlayerController.allPlayersByUsername()}",{
                                
                                
                             //if we dont use filter vi the typehead can sort list for us. 
@@ -89,7 +89,7 @@
        
             $('#mysub').click(function (){
         
-                $.getJSON("@{Players.allPlayersByUsername()}",
+                $.getJSON("@{PlayerController.allPlayersByUsername()}",
                 { filter : $('#typeahead').val()}, 
                 function (data){
              
@@ -104,7 +104,7 @@
         function this_drawChart(id){
                     
             var options =  window.versus_options;
-            $.getJSON("@{Statistics.data()}", {id : id},function(data){
+            $.getJSON("@{StatisticController.data()}", {id : id},function(data){
                 options.series = new Array();
                 options.series[0] = new Array();
  
@@ -123,9 +123,9 @@
 
         function this_AddTodrawChart(id, username){
                
-            $.getJSON("@{Statistics.data()}", {id : "${team.id}"},function(data1){
+            $.getJSON("@{StatisticController.data()}", {id : "${team.id}"},function(data1){
  
-                $.getJSON("@{Statistics.data()}", {id : id},function(data2){
+                $.getJSON("@{StatisticController.data()}", {id : id},function(data2){
      
                     var options = window.versus_options;
                             
@@ -165,7 +165,8 @@
 <div class="row section">
     <div id="profile-info-container" class="span12 card">
         <div class="row">
-            <img src="@{'/public/images/small'}/${player.image}" id="profile-image" class="span3" style="width: 128px;" />
+            <img src="@{'/public/images/medium'}/${player.image}" id="profile-image" class="span3 small-image" />
+
 
             <div id="profile-description" class="span7">
                 <h1>${player?.first_name} ${player?.last_name}
@@ -181,7 +182,7 @@
 
 
                 #{if  ( (session.pid && (Long.parseLong(session.pid) == player?.id)) && session.token && session.login)}
-                <div><a id="openfoose_see_profile" class="btn pull-right" href="@{Players.settings()}">Edit your profile</a></div>
+                <div><a id="openfoose_see_profile" class="btn pull-right" href="@{PlayerController.settings()}">Edit your profile</a></div>
                 #{/if}
 
 
@@ -299,7 +300,7 @@
 
 
                         <li class="span2">
-                            <a href="@{Teams.profile(teams?.team_name)}" rel="popover" class="classPopover"
+                            <a href="@{TeamController.profile(teams?.team_name)}" rel="popover" class="classPopover"
                                data-content="
 
 
@@ -424,7 +425,10 @@
                                </tr>
                                </thead>
                                </table>">
-                                <img src="@{'/public/images/medium'}/${teams?.image}" alt="${teams?.team_name}">
+                                <!--                                <img src="@{'/public/images/medium'}/${teams?.image}" alt="${teams?.team_name}">-->
+
+                                <img src="@{'/public/images/medium'}/${teams?.image}" alt="${teams?.team_name}" class="small-image" />
+
                                 <h3 class="team-name">@${teams?.team_name}</h3>
 
                             </a>
@@ -510,7 +514,7 @@
 
                             #{/if}
 
-                            <a href="@{Teams.profile(statistics?.target_team?.team_name)}" rel="popover" class="classPopover"
+                            <a href="@{TeamController.profile(statistics?.target_team?.team_name)}" rel="popover" class="classPopover"
                                data-content=
 
                                " 
@@ -553,7 +557,9 @@
                                </thead>
                                </table>">
 
-                                <img src="@{'/public/images/medium'}/${statistics?.target_team.image}" alt="${statistics?.target_team?.team_name}">
+                                <!--                                <img src="@{'/public/images/medium'}/${statistics?.target_team.image}" alt="${statistics?.target_team?.team_name}">-->
+                                <img src="@{'/public/images/medium'}/${statistics?.target_team.image}" 
+                                     class="small-image" alt="${statistics?.target_team?.team_name}">
 
                                 <h3 class="team-name"> @${statistics?.target_team.team_name}</h3>
 
@@ -578,12 +584,14 @@
 
                     <h2 class="underline section">${team?.team_name}</h2>
 
-                    <img src="@{'/public/images/large'}/${team.image}" alt="${team.team_name}"/>
+                    <!--                    <img src="@{'/public/images/large'}/${team.image}" alt="${team.team_name}"/>-->
+                    <img src="@{'/public/images/large'}/${team.image}" alt="${team.team_name}" class="large-image"/>
+
                     <div id="team_box">
                         <p>@${team?.team_name}</p>
-                        <p>${team?.bio}</p>
+                        <pre>${team?.bio}</pre>
                         #{if team?.arch_rival != null}
-                        <strong>Arch rival:</strong> <a href="@{Teams.profile(team?.arch_rival?.team_name)}"> ${team?.arch_rival?.team_name}</a>
+                        <strong>Arch rival:</strong> <a href="@{TeamsTeamController.profile(team?.arch_rival?.team_name)}"> ${team?.arch_rival?.team_name}</a>
                         #{/if}
                         <p>Registered: ${team?.registered}</p>
                     </div>
@@ -675,7 +683,7 @@
                 </div> <!-- games -->
 
 
-                <div id="info" class="tab-pane"><!-- INFO -->
+<!--                <div id="info" class="tab-pane"> INFO 
                     <h2 class="underline section">All info</h2>
                     <div class="span8">
                         <table id ="all-info" class="table table-striped table-bordered table-condensed">
@@ -705,8 +713,94 @@
                             </tbody>
                         </table>
                     </div>
-                </div><!-- info -->
+                </div> info -->
 
+   <!-- DETTE ER NYTT PSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSS -->
+                <div id="info" class="tab-pane">
+                    <h2 class="underline section">All info</h2>
+                    
+                    <!-- ***************************************************************************
+                    DETTE ER NYTT DATO 01.MAI.2012
+                    ***************************************************************************/ -->
+                    <h3>Played Games</h3>
+                    <div class="span8">
+                        <table id ="all-info" class="table table-striped table-bordered table-condensed">
+                            <thead>
+                                <tr>
+                                    <th></th>
+                                    <th>Home Games</th>
+                                    <th>Away Games</th>
+                                    <th>Total</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <tr>
+                                    <th>Match</th>
+                                    <td>1</td>
+                                    <td>2</td>
+                                    <td>3</td>
+                                </tr>
+                                <tr>
+                                    <th>Lost</th>
+                                    <td>1</td>
+                                    <td>2</td>
+                                    <td>3</td>
+                                </tr>
+                                <tr>
+                                    <th>Winn</th>
+                                    <td>1</td>
+                                    <td>2</td>
+                                    <td>3</td>
+                                </tr>
+                                <tr>
+                                    <th>Score for</th>
+                                    <td>1</td>
+                                    <td>2</td>
+                                    <td>3</td>
+                                </tr>
+                                <tr>
+                                    <th>Score against</th>
+                                    <td>1</td>
+                                    <td>2</td>
+                                    <td>3</td>
+                                </tr>
+                            </tbody>
+                        </table>
+
+
+                        <table class="table table-striped table-bordered table-condensed" style="width: auto; display: inline-block; float: left">
+                            <thead>
+                                <tr>
+                                    <th>Average score for</th>
+                                    <th>Average score against</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <tr>
+                                    <td>10</td>
+                                    <td>20</td>
+                                </tr>
+                            </tbody>
+                        </table>
+
+
+
+                        <table class="table table-striped table-bordered table-condensed" style="width: auto;display: inline-block; float: right;">
+                            <thead>
+                                <tr>
+                                    <th>WINN%</th>    
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <tr>
+                                    <td>50%</td>
+                                </tr>
+                            </tbody>
+                        </table>
+
+
+                    </div>
+                </div><!-- info -->
 
 
 

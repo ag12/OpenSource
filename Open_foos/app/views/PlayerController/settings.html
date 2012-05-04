@@ -27,7 +27,7 @@
                     self.data('active', true);
                     
                     //Do data request. Insert your own API logic here.
-                    $.getJSON("@{Teams.allTeamsByTeam_name()}",{
+                    $.getJSON("@{TeamController.allTeamsByTeam_name()}",{
                         
                         
                         //if we dont use filter vi the typehead can sort list for us. 
@@ -79,7 +79,7 @@
             <ul class="thumbnails">
                 <li>
                     <a href="/players/profile/${player?.username}" class="thumbnail">
-                        <img src="@{'/public/images/xsmall'}/${player?.image}" alt="${player?.username}">
+                        <img src="@{'/public/images/medium'}/${player?.image}" alt="${player?.username}">
                     </a>
                 </li>
                 <li>
@@ -141,7 +141,7 @@
 
 
                     <!-- FOR PLAYER INFO -->
-                    <form id="editformplayer" action="@{Players.edit_player()}"
+                    <form id="editformplayer" action="@{PlayerController.editPlayer()}"
                           enctype="multipart/form-data" method="POST" class="form-horizontal">
                         #{authenticityToken /}
                         <fieldset>
@@ -207,7 +207,7 @@
                     <h3 class="title underline section ">Change your password.</h3>
 
 
-                    <form action="@{Players.changePassword()}"  method="POST" class="form-horizontal">
+                    <form action="@{PlayerController.changePassword()}"  method="POST" class="form-horizontal">
                         #{authenticityToken /}
                         <fieldset>
                             <div class="control-group">
@@ -253,7 +253,7 @@
                     <h2>Your teams</h2>
                     <h3 class="title underline section ">Change your teams basic account.</h3>
 
-                    <form action="@{Teams.edit_team(team.id)}" enctype="multipart/form-data" method="POST" class="form-horizontal">
+                    <form action="@{TeamController.editTeam(team.id)}" enctype="multipart/form-data" method="POST" class="form-horizontal">
                         #{authenticityToken /}
                         <fieldset>
                             <div class="control-group">

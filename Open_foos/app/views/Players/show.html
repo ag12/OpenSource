@@ -1,0 +1,50 @@
+#{extends 'CRUD/layout.html' /}
+#{set title:messages.get('crud.show.title', type.modelName) /}
+        <script src="@{'/public/javascripts/jquery-1.7.2.js'}"></script>
+<script type="text/javascript">
+    
+    $(document).ready(function (){
+       
+       // $('#object_password').append("hahaha");
+       var el = $('<input type="checkbox" id="topicFilter-' + '"'
+         + ' checked="checked" />');
+         $('#crudField crud_text').append(el);
+       
+       
+    });
+    
+</script>
+<div id="crudShow" class="${type.name}">
+
+    <h2 id="crudShowTitle">&{'crud.show.title', type.modelName}</h2>
+
+    <div class="objectForm">
+    #{form action:@save(object._key(),false), enctype:'multipart/form-data'}
+
+<!--      #{if field == password}
+      <div style="margin-left: 700px; ">
+      <input id="gift_Taken" type="checkbox" name="gift.Taken" />
+     </div>
+      #{/if}-->
+  
+    
+    #{crud.form fields:['username', 'password', 'rfid']/}
+<!--          #{if field == password}
+      <div style="">
+      <input id="gift_Taken" type="checkbox" name="gift.Taken" />
+     </div>
+      #{/if}-->
+        <p class="crudButtons">
+            <input type="submit" name="_save" value="&{'crud.save', type.modelName}" />
+            <input type="submit" name="_saveAndContinue" value="&{'crud.saveAndContinue', type.modelName}" />
+        </p>
+    #{/form}
+    </div>
+
+    #{form @delete(object._key())}
+        <p class="crudDelete">
+            <input type="submit" value="&{'crud.delete', type.modelName}" />
+        </p>
+    #{/form}
+
+</div>

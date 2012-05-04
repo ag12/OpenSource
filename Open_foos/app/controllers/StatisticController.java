@@ -12,7 +12,7 @@ import repositories.StatisticRepository;
  *
  * @author Santonas
  */
-public class Statistics extends Controller {
+public class StatisticController extends Controller {
     
     public static void data(Long id) {
 

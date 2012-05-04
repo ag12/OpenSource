@@ -28,6 +28,7 @@ public class Player extends Model {
     @MinSize(6)
     public String password = null;
     @Column(unique = true)
+    
     public Long rfid = null;
     
     public String first_name = null;
@@ -44,7 +45,10 @@ public class Player extends Model {
 
     @Override
     public String toString() {
-        return "Player{" + "username=" + username + ", password=" + password + ", rfid=" + rfid + ", first_name=" + first_name + ", last_name=" + last_name + ", email=" + email + ", image=" + image + ", bio=" + bio + ", registered=" + registered + '}';
+        
+        
+        
+        return username + (email != null ? " " + email : "");
     }
     
     
