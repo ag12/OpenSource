@@ -7,11 +7,12 @@ package models;
 import java.util.Date;
 import javax.persistence.Column;
 import javax.persistence.Entity;
-import javax.persistence.OneToOne;
 import play.data.validation.Email;
 import play.data.validation.MinSize;
+import play.data.validation.Password;
 import play.data.validation.Required;
 import play.db.jpa.Model;
+import play.libs.Crypto;
 
 /**
  *
@@ -24,11 +25,13 @@ public class Player extends Model {
     @Required(message = "")
     @MinSize(3)
     public String username = null;
+    
     @Required(message = "")
     @MinSize(6)
+    @Password
     public String password = null;
-    @Column(unique = true)
     
+    @Column(unique = true)
     public Long rfid = null;
     
     public String first_name = null;
@@ -51,6 +54,7 @@ public class Player extends Model {
         return username + (email != null ? " " + email : "");
     }
     
+   
     
     
     

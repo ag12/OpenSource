@@ -7,6 +7,7 @@ package controllers;
 import java.lang.reflect.Constructor;
 import java.util.Date;
 import models.Player;
+import models.Team;
 import play.data.binding.Binder;
 import play.db.Model;
 import play.exceptions.TemplateNotFoundException;
@@ -36,11 +37,29 @@ public class Players extends CRUD {
                 render("CRUD/blank.html", type, object);
             }
         }
-        Player p = (Player) object;
-        p.password = Crypto.passwordHash(p.password);
-        p.registered = new Date();
-        object = p;
+        
+        //HER MÅ VI OGSÅ BRUKE GENEREL METODE 
+        //MÅ SJEKKE OM BRUKERNAVNET ER UNIQT
+        Player player = (Player) object;
+        player.password = Crypto.encryptAES(player.password);
+        player.registered = new Date();
+        
+        
+        //TODO
+        //DETTE ER TEMP TIL VI FINNER EN GENERELL METODE FOR Å REGISTRERE LAG
+        Team team = new Team();
+        team.registered = player.registered;
+        team.team_name = "Team " + player.username;
+        team.player1 = player;
+        
+        //TEMP KODE SLUTTER
+        object = player;
         object._save();
+        
+        //OG HER. PLAYER MÅ "SAVES" først
+        team.save();
+        
+        
         flash.success(play.i18n.Messages.get("crud.created", type.modelName));
         if (params.get("_save") != null) {
             redirect(request.controller + ".list");
@@ -52,7 +71,7 @@ public class Players extends CRUD {
 
     }
 
-    public static void save(String id, boolean hash) throws Exception {
+    public static void save(String id, String encryptedPassword) throws Exception {
 
         ObjectType type = ObjectType.get(getControllerClass());
         notFoundIfNull(type);
@@ -68,11 +87,22 @@ public class Players extends CRUD {
                 render("CRUD/show.html", type, object);
             }
         }
-        if ( hash){
-        Player p = (Player) object;
-        p.password = Crypto.passwordHash(p.password);
-        object = p;
+  
+      
+
+        Player player = (Player) object;
+        //Admin whants to change players password
+        if (!encryptedPassword.equals(player.password)){    
+           String temp = Crypto.encryptAES(player.password);
+           player.password = temp;
+           
+        }else if( encryptedPassword.equals(player.password)){
+            player.password = Crypto.decryptAES(player.password);
+            player.password = Crypto.encryptAES(player.password);
         }
+       
+        object = player;
+
         object._save();
         flash.success(play.i18n.Messages.get("crud.saved", type.modelName));
         if (params.get("_save") != null) {

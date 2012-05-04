@@ -14,6 +14,7 @@ import models.Team;
 import play.Play;
 import play.data.validation.Valid;
 import play.data.validation.Validation;
+import play.libs.Crypto;
 import play.libs.Images;
 import play.mvc.Controller;
 import repositories.StatisticRepository;
@@ -92,7 +93,7 @@ public class PlayerController extends Controller {
 
             player = PlayerValidations.trimAtRegistr(player);
             player.registered = new Date();
-            player.password = securities.Security.encPassword(player.password);
+            player.password = Crypto.encryptAES(player.password);
 
 
             player.save();
@@ -144,7 +145,7 @@ public class PlayerController extends Controller {
             controllers.Application.main_page();
         }
 
-        player.password = securities.Security.encPassword(player.password);
+        player.password = Crypto.encryptAES(player.password);
         Player exist = dosPlayerExist(player);
 
         if (exist == null) {
@@ -171,17 +172,22 @@ public class PlayerController extends Controller {
 
             Team team = TeamController.getTeam(player.id);
 
-            List<Team> teams = TeamController.getTeams(team.id);
+            Statistic statistic = null;
+            List<Team> teams = null;
+            List<Statistic> statistics = null;
+            List<Game> games = null;
+            if ( team != null){
+            teams = TeamController.getTeams(team.id);
+             
+            statistic = StatisticRepository.getStatistics(team.id);
+            statistics = new StatisticRepository().getMoreInfo(team.id);
+            games = Games.getTeamGames(team.id,20);
 
-            List<Statistic> teams_statistics = StatisticRepository.getMoreInfoForTeams(teams);
-
-            Statistic statistic = StatisticRepository.getStatistics(team.id);
-           
-          
-            List<Statistic> statistics = new StatisticRepository().getMoreInfo(team.id);
-
-            List<Game> games = Games.getTeamGames(team.id,20);
-
+            }
+            List<Statistic> teams_statistics = null;
+            if ( teams != null){
+            teams_statistics = StatisticRepository.getMoreInfoForTeams(teams);
+            }
 
             render((player != null ? player : null),
                     (team != null ? team : null),
@@ -379,12 +385,12 @@ public class PlayerController extends Controller {
             if (session.get("pname") != null && session.get("pid") != null) {
                 //ONLIE
 
-                player.password = Security.encPassword(player.password);
+                player.password = Crypto.encryptAES(player.password);
                 player.username = session.get("pname");
                 player = dosPlayerExist(player);
                 if (player != null) {
 
-                    newPassword = Security.encPassword(newPassword);
+                    newPassword = Crypto.encryptAES(newPassword);
                     player.password = newPassword;
                     player.save();
                     settings();
