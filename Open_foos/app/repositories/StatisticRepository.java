@@ -33,9 +33,25 @@ public class StatisticRepository {
         sqlToQuery.append(team_id);
         sqlToQuery.append(" and end_time != 0) AS away_games, ");
         sqlToQuery.append("(SELECT ( home_games + away_games )) AS games_playd, ");
+
         sqlToQuery.append("(SELECT count(Game.id) FROM Game WHERE winner_id = ");
         sqlToQuery.append(team_id);
         sqlToQuery.append(" and end_time != 0) AS winns, ");
+
+
+        sqlToQuery.append("(SELECT count(Game.id) FROM Game WHERE winner_id = ");
+        sqlToQuery.append(team_id);
+        sqlToQuery.append(" and end_time != 0 and home_team_id = winner_id) AS home_wins, ");
+
+
+
+        sqlToQuery.append("(SELECT count(Game.id) FROM Game WHERE winner_id = ");
+        sqlToQuery.append(team_id);
+        sqlToQuery.append(" and end_time != 0 and visitor_team_id = winner_id) AS away_wins, ");
+
+
+
+
         sqlToQuery.append("(SELECT (games_playd-winns)) as losts,  ");
         sqlToQuery.append(" (SELECT SUM(visitor_score) FROM Game WHERE home_team_id = ");
         sqlToQuery.append(team_id);
@@ -49,12 +65,16 @@ public class StatisticRepository {
         Statistic statistic = new Statistic();
         try {
             while (resultset.next()) {
-                
+
                 statistic.games_playd = resultset.getInt("games_playd");
                 statistic.home_games = resultset.getInt("home_games");
                 statistic.away_games = resultset.getInt("away_games");
                 statistic.winns = resultset.getInt("winns");
                 statistic.losts = resultset.getInt("losts");
+
+
+                statistic.home_wins = resultset.getInt("home_wins");
+                statistic.away_wins = resultset.getInt("away_wins");
 
 
                 statistic.score_for = resultset.getInt("score_for");
@@ -69,12 +89,43 @@ public class StatisticRepository {
                 statistic.score_against = resultset.getInt("score_against");
                 statistic.score_home_against = resultset.getInt("score_home_against");
                 statistic.score_away_against = resultset.getInt("score_away_against");
+               
                 if (statistic.score_against == 0 && statistic.score_home_against != 0) {
                     statistic.score_against = statistic.score_home_against;
                 }
                 if (statistic.score_against == 0 && statistic.score_away_against != 0) {
                     statistic.score_against = statistic.score_away_against;
                 }
+
+
+                //If team have played any home game's? 
+                if (statistic.home_games > 0) {
+
+                    //if team have won at home, then home lost must be home games - home wins
+                    if (statistic.home_wins > 0) {
+                        statistic.home_lost = statistic.home_games - statistic.home_wins;
+                    }
+                    //if team have not won at home, but played at home then home lost must be count home games.
+                    if (statistic.home_wins == 0) {
+                        statistic.home_lost = statistic.home_games;
+                    }
+                }
+
+
+               //The same for away
+                if (statistic.away_games > 0) {
+
+                  
+                    if (statistic.away_wins > 0) {
+                        statistic.away_lost = statistic.away_games - statistic.away_wins;
+                    }
+                   
+                    if (statistic.away_wins == 0) {
+                        statistic.away_lost = statistic.away_games;
+                    }
+                }
+
+
 
 
 
@@ -91,6 +142,8 @@ public class StatisticRepository {
 
             statistic.average_score_for = (statistic.score_for / statistic.games_playd);
 
+            statistic.average_score_against = (statistic.score_against / statistic.games_playd);
+            
             statistic.win_prosent = (statistic.winns * 100) / statistic.games_playd;
 
             statistic.lost_prosent = (100 - statistic.win_prosent);

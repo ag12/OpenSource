@@ -50,7 +50,7 @@ public class Api extends Controller
           error(Http.StatusCode.BAD_REQUEST, "Username or password cannot be empty"); 
        }   
         
-       Player player = Player.find("username = ? and password = ?", username, Security.encPassword(password)).first();
+       Player player = Player.find("username = ? and password = ?", username, Crypto.encryptAES(password)).first();
        
        if(player == null)
        {

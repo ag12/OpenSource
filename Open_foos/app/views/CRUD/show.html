@@ -6,8 +6,8 @@
     <h2 id="crudShowTitle">&{'crud.show.title', type.modelName}</h2>
 
     <div class="objectForm">
-    #{form action:@save(object._key(),object.password), enctype:'multipart/form-data'}
-        #{crud.form fields:['username', 'password','email','rfid','first_name','last_name','bio' ]/}
+    #{form action:@save(object._key()), enctype:'multipart/form-data'}
+        #{crud.form /}
         <p class="crudButtons">
             <input type="submit" name="_save" value="&{'crud.save', type.modelName}" />
             <input type="submit" name="_saveAndContinue" value="&{'crud.saveAndContinue', type.modelName}" />

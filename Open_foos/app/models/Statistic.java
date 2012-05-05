@@ -19,8 +19,17 @@ public class Statistic {
     
     
     public int games_playd;
+    
     public int home_games;
     public int away_games;
+    
+    public int home_wins;
+    public int home_lost;
+    
+    
+    public int away_wins;
+    public int away_lost;
+    
     public int winns;
     public int losts;
     

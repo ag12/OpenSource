@@ -723,6 +723,7 @@
                     DETTE ER NYTT DATO 01.MAI.2012
                     ***************************************************************************/ -->
                     <h3>Played Games</h3>
+                    <br/>
                     <div class="span8">
                         <table id ="all-info" class="table table-striped table-bordered table-condensed">
                             <thead>
@@ -736,33 +737,33 @@
                             <tbody>
                                 <tr>
                                     <th>Match</th>
-                                    <td>1</td>
-                                    <td>2</td>
-                                    <td>3</td>
+                                    <td>${statistic?.home_games}</td>
+                                    <td>${statistic?.away_games}</td>
+                                    <td>${statistic?.games_playd}</td>
                                 </tr>
                                 <tr>
                                     <th>Lost</th>
-                                    <td>1</td>
-                                    <td>2</td>
-                                    <td>3</td>
+                                    <td>${statistic?.home_lost}</td>
+                                    <td>${statistic?.away_lost}</td>
+                                    <td>${statistic?.losts}</td>
                                 </tr>
                                 <tr>
                                     <th>Winn</th>
-                                    <td>1</td>
-                                    <td>2</td>
-                                    <td>3</td>
+                                    <td>${statistic?.home_wins}</td>
+                                    <td>${statistic?.away_wins}</td>
+                                    <td>${statistic?.winns}</td>
                                 </tr>
                                 <tr>
                                     <th>Score for</th>
-                                    <td>1</td>
-                                    <td>2</td>
-                                    <td>3</td>
+                                    <td>${statistic?.score_home_for}</td>
+                                    <td>${statistic?.score_away_for}</td>
+                                    <td>${statistic?.score_for}</td>
                                 </tr>
                                 <tr>
                                     <th>Score against</th>
-                                    <td>1</td>
-                                    <td>2</td>
-                                    <td>3</td>
+                                    <td>${statistic?.score_home_against}</td>
+                                    <td>${statistic?.score_away_against}</td>
+                                    <td>${statistic?.score_against}</td>
                                 </tr>
                             </tbody>
                         </table>
@@ -777,8 +778,8 @@
                             </thead>
                             <tbody>
                                 <tr>
-                                    <td>10</td>
-                                    <td>20</td>
+                                    <td>${statistic?.average_score_for}</td>
+                                    <td>${statistic?.average_score_against}</td>
                                 </tr>
                             </tbody>
                         </table>
@@ -788,14 +789,29 @@
                         <table class="table table-striped table-bordered table-condensed" style="width: auto;display: inline-block; float: right;">
                             <thead>
                                 <tr>
-                                    <th>WINN%</th>    
+                                    <th>WINN</th>    
                                 </tr>
                             </thead>
+                           
                             <tbody>
                                 <tr>
-                                    <td>50%</td>
+                                    #{ if statistic?.win_prosent >= 95}
+                                    <td style="background-color: green">
+                                        <strong> ${statistic?.win_prosent} %</strong></td>
+                                    #{/if}
+                                   
+                                    #{if statistic?.win_prosent < 95 && statistic?.win_prosent >= 50 }
+                                    <td style="background-color: yellowgreen">
+                                        <strong> ${statistic?.win_prosent} %</strong></td>
+                                    #{/if}
+                                   
+                                    #{if statistic?.win_prosent < 50 }
+                                    <td style="background-color: red">
+                                        <strong> ${statistic?.win_prosent} %</strong></td>
+                                    #{/if}
                                 </tr>
                             </tbody>
+                         
                         </table>
 
 
