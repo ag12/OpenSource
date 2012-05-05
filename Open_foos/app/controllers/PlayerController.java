@@ -181,7 +181,7 @@ public class PlayerController extends Controller {
              
             statistic = StatisticRepository.getStatistics(team.id);
             statistics = new StatisticRepository().getMoreInfo(team.id);
-            games = Games.getTeamGames(team.id,20);
+            games = GamesController.getTeamGames(team.id,20);
 
             }
             List<Statistic> teams_statistics = null;

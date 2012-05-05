@@ -76,7 +76,7 @@ public class TeamController extends Controller {
             List<Statistic> teams_statistics = StatisticRepository.getMoreInfoForTeams(teams);
 
             //This teams played games
-            List<Game> games = Games.getTeamGames(team.id,20);
+            List<Game> games = GamesController.getTeamGames(team.id,20);
 
 
             render((team != null ? team : null),

@@ -8,5 +8,33 @@ first_name = First name
 last_name = Last name
 email = Email
 image = Image
-bio = Bio
+bio = Biography
 registered = Registration Date
+
+
+
+
+
+
+
+# Game
+
+home_team = Home team
+visitor_team = Visitor team
+home_score = Home's score
+visitor_score = Visitor's score
+winner_id = Winner   
+start_time = Started
+end_time = Finished
+
+
+#Team
+
+
+team_name = Team name
+player1 = Player one
+player2 = Player two
+arch_rival = Arch rival
+
+
+

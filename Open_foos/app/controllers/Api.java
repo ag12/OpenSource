@@ -10,6 +10,7 @@ import models.Player;
 import models.Team;
 import org.h2.util.StringUtils;
 import play.Logger;
+import play.libs.Crypto;
 import play.mvc.Controller;
 import play.mvc.Http;
 import securities.Security;
@@ -86,7 +87,7 @@ public class Api extends Controller
        else
        {
           //Logger.info("I registered " + username, null);
-          player.password = Security.encPassword(player.password);
+          player.password = Crypto.encryptAES(player.password);
           player.save();
           // 
           Team team = TeamController.register_team(player,null);

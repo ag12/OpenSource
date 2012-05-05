@@ -7,6 +7,9 @@ package models;
 import java.util.Date;
 import javax.persistence.Entity;
 import javax.persistence.ManyToOne;
+import net.sf.oval.constraint.MaxLength;
+import play.data.validation.Max;
+import play.data.validation.Min;
 import play.db.jpa.Model;
 
 /**
@@ -19,16 +22,25 @@ public class Game extends Model {
     public Long winner_id = null;
     
     public Date start_time = null;
+    
     public Date end_time = null;
    
     
     
+   
     @ManyToOne
     public Team home_team = null;
+   
     @ManyToOne
     public Team visitor_team = null;
     
-   
+    @MaxLength(2)
+    @Max(10)
+    @Min(0)
     public int home_score = 0;
+    
+    @MaxLength(2)
+    @Max(10)
+    @Min(0)
     public int visitor_score = 0;
 }

@@ -8,6 +8,6 @@ package controllers;
  *
  * @author Santonas
  */
-public class Games extends CRUD{
+public class Teams extends CRUD{
     
 }

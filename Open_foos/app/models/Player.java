@@ -22,7 +22,7 @@ import play.libs.Crypto;
 public class Player extends Model {
 
     @Column(unique = true)
-    @Required(message = "")
+    @Required(message = "Username must be uniq")
     @MinSize(3)
     public String username = null;
     
