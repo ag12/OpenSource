@@ -29,7 +29,7 @@
                 function(data1){
                  
                  
-                   this_AddTodrawChart(data1.id, data1.team_name)
+                    this_AddTodrawChart(data1.id, data1.team_name)
                 });     
                   
                   
@@ -51,12 +51,173 @@
                 options.series[0].name = "${team?.team_name}";
                         
                 window.chart = new Highcharts.Chart(options);
-                console.log("new chart")
+                console.log("new chart stat")
             });               
         }
                 
                 
+        function this_drawGameChart(id){
+            $.getJSON("@{GamesController.getTeamGamesForChart()}", {team_id : id},function(data){
                 
+
+                var teamId = parseFloat("${team.id}");
+                var winArray = new Array();
+                var lostArray = new Array();
+                //                for( var i = 0; i < data.length; i++){
+                //                    
+                //                    if (data[i].winner.id === teamId){
+                //                        winArray.push(data[i]);
+                //                    }
+                //                    else 
+                //                        lostArray.push(data[i]);        
+                //                }
+                
+                for( var i = 0; i < data.length; i++){
+                    
+                    if (data[i].winner.id === teamId){
+                        winArray[i] = data[i];
+                        lostArray[i] = null;
+                    }
+                    else if (data[i].winner.id !== teamId){
+                        
+                        lostArray[i] = data[i];
+                        winArray[i] = null;
+                    }
+                }
+                
+                
+                
+                
+                
+                
+                
+                console.log(winArray);
+                console.log(lostArray)
+                var countWin = new Array();
+                var countLost = new Array();
+                for (var i = 0; i < winArray.length; i++){
+                    if (winArray[i]){
+                        countWin[i] = 1;
+                    }
+                    else if (!winArray[i]){
+                        countWin[i] = null;
+                    }
+                    
+                }
+                for (var i = 0; i < lostArray.length; i++){
+                    if( lostArray[i]){
+                        countLost[i] = -1;
+                    }
+                    else if ( !lostArray[i]){
+                        countLost[i] = null;
+                    }
+                    
+                }
+                
+                console.log(countLost);
+                console.log(countWin);
+                window.chart = new Highcharts.Chart(
+                {
+                        
+                    chart: {
+                        renderTo: 'game_statistic',
+                        type: 'area',
+                        spacingBottom: 30
+                    },
+                    title: {
+                        text: 'Fruit consumption *'
+                    },
+                    subtitle: {
+                        text: '* Jane\'s banana consumption is unknown',
+                        floating: true,
+                        align: 'right',
+                        verticalAlign: 'bottom',
+                        y: 15
+                    },
+                    legend: {
+                        layout: 'vertical',
+                        align: 'left',
+                        verticalAlign: 'top',
+                        x: 150,
+                        y: 100,
+                        floating: true,
+                        borderWidth: 1,
+                        backgroundColor: '#FFFFFF'
+                    },
+                    xAxis: {
+                       title: {
+                            text: 'X-Axis'
+                        },
+                        labels: {
+                            formatter: function() {
+                                return this.value;
+                            }
+                        }
+                        
+                    },
+                    yAxis: {
+                        title: {
+                            text: 'Y-Axis'
+                        },
+                        labels: {
+                            formatter: function() {
+                                return this.value;
+                            }
+                        }, 
+                        minRange: -1,
+                        max: 2
+                    },
+                    tooltip: {
+                        formatter: function() {
+                             var winMatch =  winArray[this.x];
+                             var lostMatch = lostArray[this.x];
+                             if ( winMatch !== null){
+                                 
+                                return '<b>'+ this.series.name +'</b><br/>' +
+                                    winMatch.home_team.team_name + " VS " + 
+                                    winMatch.visitor_team.team_name +'<br/>'+
+                                    "Result : " + winMatch.home_score + " - " + 
+                                    winMatch.visitor_score+ '<br/>' + 
+                                    "Winner : " + winMatch.winner.team_name + '<br/>';
+                                   
+                             }
+                             if ( lostMatch !== null){
+                                 
+                             return '<b>'+ this.series.name +'</b><br/>' +
+                                    lostMatch.home_team.team_name + " VS " + 
+                                    lostMatch.visitor_team.team_name +'<br/>'+
+                                    "Result : " + lostMatch.home_score + " - " + 
+                                    lostMatch.visitor_score+ '<br/>' + 
+                                    "Winner : " + lostMatch.winner.team_name + '<br/>';
+                                 
+                             }
+                             
+                           
+                           
+                        }
+                    },
+                    plotOptions: {
+                        area: {
+                            fillOpacity: 0.5
+                        }
+                    },
+                    credits: {
+                        enabled: false
+                    },
+                    series:[
+                        {
+                            name : 'Winns',
+                            data : countWin},
+                        {
+                            name : 'Losts',
+                            data : countLost}
+                        
+                            
+                      
+                    ]
+                });
+            });               
+        }        
                 
                 
 
@@ -80,7 +241,7 @@
                           
                 
                     options.series[0].data = [ data1.games_playd, data1.winns, data1.losts ]
-                    options.series[0].name = "${player.username}";
+                    options.series[0].name = "${team?.team_name}";
                           
                     options.series[1].data = [ data2.games_playd, data2.winns, data2.losts]
                     options.series[1].name = username;
@@ -93,7 +254,7 @@
         }
  
         this_drawChart("${team.id}");
-           
+        this_drawGameChart("${team.id}");
                 
                
                
@@ -196,6 +357,11 @@
 
                 <li>
                     <a href="#games" data-toggle="tab">Games played
+                        <i class="icon-chevron-right pull-right"></i>
+                    </a>
+                </li>
+                <li>
+                    <a href="#gamesMap" data-toggle="tab">Game table
                         <i class="icon-chevron-right pull-right"></i>
                     </a>
                 </li>
@@ -380,7 +546,9 @@
 
 
                     </div>
-                    <div id="personalia"></div>
+                    <div id="team_statistic">
+
+                    </div>
 
                 </div>
                 <div id="game" class="tab-pane">
@@ -713,6 +881,19 @@
                         </table>
                     </div>
                 </div><!-- info -->
+
+                <div id="gamesMap" class="tab-pane">
+                    <h2 class="underline section">YEAH</h2>
+
+
+
+                    <div id="game_statistic">
+
+                    </div>
+
+
+                </div><!-- gamesMap -->
+
             </div><!-- /.tab-content -->
         </div><!-- span9 -->
     </div><!-- /.tabbable -->   
