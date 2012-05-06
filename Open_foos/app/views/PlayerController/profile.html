@@ -754,13 +754,13 @@
                                     <td>${statistic?.winns}</td>
                                 </tr>
                                 <tr>
-                                    <th>Score for</th>
+                                    <th>Goal for</th>
                                     <td>${statistic?.score_home_for}</td>
                                     <td>${statistic?.score_away_for}</td>
                                     <td>${statistic?.score_for}</td>
                                 </tr>
                                 <tr>
-                                    <th>Score against</th>
+                                    <th>Goal against</th>
                                     <td>${statistic?.score_home_against}</td>
                                     <td>${statistic?.score_away_against}</td>
                                     <td>${statistic?.score_against}</td>
@@ -772,14 +772,16 @@
                         <table class="table table-striped table-bordered table-condensed" style="width: auto; display: inline-block; float: left">
                             <thead>
                                 <tr>
-                                    <th>Average score for</th>
-                                    <th>Average score against</th>
+                                    <th>Average goal for</th>
+                                    <th>Average goal against</th>
+                                    <th>Average goal difference</th>
                                 </tr>
                             </thead>
                             <tbody>
                                 <tr>
                                     <td>${statistic?.average_score_for}</td>
                                     <td>${statistic?.average_score_against}</td>
+                                     <td>${statistic?.average_score_difference}</td>
                                 </tr>
                             </tbody>
                         </table>
@@ -813,7 +815,35 @@
                             </tbody>
                          
                         </table>
-
+                        <table class="table table-striped table-bordered table-condensed" style="width: auto;display: inline-block; float: right;">
+                            <thead>
+                                <tr>
+                                    <th>Goal difference</th>    
+                                </tr>
+                            </thead>
+                           
+                            <tbody>
+                                <tr>
+                                    #{ if statistic?.score_difference == 0}
+                                    <td>
+                                        <strong> ${statistic?.score_difference}</strong>
+                                    </td>
+                                    #{/if}
+                                   
+                                    #{if statistic?.score_difference < 0 }
+                                    <td style="background-color: red">
+                                        <strong> ${statistic?.score_difference} </strong></td>
+                                    #{/if}
+                                   
+                                    #{if statistic?.score_difference > 0 }
+                                    <td style="background-color: green">
+                                        <strong> ${statistic?.score_difference} </strong></td>
+                                    #{/if}
+                                   
+                                </tr>
+                            </tbody>
+                         
+                        </table>
 
                     </div>
                 </div><!-- info -->

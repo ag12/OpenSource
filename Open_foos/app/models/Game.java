@@ -19,7 +19,7 @@ import play.db.jpa.Model;
 @Entity
 public class Game extends Model {
 
-    public Long winner_id = null;
+
     
     public Date start_time = null;
     
@@ -34,6 +34,9 @@ public class Game extends Model {
     @ManyToOne
     public Team visitor_team = null;
     
+    @ManyToOne
+    public Team winner = null;
+    
     @MaxLength(2)
     @Max(10)
     @Min(0)
@@ -43,4 +46,11 @@ public class Game extends Model {
     @Max(10)
     @Min(0)
     public int visitor_score = 0;
+    
+    
+    
+    @Override
+    public String toString() {
+        return home_team.team_name + " VS " + visitor_team.team_name;
+    }
 }

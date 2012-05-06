@@ -25,20 +25,14 @@ public class Player extends Model {
     @Required(message = "Username must be uniq")
     @MinSize(3)
     public String username = null;
-    
     @Required(message = "")
     @MinSize(6)
     @Password
     public String password = null;
-    
     @Column(unique = true)
     public Long rfid = null;
-    
     public String first_name = null;
-    
     public String last_name = null;
-    
-    
     @Email
     public String email = null;
     //default "player.png"
@@ -48,15 +42,9 @@ public class Player extends Model {
 
     @Override
     public String toString() {
-        
-        
-        
-        return username + (email != null ? " " + email : "");
-    }
-    
-   
-    
-    
-    
-}
 
+
+
+        return username;
+    }
+}

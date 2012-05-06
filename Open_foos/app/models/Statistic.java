@@ -44,11 +44,12 @@ public class Statistic {
     public int score_home_against;   
     public int score_away_against;
     
+    public int score_difference;
     
     
-    public double average_score_for;
-    public double average_score_against;
-    
+    public int average_score_for;
+    public int average_score_against;
+    public int average_score_difference;
     
     public double win_prosent;
     public double lost_prosent;

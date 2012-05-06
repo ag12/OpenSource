@@ -192,7 +192,7 @@ public class Api extends Controller
            //At de ikke er null; 
            verified.home_score = game.home_score; 
            verified.visitor_score = game.visitor_score; 
-           verified.winner_id = (verified.home_score > verified.visitor_score ? verified.home_team.id : verified.visitor_team.id); 
+           verified.winner = (verified.home_score > verified.visitor_score ? verified.home_team: verified.visitor_team); 
            
            verified.end_time = new Date();
            verified.save(); 

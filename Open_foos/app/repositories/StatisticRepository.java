@@ -140,13 +140,19 @@ public class StatisticRepository {
         if (statistic.games_playd >= 1) {
 
 
-            statistic.average_score_for = (statistic.score_for / statistic.games_playd);
+            statistic.average_score_for = (int)(statistic.score_for / statistic.games_playd);
 
-            statistic.average_score_against = (statistic.score_against / statistic.games_playd);
+            statistic.average_score_against = (int)(statistic.score_against / statistic.games_playd);
+            
+            statistic.average_score_difference = statistic.average_score_for - statistic.average_score_against;
+            
+            statistic.score_difference = statistic.score_for - statistic.score_against;
             
             statistic.win_prosent = (statistic.winns * 100) / statistic.games_playd;
 
             statistic.lost_prosent = (100 - statistic.win_prosent);
+            
+            
 
             statistic.last_three_games_played = getLastThreeGameResult(team_id);
         }

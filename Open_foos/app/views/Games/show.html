@@ -1,6 +1,9 @@
 #{extends 'CRUD/layout.html' /}
 #{set title:messages.get('crud.show.title', type.modelName) /}
-
+    <script src="@{'/public/javascripts/jquery-1.7.2.js'}"></script>
+<script type="text/javascript">
+    $(document).ready(function(){$('input:text, select').attr('disabled','');$('#object_start_time').attr('size','20');$('#object_end_time').attr('size','20');});
+</script>
 <div id="crudShow" class="${type.name}">
 
     <h2 id="crudShowTitle">&{'crud.show.title', type.modelName}</h2>
@@ -8,10 +11,10 @@
     <div class="objectForm">
     #{form action:@save(object._key()), enctype:'multipart/form-data'}
         #{crud.form /}
-        <p class="crudButtons">
+<!--        <p class="crudButtons">
             <input type="submit" name="_save" value="&{'crud.save', type.modelName}" />
             <input type="submit" name="_saveAndContinue" value="&{'crud.saveAndContinue', type.modelName}" />
-        </p>
+        </p>-->
     #{/form}
     </div>
 
@@ -20,5 +23,4 @@
             <input type="submit" value="&{'crud.delete', type.modelName}" />
         </p>
     #{/form}
-
 </div>
