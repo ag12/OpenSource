@@ -14,92 +14,31 @@
     $(document).ready(function() {
         $('.classPopover').popover('hide');
         
-               
-        function openfoose_typeahead(){
-            //GitHub
-            $('#typeahead').typeahead()
-            .on('click', function(ev){
-                console.log("klik feeld");
-            })
-                   
-            .on('keyup', function(ev){
-
-                       
-                ev.stopPropagation();
-                ev.preventDefault();
-
-                //filter out up/down, tab, enter, and escape keys
-                if( $.inArray(ev.keyCode,[40,38,9,13,27]) === -1 ){
-
-                    var self = $(this);
-                
-                    //a empty source
-                    self.data('typeahead').source = [];
-
-                    //active used so we aren't triggering duplicate keyup events
-                    if( !self.data('active') && self.val().length > 0){
-
-                        self.data('active', true);
-
-                        //Do data request. Insert your own API logic here.
-                        $.getJSON("@{PlayerController.allPlayersByUsername()}",{
-                               
-                               
-                            //if we dont use filter vi the typehead can sort list for us. 
-                            //or change the method sett Like  % var % 
-                            // filter: $(this).val() use this for PlayerController
-                        
-                        
-                        
-                        }, function(data) {
-                        
-                              
-                            //set this to true when your callback executes
-                            self.data('active',true);
-
-                            //change values
-                            var arr = [],
-                        
-                            i=data.length;
-                            while(i--){
-                                arr[i] = data[i].username;
-                            }
-
-                            //set your results into the typehead's source 
-                            self.data('typeahead').source = arr;
-                                   
-
-                            //trigger keyup on the typeahead to make it search
-                            self.trigger('keyup');
-
-                            //All done, set to false to prepare for the next remote query.
-                                
-                            self.data('active', false);
-
-                        });
-
-                    }
-                }
-            });
-                    
-
-
-        }              
-        function this_clicButton(){
-       
-            $('#mysub').click(function (){
-        
-                $.getJSON("@{PlayerController.allPlayersByUsername()}",
-                { filter : $('#typeahead').val()}, 
-                function (data){
-             
-                    console.log(data[0].id);
-                       
-                    this_AddTodrawChart(data[0].id,data[0].username);
-                            
+        $('#highchartTypeahead').typeahead({
+            items: 3, 
+            source: function (typeahead) {
+                return $.get('/application/everybody ',  function (data) 
+                {
+                    return typeahead.process(data);
                 });
-            });
-        }
+            },
+            onselect: function (data){
+                  
+                  
+                $.getJSON("@{StatisticController.statisticForWho()}", {name : data },
+                function(data1){
+                 
+                 
+                   this_AddTodrawChart(data1.id, data1.team_name)
+                });     
+                  
+                  
+                  
+                  
+                  
+
+            }
+        });
                 
         function this_drawChart(id){
                     
@@ -109,7 +48,7 @@
                 options.series[0] = new Array();
  
                 options.series[0].data = [ data.games_playd, data.winns, data.losts ]
-                options.series[0].name = "${player.username}";
+                options.series[0].name = "${team?.team_name}";
                         
                 window.chart = new Highcharts.Chart(options);
                 console.log("new chart")
@@ -126,6 +65,12 @@
             $.getJSON("@{StatisticController.data()}", {id : "${team.id}"},function(data1){
  
                 $.getJSON("@{StatisticController.data()}", {id : id},function(data2){
+                    
+                    if (data2.games_playd === 0){
+                        alert(username + " have not played a match..try later")
+                        $('#highchartTypeahead').val("");
+                        return;
+                    }
      
                     var options = window.versus_options;
                             
@@ -146,8 +91,7 @@
                 });           
             });               
         }
-        openfoose_typeahead();
-        this_clicButton();
+ 
         this_drawChart("${team.id}");
            
                 
@@ -267,8 +211,6 @@
             </div>
             #{/if}
 
-
-
             <div class="card">
 
 
@@ -278,26 +220,15 @@
 
             </div>
 
-
-
-
-
-
-
-
-
         </div>
 
         <div class="span9"> 
             <div id="profile-menu-info" class="tab-content card section">
                 <div id="teams" class="tab-pane">
                     <h2 class="underline section">Teams</h2>
-
                     <ul class="thumbnails center">
 
-
                         #{list items:teams, as:'teams'}
-
 
                         <li class="span2">
                             <a href="@{TeamController.profile(teams?.team_name)}" rel="popover" class="classPopover"
@@ -438,36 +369,20 @@
 
                 </div>
 
-
-
-
                 <div id="stat" class="tab-pane">
                     <h2 class="underline section">Statistic</h2>
 
-
-
-
-                    <div id="mDiv">
-
+                    <div id="statisticDiv">
+                        <p>Let the scaner scan you rfid, so you can logon with it.</p>
                         <input type="text" class="input-large search-query"
-                               id="typeahead" data-provide="typeahead"
-                               placeholder="Search for your team mates here">
-                        <button type="submit" class="btn btn-primary" id="mysub">Search</button>
+                               id="highchartTypeahead" data-provide="typeahead"
+                               placeholder="Search for your team mates here"/>
+
 
                     </div>
                     <div id="personalia"></div>
 
-
-
-
                 </div>
-
-
-
-
-
-
-
                 <div id="game" class="tab-pane">
                     <h2 class="underline section">Game statistics</h2>
                     #{if statistics.size() >= 1}
@@ -477,12 +392,6 @@
                         #{list items:statistics, as:'statistics'}
 
                         #{if statistics?.target_team != null }
-
-
-
-
-
-
 
 
                         <li class="span2">
@@ -572,14 +481,8 @@
                     </ul>
                     #{/if}<!--  Statistics size() >= 1 -->
 
-
-
                 </div>
                 <div id="team" class="tab-pane active">
-
-
-
-
 
 
                     <h2 class="underline section">${team?.team_name}</h2>
@@ -599,8 +502,6 @@
 
                 <div id="games" class="tab-pane">
                     <h2 class="underline section">Games played by ${team?.team_name}!</h2>
-
-
                     <ul class="thumbnails center">
 
                         #{list items:games, as:'games'}
@@ -682,12 +583,10 @@
                     </ul>
                 </div> <!-- games -->
 
-
-
-   <!-- DETTE ER NYTT PSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSS -->
+                <!-- DETTE ER NYTT PSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSS -->
                 <div id="info" class="tab-pane">
                     <h2 class="underline section">All info</h2>
-                    
+
                     <!-- ***************************************************************************
                     DETTE ER NYTT DATO 01.MAI.2012
                     ***************************************************************************/ -->
@@ -750,7 +649,7 @@
                                 <tr>
                                     <td>${statistic?.average_score_for}</td>
                                     <td>${statistic?.average_score_against}</td>
-                                     <td>${statistic?.average_score_difference}</td>
+                                    <td>${statistic?.average_score_difference}</td>
                                 </tr>
                             </tbody>
                         </table>
@@ -763,26 +662,26 @@
                                     <th>WINN</th>    
                                 </tr>
                             </thead>
-                           
+
                             <tbody>
                                 <tr>
                                     #{ if statistic?.win_prosent >= 95}
                                     <td style="background-color: green">
                                         <strong> ${statistic?.win_prosent} %</strong></td>
                                     #{/if}
-                                   
+
                                     #{if statistic?.win_prosent < 95 && statistic?.win_prosent >= 50 }
                                     <td style="background-color: yellowgreen">
                                         <strong> ${statistic?.win_prosent} %</strong></td>
                                     #{/if}
-                                   
+
                                     #{if statistic?.win_prosent < 50 }
                                     <td style="background-color: red">
                                         <strong> ${statistic?.win_prosent} %</strong></td>
                                     #{/if}
                                 </tr>
                             </tbody>
-                         
+
                         </table>
                         <table class="table table-striped table-bordered table-condensed" style="width: auto;display: inline-block; float: right;">
                             <thead>
@@ -790,7 +689,7 @@
                                     <th>Goal difference</th>    
                                 </tr>
                             </thead>
-                           
+
                             <tbody>
                                 <tr>
                                     #{ if statistic?.score_difference == 0}
@@ -798,38 +697,23 @@
                                         <strong> ${statistic?.score_difference}</strong>
                                     </td>
                                     #{/if}
-                                   
+
                                     #{if statistic?.score_difference < 0 }
                                     <td style="background-color: red">
                                         <strong> ${statistic?.score_difference} </strong></td>
                                     #{/if}
-                                   
+
                                     #{if statistic?.score_difference > 0 }
                                     <td style="background-color: green">
                                         <strong> ${statistic?.score_difference} </strong></td>
                                     #{/if}
-                                   
+
                                 </tr>
                             </tbody>
-                         
                         </table>
-
                     </div>
                 </div><!-- info -->
-
-
-
-
-
-
-
-
-
-
             </div><!-- /.tab-content -->
         </div><!-- span9 -->
     </div><!-- /.tabbable -->   
 </div><!-- .row -->   
-
-
-

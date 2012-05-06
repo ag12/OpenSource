@@ -18,33 +18,14 @@ import play.libs.Crypto;
 import play.libs.Images;
 import play.mvc.Controller;
 import repositories.StatisticRepository;
-import securities.Security;
 import validations.PlayerValidations;
 
-/**
- *
- * @author Santonas
- */
 public class PlayerController extends Controller {
 
-    public static Player getPlayer(Long id, String username) {
-
-        Player player = Player.find("id = ? and username = ?", id, username).first();
-        return player;
-    }
-
-    //check if
-    public static Player dosPlayerExist(Player player) {
-
-        Player exist = Player.find("byUsernameAndPassword",
-                player.username, player.password).first();
-        return exist;
-    }
-
-    //used in froms
-    public static Player getPlayer(Player player) {
-        Player registered = Player.find("byUsername", player.username).first();
-        return registered;
+    public static Player getPlayer(String username){
+        Player p = Player.find("byUsername", username).first();
+        renderJSON(p);
+        return null;
     }
 
     /*
@@ -58,7 +39,8 @@ public class PlayerController extends Controller {
 
         if (id != null && (username != null && !username.equals(""))) {
 
-            Player player = getPlayer(id, username);
+            Player player = Player.find("id = ? and username = ?", id, username).first();
+                    //getPlayer(id, username);
 
             Team team = TeamController.getTeam(id);
 
@@ -70,9 +52,6 @@ public class PlayerController extends Controller {
         } else {
             controllers.Application.error();
         }
-
-
-
     }
 
     public static void registerPlayer(@Valid Player player) {
@@ -84,7 +63,7 @@ public class PlayerController extends Controller {
         }
 
 
-        Player exist = getPlayer(player);
+        Player exist = Player.find("byUsername", player.username).first();//getPlayer(player);
         if (exist != null) {
             Validation.addError("message", "The username have been used.", player.username);
             Validation.keep();
@@ -145,8 +124,9 @@ public class PlayerController extends Controller {
             controllers.Application.main_page();
         }
 
-        player.password = Crypto.encryptAES(player.password);
-        Player exist = dosPlayerExist(player);
+        //player.password = Crypto.encryptAES(player.password);
+        Player exist = Player.find("byUsernameAndPassword",
+                player.username, Crypto.encryptAES(player.password)).first();//dosPlayerExist(player);
 
         if (exist == null) {
             Validation.addError("message", "The system cant find u, rigister ur self", player.username);
@@ -199,8 +179,8 @@ public class PlayerController extends Controller {
 
 
         } else if (player == null) {
-//            controllers.Application.error("Oooobs");
-//            error(666, "Cant find " + username);
+
+            controllers.Application.ofError();
         }
     }
 
@@ -335,31 +315,6 @@ public class PlayerController extends Controller {
         settings();
     }
 
-    public static void allPlayers() {
-
-
-        renderJSON(getPlayersFromDb(null));
-    }
-
-    public static void allPlayersByUsername(String filter) {
-
-        renderJSON(getPlayersFromDb(filter));
-
-    }
-
-    public static List<Player> getPlayersFromDb(String filter) {
-
-
-
-        if (filter != null) {
-            List<Player> players = Player.find("byUsernameLike", filter + "%").fetch();
-            return players;
-        } else {
-            List<Player> players = Player.findAll();
-            return players;
-        }
-    }
-
     public static void changePassword(Player player, String newPassword, String newPassword2) {
 
 
@@ -385,9 +340,12 @@ public class PlayerController extends Controller {
             if (session.get("pname") != null && session.get("pid") != null) {
                 //ONLIE
 
-                player.password = Crypto.encryptAES(player.password);
                 player.username = session.get("pname");
-                player = dosPlayerExist(player);
+                player = Player.find("byUsernameAndPassword",
+                player.username, Crypto.encryptAES(player.password)).first();
+                        //dosPlayerExist(player);
+               
+                
                 if (player != null) {
 
                     newPassword = Crypto.encryptAES(newPassword);
@@ -403,13 +361,8 @@ public class PlayerController extends Controller {
                     Validation.keep();
                     settings();
                 }
-
             }
-
         }
-
-
-
     }
 
     /*

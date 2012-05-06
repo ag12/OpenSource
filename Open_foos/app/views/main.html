@@ -18,7 +18,7 @@
         
         
                 $('#main_typeahead').typeahead({
-                items: 3, 
+                items: 8, 
                 source: function (typeahead) {
                     return $.get('/application/everybody ',  function (data) 
                     {
@@ -27,10 +27,8 @@
                 },
                 onselect: function (data){
                   
-                  $.get('@{Application.whoIsIt()}', {who : data}, function(data){
-                       //$('#mainBody').html(data)
+                  $.get('@{Application.redirectToProfile()}', {who : data}, function(data){
                        window.location = data;
-                     console.log(data)
                   });
                 }
             });
@@ -105,6 +103,6 @@
 
         </div><!-- END .container -->
 
-        <script src="@{'/public/bootstrap/js/search_typeahead.js'}" type="text/javascript" charset="${_response_encoding}" ></script>
+       
     </body>
 </html>

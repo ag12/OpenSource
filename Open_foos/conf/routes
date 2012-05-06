@@ -21,7 +21,7 @@ PUT     /api/game                                     Api.updateGame
 GET     /api/test                                      Api.test
 
 GET     /application/everybody                        Application.autocomplete      
-GET     /error                                        Application.of_error      
+GET     /error                                        Application.ofError      
 
 
 

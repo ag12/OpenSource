@@ -22,10 +22,4 @@ public class GamesController extends Controller {
         return games;
 
     }
-
-    public static int coutGameDiff(Game game) {
-
-       
-        return 0;
-    }
 }

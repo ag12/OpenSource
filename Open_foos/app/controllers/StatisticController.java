@@ -4,7 +4,9 @@
  */
 package controllers;
 
+import models.Player;
 import models.Statistic;
+import models.Team;
 import play.mvc.Controller;
 import repositories.StatisticRepository;
 
@@ -18,5 +20,27 @@ public class StatisticController extends Controller {
 
         Statistic statistic = StatisticRepository.getStatistics(id);
         renderJSON(statistic);
+    }
+    
+    public static void statisticForWho(String name){
+        
+        Player player = Player.find("byUsername", name).first();
+        if(player!= null){
+            Team team = statisticTeamForPlayer(player.getId());
+            if ( team != null){
+                 renderJSON(team);
+            }
+           
+        }else 
+        {
+            Team team = Team.find("byTeam_name", name).first();
+            if ( team != null){
+                renderJSON(team);
+            }
+        }  
+    }
+    
+    public static Team statisticTeamForPlayer(Long player1_id){
+        return controllers.TeamController.getTeam(player1_id);
     }
 }

@@ -72,27 +72,21 @@ public class Application extends Controller {
         renderJSON(list);
     }
     
-    public static String whoIsIt(String who){
+    public static String redirectToProfile(String who){
         
         System.out.println("Inside who");
         Player player = Player.find("byUsername", who).first();
         if (player != null) {
-            System.out.println("Inside player != null");
-            //Players.profile(who);
             return "/players/profile/" + who;
         }
         System.out.println("outside first if");
         Team team = Team.find("byTeam_name", who).first();
         if (team != null) {
-            System.out.println("Inside team != null");
-           // Teams.profile(who);
             return "/teams/profile/" + who;
         }
         System.out.println("Outside 2.if");
         if (team == null && player == null) {
-            System.out.println("team == player == null");
-            ofError();
-            return "";
+            return "/error";
         }
         return "";     
     }

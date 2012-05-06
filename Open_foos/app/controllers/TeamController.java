@@ -282,28 +282,6 @@ public class TeamController extends Controller {
 
     }
 
-    public static List<Team> getTeamsFromDb(String filter) {
-
-        List<Team> teams;
-        if (filter != null) {
-            teams = Team.find("byTeam_nameLike", "%" + filter + "%").fetch();
-            return teams;
-        } else {
-            teams = Team.findAll();
-            return teams;
-        }
-    }
-
-    public static void allTeamsByTeam_name(String filter) {
-        renderJSON(getTeamsFromDb(filter));
-    }
-
-    public static void getTeamsForPlayer(Long team_id, String filter) {
-
-        List<Team> teams = Team.find("player1_id = ? AND player2_id != NULL", team_id).fetch();
-        renderJSON(teams);
-    }
-
     public static int compeletedProfile(Team team) {
 
         int notNull = 10;
