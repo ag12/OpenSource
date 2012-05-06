@@ -125,10 +125,10 @@
                         spacingBottom: 30
                     },
                     title: {
-                        text: 'Your played games'
+                        text: '${team?.team_name}' + '\'s' + ' played games'
                     },
                     subtitle: {
-                        text: '* Jane\'s banana consumption is unknown',
+                        text: '',
                         floating: true,
                         align: 'right',
                         verticalAlign: 'bottom',
@@ -146,7 +146,7 @@
                     },
                     xAxis: {
                        title: {
-                            text: 'X-Axis'
+                            text: 'Played games'
                         },
                         labels: {
                             formatter: function() {
@@ -157,7 +157,7 @@
                     },
                     yAxis: {
                         title: {
-                            text: 'Y-Axis'
+                            text: 'Winns and losts'
                         },
                         labels: {
                             formatter: function() {

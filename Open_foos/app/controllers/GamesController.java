@@ -25,6 +25,6 @@ public class GamesController extends Controller {
     }
     
     public static void  getTeamGamesForChart(Long team_id){
-        renderJSON(getTeamGames(team_id,"id asc",  10));
+        renderJSON(getTeamGames(team_id,"id asc",  30));
     }
 }
