@@ -20,7 +20,7 @@ public class Team extends Model {
     //@Column(unique=true)
     public String team_name = null;
     public String bio = null;
-    public Date registered = null;
+    public Date registered = new Date();
     public String image = "team.png";
     @ManyToOne
     public Player player1 = null;

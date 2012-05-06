@@ -170,18 +170,18 @@ public class PlayerController extends Controller {
         Player player = Player.find("byUsername", username).first();
         if (player != null) {
 
-            Team team = TeamController.getTeam(player.id);
+            Team team = TeamController.getTeam(player.getId());
 
             Statistic statistic = null;
             List<Team> teams = null;
             List<Statistic> statistics = null;
             List<Game> games = null;
             if ( team != null){
-            teams = TeamController.getTeams(team.id);
+            teams = TeamController.getTeams(team.getId());
              
-            statistic = StatisticRepository.getStatistics(team.id);
-            statistics = new StatisticRepository().getMoreInfo(team.id);
-            games = GamesController.getTeamGames(team.id,20);
+            statistic = StatisticRepository.getStatistics(team.getId());
+            statistics = new StatisticRepository().getMoreInfo(team.getId());
+            games = GamesController.getTeamGames(team.getId(),20);
 
             }
             List<Statistic> teams_statistics = null;
