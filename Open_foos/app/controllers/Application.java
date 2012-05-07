@@ -25,7 +25,9 @@ public class Application extends Controller {
     public static void login() {
         render();
     }
-    
+    public static void register() {
+        render();
+    }
     public static void ofError(){
         render();
     }

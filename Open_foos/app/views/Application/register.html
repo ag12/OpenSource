@@ -2,20 +2,21 @@
 #{set page:'login_fail' /}
 
 <div class="row">
-    #{ifError 'login'}
+    #{ifError 'register'}
     <div class="war alert1 alert-error">
       
         <button class="close" data-dismiss="alert">×</button>
         <h1>Oops…</h1>
         <br/>
-        <li>#{error 'login' /}</li>
+        <li>#{error 'register' /}</li>
     <br/>
     </div>
     #{/ifError}
     <div class="span12">
         <div class="signin-wrapper">
-            <h1>Sign in to Openfoos</h1>
-            <form class="form-horizontal" action="@{PlayerController.loginPlayer()}" method="POST">
+            <h1>New to openfoos?<br/>
+                Sign in here.</h1>
+            <form class="form-horizontal" action="@{PlayerController.registerPlayer()}" method="POST">
                 <fieldset>
                     <div class="control-group">
                         <div class="controls">
@@ -38,7 +39,7 @@
                     </div>
 
                     <div class="form-actions">
-                        <button type="submit" class="btn btn-primary">Sign in</button>
+                        <button type="submit" class="btn btn-warning">Sign up</button>
                     
                     </div>
                 </fieldset>

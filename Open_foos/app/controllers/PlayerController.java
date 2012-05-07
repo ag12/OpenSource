@@ -57,16 +57,17 @@ public class PlayerController extends Controller {
 
         if (Validation.hasErrors()) {
             params.flash(); // add http parameters to the flash scope
+            Validation.addError("register", "Username and password is missing", player.username);
             Validation.keep();   // keep the errors for the next request
-            controllers.Application.login();
+            controllers.Application.register();
         }
 
 
         Player exist = Player.find("byUsername", player.username).first();//getPlayer(player);
         if (exist != null) {
-            Validation.addError("message", "The username have been used.", player.username);
+            Validation.addError("register", "The username have been used.", player.username);
             Validation.keep();
-            controllers.Application.main_page();
+            controllers.Application.register();
         } else if (exist == null) {
 
            
@@ -111,9 +112,9 @@ public class PlayerController extends Controller {
 
                 } else if (exist == null) {
 
-                    Validation.addError("message", "The system cant find you with rfid.", player.username);
+                    Validation.addError("login", "The system cant find you with radio frequency identification.", player.username);
                     Validation.keep();
-                    controllers.Application.main_page();
+                    controllers.Application.login();
 
                 }
             }
@@ -122,7 +123,8 @@ public class PlayerController extends Controller {
         if (Validation.hasErrors()) {
             params.flash();
             Validation.keep();
-            controllers.Application.main_page();
+            Validation.addError("login", "Username and password is missing", player.username);
+            controllers.Application.login();
         }
 
         //player.password = Crypto.encryptAES(player.password);
@@ -130,9 +132,9 @@ public class PlayerController extends Controller {
                 player.username, Crypto.encryptAES(player.password)).first();//dosPlayerExist(player);
 
         if (exist == null) {
-            Validation.addError("message", "The system cant find u, rigister ur self", player.username);
+            Validation.addError("login", "Wrong username or password.", player.username);
             Validation.keep();
-            controllers.Application.main_page();
+            controllers.Application.login();
 
         } else if (exist != null) {
 
