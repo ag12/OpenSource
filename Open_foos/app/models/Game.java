@@ -47,7 +47,7 @@ public class Game extends Model {
     @Min(0)
     public int visitor_score = 0;
     
-    
+    public String mode = null;
     
     @Override
     public String toString() {

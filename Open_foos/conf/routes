@@ -13,8 +13,8 @@ GET     /api/player/autocomplete/{username}           Api.autocomplete
 GET     /api/player/login/{username}/{password}       Api.fetchPlayer
 POST    /api/player/register                          Api.registerPlayer
 POST    /api/team                                     Api.fetchTeam
-POST    /api/game                                     Api.initGame  
-PUT     /api/game                                     Api.updateGame  
+POST    /api/game                                     Api.initializeGame  
+PUT     /api/game                                     Api.setGame  
 
 
 

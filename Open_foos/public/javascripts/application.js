@@ -120,6 +120,7 @@ $(document).ready(function(){
         {
             var attrs = {};
             attrs.id = response.id;
+            attrs.score = response.score;
             
             // If the team name is not set, then 
             // we will use a combination of both player names.
@@ -146,7 +147,8 @@ $(document).ready(function(){
         defaults: 
         {
             'id': undefined,
-            'team_name': ''
+            'team_name': undefined,
+            'score': 0
         }
     });
 
@@ -212,35 +214,36 @@ $(document).ready(function(){
             
             var home = this.get('home_team'),
                 visitor = this.get('visitor_team');
-                
-            if(home.count() > 0 && visitor.count() > 0)
-            {   
-                /*
-                // Checks if both teams have equal amount of players
-                if(home.count() === visitor.count())
-                {
-                    if(this.get('state') !== 'started')
-                    {                            
-                       this.set('state', 'ready');
-                    }
-                    return true;
-                }
-                */
-               
-               if(this.get('state') !== 'started')
-               {                            
-                       this.set('state', 'ready');
-               }
-               return true;
+            
+            // Checks that both teams at least have one player
+            if(home.count() === 0 || visitor.count() === 0)
+            {
+                Foosball.message.showError("Both teams need at least one player!");    
+                return false;
             }
             
-            return false;
+            // Both teams need to have an equal amount of players
+            // if the game mode is ranked
+            if(this.get('mode') === 'ranked')
+            {    
+                if(home.count() !== visitor.count())
+                {
+                    Foosball.message.showError("A ranked game need an equal amount of players on both teams!");    
+                    return false;
+                }
+            }
+            
+           if(this.get('state') !== 'started')
+           {                            
+                   this.set('state', 'ready');
+           }   
+           return true;
         },
        
         start: function() 
         {
-           if(!this.isReady())
-               return false; 
+           if(!this.isReady()) return false; 
+           
            
            // Authenticate teams
            var teamsAuthenticated = this.get('home_team').authenticate();
@@ -277,6 +280,8 @@ $(document).ready(function(){
        
         restart: function()
         {
+            // Re-sets some of the game variables to default-values. 
+            // We still keep information about authenticated teams and players
             this.set
             ({
                 id: undefined,
@@ -284,16 +289,21 @@ $(document).ready(function(){
                 visitor_score: 0,
                 state: 'ready'
             });
-            this.trigger('restart');
+            // Starts the game
             this.start();
         },
        
         reset: function()
         {
+            // Remembers the current game-mode
+            var mode = this.get('mode');
+            // Re-sets all values to defaults
             this.set(this.defaults);
+            // Sets the game mode to what was previously set
+            this.set('mode', mode); 
+            // Re-sets the teams and players
             this.get('home_team').reset(); 
             this.get('visitor_team').reset(); 
-            this.trigger('reset');
         },
         
         authenticate: function()
@@ -335,7 +345,8 @@ $(document).ready(function(){
             'visitor_score' : 0,
             'start_time': undefined,
             'end_time': undefined,
-            'state': 'new'
+            'state': 'new',
+            'mode' : 'ranked'
         }
     });
     
@@ -398,14 +409,17 @@ $(document).ready(function(){
                 window.game.set(team + '_score', window.game.get(team + '_score') - 1); }
         },
         
-        startClock: function(){
+        startClock: function()
+        {
             // tick tock; 
         },
         
-        stopClock: function(){
-            
+        stopClock: function()
+        {
+           // tock tick 
         },
         
+       
         isGameWon: function ()
         {
             if(window.game.get('home_score') === 10 || window.game.get('visitor_score') === 10 )
@@ -453,7 +467,6 @@ $(document).ready(function(){
         {
           'click .player-login' : 'login',
           'click .player-logout' : 'logout',
-          //'dblclick .player-score' : 'unscore',
           'click .player-score .player-image' : 'displayOptions', 
           'click .goal-options-cancel' : 'hideOptions',
           'click .goal-options-score' : 'score',
@@ -466,7 +479,6 @@ $(document).ready(function(){
             _.bindAll(this, 'render', 'login', 'logout', 'score', 'unscore', 'handleGamestate', 'displayOptions', 'hideOptions', 'backfire');
             this.player = this.options.player;
             this.player.set('position', this.options.position);
-            //this.clickTimer = undefined;
             
             this.player.on('change:id', this.render);
             window.game.on('change:state', this.handleGamestate);
@@ -502,21 +514,12 @@ $(document).ready(function(){
         
         score: function()
         {
-//          var timer = this.clickTimer;
-//          if (timer) 
-//              clearTimeout(timer);
-//         
-//         var p = this.player;
-//         var closure = function(player){ window.referee.addGoal(player);}; 
-//         this.clickTimer = setTimeout(function(){ closure(p) }, 250); 
-
            window.referee.addGoal(this.player, false);
            this.hideOptions();
         },
         
         unscore: function()
         {
-          //clearTimeout(this.clickTimer);
           window.referee.removeGoal(this.player);
           this.hideOptions();
         },
@@ -549,9 +552,11 @@ $(document).ready(function(){
         }
     }); 
 
-    window.TeamView = Backbone.View.extend({
+    window.TeamView = Backbone.View.extend
+    ({
         initialize: function()
         {   
+            this.team = this.options.team;
             this.render();
         },
       
@@ -559,12 +564,12 @@ $(document).ready(function(){
         {
             var player1View = new PlayerView({
                 position: 1, 
-                player: this.options.team.get('player1')
+                player: this.team.get('player1')
             });
             
             var player2View = new PlayerView({
                 position: 2, 
-                player: this.options.team.get('player2')
+                player: this.team.get('player2')
             });
             
             this.$el.empty();
@@ -574,6 +579,35 @@ $(document).ready(function(){
         }
     });
  
+ // OLD
+ /*
+  window.TeamView = Backbone.View.extend
+    ({
+        initialize: function()
+        {   
+            this.team = this.options.team;
+            this.render();
+        },
+      
+        render: function()
+        {
+            var player1View = new PlayerView({
+                position: 1, 
+                player: this.team.get('player1')
+            });
+            
+            var player2View = new PlayerView({
+                position: 2, 
+                player: this.team.get('player2')
+            });
+            
+            this.$el.empty();
+            this.$el.append(player1View.render().el);
+            this.$el.append(player2View.render().el);
+            return this;
+        }
+    });
+ */
 
     Foosball.LoginView = Backbone.View.extend
     ({
@@ -721,7 +755,7 @@ $(document).ready(function(){
         {
            var state = window.game.get('state');
            if(state !== 'started')
-           $(this.el).html('<button id="start-game-button" class="button green">start!</button>');
+           $(this.el).html('<button id="start-game-button" class="button green">start</button>');
            else
            $(this.el).html('<button id="cancel-game-button" class="button yellow">cancel</button>');    
         },
@@ -776,6 +810,56 @@ $(document).ready(function(){
            window.game.off('change:visitor_score', this.render);  
         }
     }); 
+    
+    Foosball.GameModeView = Backbone.View.extend
+    ({
+        el: '#game-mode', 
+        template: _.template($('#mode-template').html()),
+        events: 
+        {
+            'click #friendly-mode-button': 'setFriendlyMode',
+            'click #ranked-mode-button': 'setRankedMode'
+        },
+        
+        initialize: function()
+        {
+            window.game.on('change:state change:mode', this.render, this);
+            this.render();
+        },
+        
+        render: function()
+        {
+            var state = window.game.get('state');
+            var mode = window.game.get('mode');
+            
+            if(state !== 'new')
+            {
+                this.$el.hide();
+            }
+            else
+            {
+                var attributes = 
+                {
+                   isFriendlyActive: mode === 'friendly' ? 'button-active' : '',
+                   isRankedActive: mode === 'ranked' ? 'button-active' : ''
+                }
+                
+                this.$el.html(this.template(attributes)).show(); 
+            }
+            return this;
+        },
+        
+        setFriendlyMode: function()
+        {
+            window.game.set('mode', 'friendly');
+        },
+        
+        setRankedMode: function()
+        {
+            window.game.set('mode', 'ranked');
+        }
+            
+        }); 
     
     Foosball.ResultView = Backbone.View.extend
     ({
@@ -855,7 +939,6 @@ $(document).ready(function(){
         
         showScoreBoard: function()
         {
-            console.log('board:showScore');
             var scoreBoard = new Foosball.ScoreBoardView();
             this.show(scoreBoard);
         },
@@ -876,11 +959,7 @@ $(document).ready(function(){
     ({
         el: '#messages', 
         template: _.template($('#message-template').html()),
-        events:
-        {
-        
-        },
-        
+       
         showMessage: function(message)
         {
             var data = 
@@ -923,13 +1002,11 @@ $(document).ready(function(){
     }); 
     
     
-    
     Foosball.Field = Backbone.View.extend
     ({
         el: '#field',
         initialize: function()
         {
-          var stateView = new Foosball.GameStateView();
           window.game.on('change:state', this.handleGameState, this);
           this.renderTeams();
         },
@@ -970,6 +1047,8 @@ $(document).ready(function(){
     Foosball.message = new Foosball.MessageView();
     Foosball.board = new Foosball.BoardView();
     Foosball.application = new Foosball.Field();
+    Foosball.gameMode = new Foosball.GameModeView();
+    Foosball.gameState = new Foosball.GameStateView(); 
     
     
     // Request indicator. 

@@ -20,13 +20,17 @@
             <div id="field">
                 <div id="playfield">
                     <div id="home-team">
+                        <h2 class="team-name"></h2>
                     </div>  
                     <div id="visitor-team">
+                        <h2 class="team-name"></h2>
                     </div>
                     <div id="game-state">
-                       <button id="start-game-button" class="button green">start!</button>
-                    </div>
+                    </div> 
                 </div><!-- END #playfield --> 
+                
+                <div id="game-mode">
+                </div>                
             </div><!-- END field -->
                 
                 <div id="board">
@@ -93,7 +97,7 @@
             <div id="result-home">
                 <div class="result-medal">
                     <%
-                    if(winner === 'home_team')
+                    if(winner === 'homeTeam')
                     {
                      %>
                      <img src="/public/images/game/medal.png" />
@@ -108,7 +112,7 @@
             <div id="result-visitor">
                 <div class="result-medal">
                     <%
-                    if(winner === 'visitor_team')
+                    if(winner === 'visitorTeam')
                     {
                      %>
                      <img src="/public/images/game/medal.png" />
@@ -148,6 +152,19 @@
             <%= message %>
              </div>
         </script>
+        
+        <script type="text/template" id="mode-template">
+            <h3>Game mode</h3>
+            <div class="btn-group">               
+                <!-- 
+                <button id="friendly-mode-button" class="btn btn-large <%= isFriendlyActive %>">friendly</button>    
+                <button id="ranked-mode-button" class="btn btn-large <%= isRankedActive %>">ranked</button> 
+                -->
+                <button id="friendly-mode-button" class="button <%= isFriendlyActive %>">friendly</button>    
+                <button id="ranked-mode-button" class="button <%= isRankedActive %>">ranked</button> 
+            </div>
+        </script>
+
 
         <script src="@{'/public/bootstrap/js/typeahead.js'}" type="text/javascript" charset="${_response_encoding}" ></script>
         <script src="@{'/public/javascripts/application.js'}" type="text/javascript" charset="${_response_encoding}"></script>

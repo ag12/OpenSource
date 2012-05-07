@@ -161,8 +161,7 @@ img{
     border-top-color: #c9c9c9; 
 }
 
-.button:active, .button.green:active,  .button.yellow:active {
-    vertical-align: -5px;
+.button:active, .button.green:active,  .button.yellow:active, .button-active {
     border-radius: 3px;
     -webkit-box-shadow: inset 0 0 3px rgba(0, 0, 0, 0.3), inset 0 1px 1px rgba(0, 0, 0, 0.4), 0 1px white;
     -moz-box-shadow: inset 0 0 3px rgba(0, 0, 0, 0.3), inset 0 1px 1px rgba(0, 0, 0, 0.4), 0 1px white;
@@ -527,4 +526,15 @@ background-color: #ffe550;
   position: relative; 
   top: 35%;
   bottom: 35%;
+}
+
+#game-mode
+{   
+    margin: 0px auto;
+    text-align: center;
+}
+#game-mode h3
+{
+    color: black;
+    margin-bottom: 15px;
 }

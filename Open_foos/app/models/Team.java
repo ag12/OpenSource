@@ -28,6 +28,7 @@ public class Team extends Model {
     public Player player2 = null;
     @OneToOne
     public Team arch_rival = null;
+    public double rating = 1500;
 
     public int memberCount() {
         int count = 0;

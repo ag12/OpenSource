@@ -59,7 +59,6 @@ public class Api extends Controller
        
        else
        {
-          //Logger.info("I authenticated " + username, null);
           renderJSON(player);
        }
     }
@@ -86,16 +85,19 @@ public class Api extends Controller
        
        else
        {
-          //Logger.info("I registered " + username, null);
+
           player.password = Crypto.encryptAES(player.password);
           player.save();
-          // 
-          Team team = TeamController.register_team(player,null);
+          
+          // Registers the team
+          Team team = new Team();
+          team.team_name = player.username; 
+          team.player1 = player;
           team.save();
+
           renderJSON(player);
        }
-    }
-    
+    }    
     
     public static void fetchTeam(JsonElement body)
     {
@@ -145,7 +147,7 @@ public class Api extends Controller
        //specified, if we coult not find it, then we will create it;
        if(verifiedTeam == null)
        {
-         String name = "Team " + team.player1.username; 
+         String name = team.player1.username; 
          if(team.memberCount() > 1) 
              name += " & " + team.player2.username;
                      
@@ -155,7 +157,9 @@ public class Api extends Controller
         
        
        if(verifiedTeam == null)
+       {
            error("Could not find or create the team"); 
+       }
        else
        {
            Logger.info("i authenticated team: " + verifiedTeam.getId());
@@ -163,42 +167,83 @@ public class Api extends Controller
        }
     }
     
-    public static void initGame(JsonElement body)
+    public static void initializeGame(JsonElement body)
     {
        Game game = construct(body, Game.class);
        if(game == null)
+       {
            badRequest();
+           return;
+       }
              
-       //TODO: lagene må verifiseres
+       
+      // Verifies the teams. 
+      // We only want to operate on data that is retrieved from the server.
+      game.home_team = Team.findById(game.home_team.getId());
+      game.visitor_team = Team.findById(game.visitor_team.getId());
+
+      if(game.home_team == null || game.visitor_team == null)
+      {
+        badRequest();
+        return;
+      }
+      
        game.start_time = new Date();
+       game.id = null;
+       
        Game verifiedGame = game.save();
-       Logger.info("Verdified game with id: " + verifiedGame.getId());
        renderJSON(verifiedGame); 
     }
 
-    public static void updateGame(JsonElement body)
+    public static void setGame(JsonElement body)
     {
        Game game = construct(body, Game.class);
-       if(game == null)
-           badRequest();
-
-       if(game.getId() < 1)
-           badRequest();
        
-       Game verified = Game.findById(game.getId());
-       if(verified != null)
+       if(game == null)
        {
-           //TODO husk å validere disse verdiene
-           //At de ikke er null; 
+           badRequest();
+           return;
+       }
+
+       Game verified = Game.findById(game.getId());
+       if(verified == null)
+       {
+           badRequest();
+           return;
+       }
+       
+      // Verifies the teams. 
+      // We only want to operate on data that is retrieved from the server.
+      verified.home_team = Team.findById(game.home_team.getId());
+      verified.visitor_team = Team.findById(game.visitor_team.getId());
+
+      if(verified.home_team == null || verified.visitor_team == null)
+      {
+        badRequest();
+        return;
+      }
+       
+      else
+      {
            verified.home_score = game.home_score; 
            verified.visitor_score = game.visitor_score; 
-           verified.winner = (verified.home_score > verified.visitor_score ? verified.home_team: verified.visitor_team); 
-           
+           verified.winner = (verified.home_score > verified.visitor_score ? verified.home_team : verified.visitor_team); 
            verified.end_time = new Date();
+           
+           //Calculates and sets team score if the game mode is ranked
+           if(verified.mode.equals("ranked"))
+           {
+               calculateRating(
+                       verified.home_team,
+                       verified.visitor_team,
+                       verified.home_score,
+                       verified.visitor_score
+                       );
+           }
+           
            verified.save(); 
            renderJSON(verified);
        }
-       badRequest();
     }
     
     private static <T extends Object> T construct(JsonElement json, Class<T> classOfT)
@@ -217,4 +262,52 @@ public class Api extends Controller
        }
     }
     
+    private static void calculateRating(Team home_team, Team visitor_team, int home_score, int visitor_score)
+    {
+
+        double current_home_rating = home_team.rating;
+        double current_visitor_rating = visitor_team.rating;
+
+
+        double E = 0;
+
+        if (home_score != visitor_score)
+        {
+            if (home_score > visitor_score)
+            {
+                E = 120 - Math.round(1 / (1 + Math.pow(10, ((current_visitor_rating - current_home_rating) / 400))) * 120);
+                home_team.rating = current_home_rating + E;
+                visitor_team.rating = current_visitor_rating - E;
+            } else
+            {
+                E = 120 - Math.round(1 / (1 + Math.pow(10, ((current_home_rating - current_visitor_rating) / 400))) * 120);
+                home_team.rating = current_home_rating - E;
+                visitor_team.rating = current_visitor_rating + E;
+            }
+        } else
+        {
+            if (current_home_rating == current_visitor_rating)
+            {
+                home_team.rating = current_home_rating;
+                visitor_team.rating = current_visitor_rating;
+            } else
+            {
+                if (current_home_rating > current_visitor_rating)
+                {
+                    E = (120 - Math.round(1 / (1 + Math.pow(10, ((current_home_rating - current_visitor_rating) / 400))) * 120)) - (120 - Math.round(1 / (1 + Math.pow(10, ((current_visitor_rating - current_home_rating) / 400))) * 120));
+                    home_team.rating = current_home_rating - E;
+                    visitor_team.rating = current_visitor_rating + E;
+                } else
+                {
+                    E = (120 - Math.round(1 / (1 + Math.pow(10, ((current_visitor_rating - current_home_rating) / 400))) * 120)) - (120 - Math.round(1 / (1 + Math.pow(10, ((current_home_rating - current_visitor_rating) / 400))) * 120));
+                    home_team.rating = current_home_rating + E;
+                    visitor_team.rating = current_visitor_rating - E;
+                }
+            }
+        }
+
+        //Saves the calculated rating
+        home_team.save();
+        visitor_team.save();
+    }
 }
