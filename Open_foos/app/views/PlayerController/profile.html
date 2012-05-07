@@ -8,12 +8,10 @@
 
 
 
-<script type="text/javascript">
-            
+<script type="text/javascript">            
     window.chart = null;
     $(document).ready(function() {
-        $('.classPopover').popover('hide');
-        
+        $('.classPopover').popover('hide');    
         $('#highchartTypeahead').typeahead({
             items: 3, 
             source: function (typeahead) {
@@ -30,13 +28,7 @@
                  
                  
                     this_AddTodrawChart(data1.id, data1.team_name)
-                });     
-                  
-                  
-                  
-                  
-                  
-
+                });       
             }
         });
                 
@@ -58,20 +50,9 @@
                 
         function this_drawGameChart(id){
             $.getJSON("@{GamesController.getTeamGamesForChart()}", {team_id : id},function(data){
-                
-
                 var teamId = parseFloat("${team.id}");
                 var winArray = new Array();
                 var lostArray = new Array();
-                //                for( var i = 0; i < data.length; i++){
-                //                    
-                //                    if (data[i].winner.id === teamId){
-                //                        winArray.push(data[i]);
-                //                    }
-                //                    else 
-                //                        lostArray.push(data[i]);        
-                //                }
-                
                 for( var i = 0; i < data.length; i++){
                     
                     if (data[i].winner.id === teamId){
@@ -84,15 +65,6 @@
                         winArray[i] = null;
                     }
                 }
-                
-                
-                
-                
-                
-                
-                
-                console.log(winArray);
-                console.log(lostArray)
                 var countWin = new Array();
                 var countLost = new Array();
                 for (var i = 0; i < winArray.length; i++){
@@ -110,12 +82,8 @@
                     }
                     else if ( !lostArray[i]){
                         countLost[i] = null;
-                    }
-                    
+                    }           
                 }
-                
-                console.log(countLost);
-                console.log(countWin);
                 window.chart = new Highcharts.Chart(
                 {
                         
@@ -145,15 +113,14 @@
                         backgroundColor: '#FFFFFF'
                     },
                     xAxis: {
-                       title: {
+                        title: {
                             text: 'Played games'
                         },
                         labels: {
                             formatter: function() {
                                 return this.value;
                             }
-                        }
-                        
+                        }              
                     },
                     yAxis: {
                         title: {
@@ -169,9 +136,9 @@
                     },
                     tooltip: {
                         formatter: function() {
-                             var winMatch =  winArray[this.x];
-                             var lostMatch = lostArray[this.x];
-                             if ( winMatch !== null){
+                            var winMatch =  winArray[this.x];
+                            var lostMatch = lostArray[this.x];
+                            if ( winMatch !== null){
                                  
                                 return '<b>'+ this.series.name +'</b><br/>' +
                                     winMatch.home_team.team_name + " VS " + 
@@ -180,20 +147,17 @@
                                     winMatch.visitor_score+ '<br/>' + 
                                     "Winner : " + winMatch.winner.team_name + '<br/>';
                                    
-                             }
-                             if ( lostMatch !== null){
+                            }
+                            if ( lostMatch !== null){
                                  
-                             return '<b>'+ this.series.name +'</b><br/>' +
+                                return '<b>'+ this.series.name +'</b><br/>' +
                                     lostMatch.home_team.team_name + " VS " + 
                                     lostMatch.visitor_team.team_name +'<br/>'+
                                     "Result : " + lostMatch.home_score + " - " + 
                                     lostMatch.visitor_score+ '<br/>' + 
                                     "Winner : " + lostMatch.winner.team_name + '<br/>';
                                  
-                             }
-                             
-                           
-                           
+                            } 
                         }
                     },
                     plotOptions: {
@@ -210,17 +174,10 @@
                             data : countWin},
                         {
                             name : 'Losts',
-                            data : countLost}
-                        
-                            
-                      
-                    ]
+                            data : countLost}]
                 });
             });               
-        }        
-                
-                
-
+        }                    
         function this_AddTodrawChart(id, username){
                
             $.getJSON("@{StatisticController.data()}", {id : "${team.id}"},function(data1){
@@ -238,31 +195,20 @@
                     options.series = new Array();
                     options.series[0] = new Array();                          
                     options.series[1] = new Array();
-                          
-                
+                             
                     options.series[0].data = [ data1.games_playd, data1.winns, data1.losts ]
                     options.series[0].name = "${team?.team_name}";
                           
                     options.series[1].data = [ data2.games_playd, data2.winns, data2.losts]
                     options.series[1].name = username;
                             
-                    chart = new Highcharts.Chart(options);
-                            
-                            
+                    chart = new Highcharts.Chart(options);                                              
                 });           
             });               
         }
- 
         this_drawChart("${team.id}");
-        this_drawGameChart("${team.id}");
-                
-               
-               
-             
-    });
-            
-            
-            
+        this_drawGameChart("${team.id}");    
+    });     
 </script>
 
 
@@ -765,38 +711,38 @@
                             <thead>
                                 <tr>
                                     <th></th>
-                                    <th style="background-color: grey; color: white">Home Games</th>
-                                    <th style="background-color: grey; color: white">Away Games</th>
-                                    <th style="background-color: grey; color: white">Total</th>
+                                    <th>Home Games</th>
+                                    <th>Away Games</th>
+                                    <th>Total</th>
                                 </tr>
                             </thead>
                             <tbody>
                                 <tr>
-                                    <th style="background-color: grey; color: white">Match</th>
+                                    <th>Match</th>
                                     <td>${statistic?.home_games}</td>
                                     <td>${statistic?.away_games}</td>
                                     <td>${statistic?.games_playd}</td>
                                 </tr>
                                 <tr>
-                                    <th style="background-color: grey; color: white">Lost</th>
+                                    <th>Lost</th>
                                     <td>${statistic?.home_lost}</td>
                                     <td>${statistic?.away_lost}</td>
                                     <td>${statistic?.losts}</td>
                                 </tr>
                                 <tr>
-                                    <th style="background-color: grey; color: white">Winn</th>
+                                    <th>Winn</th>
                                     <td>${statistic?.home_wins}</td>
                                     <td>${statistic?.away_wins}</td>
                                     <td>${statistic?.winns}</td>
                                 </tr>
                                 <tr>
-                                    <th style="background-color: grey; color: white">Goal for</th>
+                                    <th>Goal for</th>
                                     <td>${statistic?.score_home_for}</td>
                                     <td>${statistic?.score_away_for}</td>
                                     <td>${statistic?.score_for}</td>
                                 </tr>
                                 <tr>
-                                    <th style="background-color: grey; color: white">Goal against</th>
+                                    <th>Goal against</th>
                                     <td>${statistic?.score_home_against}</td>
                                     <td>${statistic?.score_away_against}</td>
                                     <td>${statistic?.score_against}</td>

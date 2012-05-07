@@ -23,7 +23,6 @@ public class Application extends Controller {
     }
 
     public static void login() {
-        System.out.println("OK");
         render();
     }
     
@@ -47,11 +46,6 @@ public class Application extends Controller {
         session.clear();
         return true;
     }
-
-    public static boolean auto(Long id) {
-        return Long.parseLong(session.get("pid")) == id;
-    }
-
     public static List<Object> teamsAndPlayers() {
 
         List<Object> teamsAndPlayers = new ArrayList<Object>();
@@ -88,6 +82,6 @@ public class Application extends Controller {
         if (team == null && player == null) {
             return "/error";
         }
-        return "";     
+        return "/";     
     }
 }

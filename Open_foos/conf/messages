@@ -26,7 +26,7 @@ visitor_score = Visitor's score
 winner = Winner   
 start_time = Started
 end_time = Finished
-
+mode = Mode
 
 #Team
 
@@ -35,7 +35,7 @@ team_name = Team name
 player1 = Player one
 player2 = Player two
 arch_rival = Arch rival
-
+rating = Rating
 
 
 # Default CRUD messages

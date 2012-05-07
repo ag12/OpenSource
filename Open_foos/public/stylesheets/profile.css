@@ -380,5 +380,13 @@ DETTE ER NYTT DATO 02.04.2012
 
 
 
+#all-info thead tr th:first-child{
+   background-color: white; 
+   color: white; 
+}
 
 
+#all-info th{
+   background-color: grey; 
+   color: white; 
+}

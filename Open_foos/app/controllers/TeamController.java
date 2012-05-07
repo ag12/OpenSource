@@ -90,7 +90,7 @@ public class TeamController extends Controller {
             // send user to player profile site, where the player team info is available
             controllers.PlayerController.profile(team.player1.username);
         } else {
-            // send user to error site ? 
+           controllers.Application.ofError();
         }
     }
 
@@ -272,11 +272,11 @@ public class TeamController extends Controller {
                     int compeleted = (compeletedProfile(team) + 60);
                     render(team,compeleted);
                 } else {
-                    error("You dont have the rights to bee here");
+                   controllers.Application.ofError();
                 }
             }
         } else {
-            error("HOMO, how did you got here ");
+             controllers.Application.ofError();
         }
 
 

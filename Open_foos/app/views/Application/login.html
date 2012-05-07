@@ -6,6 +6,15 @@
     <div class="war alert1 alert-error">
         <!--<button class="close" data-dismiss="alert">×</button>-->
         <strong>Warning!</strong> Wrong username and password combination.
+        #{ifErrors}
+ 
+   <h1>Oops…</h1>
+ 
+   #{errors}
+       <li>${error}</li>
+   #{/errors}
+ 
+#{/ifErrors}
     </div>
 
     <div class="span12">

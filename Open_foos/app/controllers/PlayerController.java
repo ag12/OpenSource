@@ -18,7 +18,6 @@ import play.libs.Crypto;
 import play.libs.Images;
 import play.mvc.Controller;
 import repositories.StatisticRepository;
-import validations.PlayerValidations;
 
 public class PlayerController extends Controller {
 
@@ -59,7 +58,7 @@ public class PlayerController extends Controller {
         if (Validation.hasErrors()) {
             params.flash(); // add http parameters to the flash scope
             Validation.keep();   // keep the errors for the next request
-            controllers.Application.main_page();
+            controllers.Application.login();
         }
 
 
@@ -70,7 +69,9 @@ public class PlayerController extends Controller {
             controllers.Application.main_page();
         } else if (exist == null) {
 
-            player = PlayerValidations.trimAtRegistr(player);
+           
+            player.username = player.username.trim();
+            player.password = player.password.trim();
             player.registered = new Date();
             player.password = Crypto.encryptAES(player.password);
 
@@ -143,9 +144,6 @@ public class PlayerController extends Controller {
     }
 
     public static void profile(String username) {
-
-
-        username = PlayerValidations.sqlInjection(username);
 
         Player player = Player.find("byUsername", username).first();
         if (player != null) {

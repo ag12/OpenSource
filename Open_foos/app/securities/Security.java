@@ -5,7 +5,7 @@
 package securities;
 
 import controllers.Secure;
-import models.Player;
+import models.Admin;
 import play.libs.Crypto;
 
 /**
@@ -15,14 +15,7 @@ import play.libs.Crypto;
 public class Security extends Secure.Security {
 
     public static boolean authenticate(String username, String password) {
-
-        Player player = Player.find("byUsername", username).first();
-
-        return (player != null && player.password.equals(password));
-    }
-
-    public static String encPassword(String password) {
-
-        return Crypto.passwordHash(password);
+        Admin admin = Admin.find("byUsernameAndPassword", username,Crypto.encryptAES(password)).first();
+        return (admin != null && admin.password.equals(password));
     }
 }

@@ -350,6 +350,9 @@ public class StatisticRepository {
         }
         return statistic;
     }
+    
+    
+    
 //    private Statistic getMostRegularAppearances(Long team_id, int differenc) {
 //
 //        StringBuilder sqlToQuery =
@@ -387,6 +390,7 @@ public class StatisticRepository {
 //        return statistic;
 //    }
 
+    
     public List<Statistic> getMoreInfo(Long team_id) {
 
         List<Statistic> statistics = new ArrayList<Statistic>();
@@ -401,10 +405,9 @@ public class StatisticRepository {
 
         List<Statistic> statistics = new ArrayList<Statistic>();
         for (int i = 0; i < teams.size(); i++) {
-
             statistics.add(getStatistics(teams.get(i).id));
         }
 
-        return statistics;
+      return statistics;
     }
 }
