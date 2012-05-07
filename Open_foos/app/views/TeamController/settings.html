@@ -6,64 +6,7 @@
     $(document).ready(function(){
         
         
-        $('#arch-rival').typeahead()
-        .on('keyup', function(ev){
-
-            ev.stopPropagation();
-            ev.preventDefault();
-
-            //filter out up/down, tab, enter, and escape keys
-            if( $.inArray(ev.keyCode,[40,38,9,13,27]) === -1 ){
-
-                var self = $(this);
-                
-                //a empty source
-                self.data('typeahead').source = [];
-
-                //active used so we aren't triggering duplicate keyup events
-                if( !self.data('active') && self.val().length > 0){
-
-                    self.data('active', true);
-
-                    //Do data request. Insert your own API logic here.
-                    $.getJSON("@{TeamController.allTeamsByTeam_name()}",{
-                               
-                               
-                        //if we dont use filter vi the typehead can sort list for us. 
-                        //or change the method sett Like  % var % 
-                        // filter: $(this).val() use this for PlayerController
-                        
-                        
-                        filter: self.val()
-                    }, function(data) {
-                  
-                        //set this to true when your callback executes
-                        self.data('active',true);
-
-                        //change values
-                        var arr = [],
-                        
-                        i=data.length;
-                        while(i--){
-                            arr[i] = data[i].team_name
-                        }
-
-                        //set your results into the typehead's source 
-                        self.data('typeahead').source = arr;
-
-                        //trigger keyup on the typeahead to make it search
-                        self.trigger('keyup');
-
-                        //All done, set to false to prepare for the next remote query.
-                                
-                        self.data('active', false);
-
-                    });
-
-                }
-            }
-        });
-        
+       
         doInputfeltTricks();
 
 

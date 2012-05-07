@@ -662,7 +662,7 @@
                         <p>@${team?.team_name}</p>
                         <pre>${team?.bio}</pre>
                         #{if team?.arch_rival != null}
-                        <strong>Arch rival:</strong> <a href="@{TeamsTeamController.profile(team?.arch_rival?.team_name)}"> ${team?.arch_rival?.team_name}</a>
+                        <strong>Arch rival:</strong> <a href="@{TeamController.profile(team?.arch_rival?.team_name)}"> ${team?.arch_rival?.team_name}</a>
                         #{/if}
                         <p>Registered: ${team?.registered}</p>
                     </div>

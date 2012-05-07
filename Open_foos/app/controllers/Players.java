@@ -12,11 +12,9 @@ import play.data.binding.Binder;
 import play.db.Model;
 import play.exceptions.TemplateNotFoundException;
 import play.libs.Crypto;
+import play.mvc.With;
 
-/**
- *
- * @author Santonas
- */
+@With(Secure.class)
 public class Players extends CRUD {
 
     public static void create() throws Exception {
