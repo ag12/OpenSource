@@ -1629,11 +1629,6 @@
         if (!that.strings)
             item = item[that.options.property]
         i.find('a').html(that.highlighter(item))
-        i.find('a').css('float', 'left');
-        i.find('a').attr('href', '/' + item); 
-        i.find('a').append('<img src="/public/images/favicon.png" width="40" height="40" style="float: right" />');
-        i.find('img').css('float', 'right');
-         // console.log(i)
         return i[0]
       })
 

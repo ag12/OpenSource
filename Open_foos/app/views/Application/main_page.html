@@ -10,7 +10,7 @@
 
 
 
-
+            
                 <!-- ----------------------------------------------------------
                 DETTE ER NYTT DATO 02.05.2012
                 -------------------------------------------------------------->
@@ -280,25 +280,11 @@
                         </div>
                     </div>
                 </div>
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
             </div>
+            
+            
+            
+            #{if !session.login}
             <div class="span4 card section shadow">
 
                 <form id="profile-signin" action="@{PlayerController.loginPlayer()}" method="POST">
@@ -337,6 +323,7 @@
                     <button type="submit" class="btn btn-warning">Sign up for OpenFoos</button>
                 </form>
             </div>
+            #{/if}
         </div>
     </div>
 </div>
