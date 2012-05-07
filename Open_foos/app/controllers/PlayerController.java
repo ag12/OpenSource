@@ -22,10 +22,10 @@ import validations.PlayerValidations;
 
 public class PlayerController extends Controller {
 
-    public static Player getPlayer(String username){
+    public static void getPlayer(String username){
         Player p = Player.find("byUsername", username).first();
         renderJSON(p);
-        return null;
+    
     }
 
     /*

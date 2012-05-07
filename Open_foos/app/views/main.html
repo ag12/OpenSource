@@ -18,20 +18,20 @@
         
         
                 $('#main_typeahead').typeahead({
-                items: 8, 
-                source: function (typeahead) {
-                    return $.get('/application/everybody ',  function (data) 
-                    {
-                        return typeahead.process(data);
-                    });
-                },
-                onselect: function (data){
+                    items: 8, 
+                    source: function (typeahead) {
+                        return $.get('/application/everybody ',  function (data) 
+                        {
+                            return typeahead.process(data);
+                        });
+                    },
+                    onselect: function (data){
                   
-                  $.get('@{Application.redirectToProfile()}', {who : data}, function(data){
-                       window.location = data;
-                  });
-                }
-            });
+                        $.get('@{Application.redirectToProfile()}', {who : data}, function(data){
+                            window.location = data;
+                        });
+                    }
+                });
         
         
         
@@ -51,21 +51,30 @@
         <div class="navbar navbar-fixed-top" >
             <div class="navbar-inner">
                 <div class="container">
-                   
-                   
-           <ul class="nav">
-                        <li class="${page == 'main' ? 'active' : ''}">
-                            <a class="brand" href="/main">
+
+
+                    <ul class="nav">
+                        <li class="${page == '/' ? 'active' : ''}">
+                            <a class="brand" href="/">
                                 <i class="icon-fire icon-white"></i>
                                 OpenFoos
                             </a> 
                         </li>
-                        #{if session.login}
-                        <li class="${page == 'profile' ? 'active' : ''}">
-                            <a href="">
-                                <i class="icon-home ${page == 'profile' ? 'icon-white' : ''}"></i>
-                                Home
+                        #{if !session.login}
+ 
+                        <li class="dropdown">
+                            <a class="dropdown-toggle"
+                               data-toggle="dropdown"
+                               href="#">
+                              <i class="icon-home icon-white"></i>
+                               <b class="caret"></b>
                             </a>
+
+                            <ul class="dropdown-menu pull-right">
+                                <li><a href="@{Application.login()}" ><i class="icon-user"></i> Sign in</a></li>
+                                <li><a href="@{Application.login()}"><i class="icon-plus-sign"></i> Sign up</a></li>
+                            </ul>
+
                         </li>
                         #{/if}
                     </ul>
@@ -103,6 +112,6 @@
 
         </div><!-- END .container -->
 
-       
+
     </body>
 </html>
