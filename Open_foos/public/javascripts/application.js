@@ -120,7 +120,7 @@ $(document).ready(function(){
         {
             var attrs = {};
             attrs.id = response.id;
-            attrs.score = response.score;
+            attrs.rating = response.rating;
             
             // If the team name is not set, then 
             // we will use a combination of both player names.
@@ -148,7 +148,7 @@ $(document).ready(function(){
         {
             'id': undefined,
             'team_name': undefined,
-            'score': 0
+            'rating': 0
         }
     });
 
@@ -157,6 +157,8 @@ $(document).ready(function(){
         defaults:
         {
             'player': undefined, 
+            'position': undefined,
+            'game_id': undefined,
             'backfire': false, 
             'timestamp': 0
         }
@@ -164,6 +166,7 @@ $(document).ready(function(){
     
    Foosball.Goals = Backbone.Collection.extend
    ({
+        url: window.serverURL + '/game/goals',
         model: Foosball.Goal,   
         
         pop: function(player) 
@@ -194,6 +197,18 @@ $(document).ready(function(){
                 this.remove(goal);	
             
              return goal;
+        },
+        
+        save: function()
+        {
+            var collection = JSON.stringify(this.toJSON());
+            $.ajax({
+                type: 'POST',
+                url: this.url,
+                data: collection,
+                error: function(){Foosball.message.showError("An error occured while we attempted to save the goals");},
+                dataType: "json"
+            });
         }
         
     });
@@ -254,7 +269,6 @@ $(document).ready(function(){
              if(this.authenticate() === true)
              {
                 this.set('state', 'started');
-                console.log('the game has started');
                 return true;
              }
            }
@@ -265,7 +279,7 @@ $(document).ready(function(){
         finish: function() 
         {
             var winner = this.get('home_score') > this.get('visitor_score') ? this.get('home_team') : this.get('visitor_team'); 
-            this.set('state', 'end'); 
+            this.set('state', 'finish'); 
             this.save({}, {
                 success: function()
                 {
@@ -367,13 +381,19 @@ $(document).ready(function(){
                 this.reset();
                 this.startClock();
             }
+            
+            else if(state === 'finish')
+            {
+                this.get('goals').save();
+            }
         },
         
         addGoal: function(player, backfire)
         {
-            
             var goal = new Foosball.Goal({
                                            player: player,
+                                           position: player.get('position'),
+                                           game_id: window.game.get('id'),
                                            backfire: backfire,
                                            timestamp: new Date().getTime()
                                          });
@@ -406,7 +426,7 @@ $(document).ready(function(){
                     team = team === 'home' ? 'visitor' : 'home';
                 }
                 
-                window.game.set(team + '_score', window.game.get(team + '_score') - 1); }
+                window.game.set(team + '_score', window.game.get(team + '_score') - 1);}
         },
         
         startClock: function()
@@ -1034,7 +1054,7 @@ $(document).ready(function(){
             {                
                 this.renderTeams();
             }
-            else if(state === 'end')
+            else if(state === 'finish')
             {                
                 var resultView = new Foosball.ResultView();
                 $(this.el).append(resultView.render().el);

@@ -1,19 +1,15 @@
-/*
- * To change this template, choose Tools | Templates
- * and open the template in the editor.
- */
 package models;
 
 import java.util.Date;
+import javax.persistence.Entity;
+import play.db.jpa.Model;
 
-/**
- *
- * @author Santonas
- */
-public class Goal {
-
+@Entity
+public class Goal extends Model{
     public Long player_id;
     public Long game_id;
     public int position;
+    public boolean backfire = false;
     public Date registered;
+    
 }

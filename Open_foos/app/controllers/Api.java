@@ -1,11 +1,15 @@
 package controllers;
 import com.google.gson.Gson;
+import com.google.gson.JsonArray;
 import com.google.gson.JsonElement;
+import com.google.gson.JsonObject;
 import com.google.gson.JsonSyntaxException;
 import java.util.ArrayList;
+import java.util.Calendar;
 import java.util.Date;
 import java.util.List;
 import models.Game;
+import models.Goal;
 import models.Player;
 import models.Team;
 import org.h2.util.StringUtils;
@@ -13,7 +17,6 @@ import play.Logger;
 import play.libs.Crypto;
 import play.mvc.Controller;
 import play.mvc.Http;
-import securities.Security;
 
 public class Api extends Controller
 {
@@ -246,6 +249,40 @@ public class Api extends Controller
        }
     }
     
+    public static void registerGoals(JsonElement body)
+    {
+        if(body == null)
+        {
+            badRequest();
+            return;
+        }
+        
+        JsonArray array = body.getAsJsonArray();
+        if(array.size() <= 0)
+        {
+            badRequest();
+            return;
+        }
+        
+        for(int i = 0; i < array.size(); i++)
+        {
+            Goal goal = new Goal();
+            JsonObject object = array.get(i).getAsJsonObject();
+            goal.position = object.get("position").getAsInt();
+            goal.game_id = object.get("game_id").getAsLong();
+            goal.backfire = object.get("backfire").getAsBoolean();
+            long timestamp = object.get("timestamp").getAsLong();
+            goal.registered = new Date(timestamp);
+            JsonObject player = object.get("player").getAsJsonObject();
+            goal.player_id = player.get("id").getAsLong();
+            
+            goal.save();
+        }
+        
+        ok();
+        
+    }
+    
     private static <T extends Object> T construct(JsonElement json, Class<T> classOfT)
     {
        if(json == null)
@@ -308,7 +345,6 @@ public class Api extends Controller
 
         //Saves the calculated rating
         home_team.save();
-        
         visitor_team.save();
     }
 }
