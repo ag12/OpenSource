@@ -308,6 +308,7 @@ public class Api extends Controller
 
         //Saves the calculated rating
         home_team.save();
+        
         visitor_team.save();
     }
 }
