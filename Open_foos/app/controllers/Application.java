@@ -69,18 +69,15 @@ public class Application extends Controller {
     }
     
     public static String redirectToProfile(String who){
-        
-        System.out.println("Inside who");
+       
         Player player = Player.find("byUsername", who).first();
         if (player != null) {
             return "/players/profile/" + who;
         }
-        System.out.println("outside first if");
         Team team = Team.find("byTeam_name", who).first();
         if (team != null) {
             return "/teams/profile/" + who;
         }
-        System.out.println("Outside 2.if");
         if (team == null && player == null) {
             return "/error";
         }
