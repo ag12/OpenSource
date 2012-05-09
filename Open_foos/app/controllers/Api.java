@@ -27,8 +27,8 @@ public class Api extends Controller
      */
     
     public static void autocomplete(String username)
-    {
-        
+    {   
+        await("1s");
        if(StringUtils.isNullOrEmpty(username))
        {
           badRequest();
@@ -45,25 +45,55 @@ public class Api extends Controller
        renderJSON(usernames);
     }
     
-    public static void fetchPlayer(String username, String password)
+    public static void getPlayer(JsonElement body)
     {
-       //await("5s");
-       if(StringUtils.isNullOrEmpty(username) || StringUtils.isNullOrEmpty(password))
+       Player player = construct(body, Player.class);  
+       
+       if(StringUtils.isNullOrEmpty(player.username) || StringUtils.isNullOrEmpty(player.password))
        {
           error(Http.StatusCode.BAD_REQUEST, "Username or password cannot be empty"); 
-       }   
-        
-       Player player = Player.find("username = ? and password = ?", username, Crypto.encryptAES(password)).first();
+          return;
+       }
        
-       if(player == null)
+       // Check if a player with the given username 
+       // allready exist
+       Player verifiedPlayer = Player.find("username = ? and password = ?", player.username, Crypto.encryptAES(player.password)).first();
+       if(verifiedPlayer == null)
        {
-          error(Http.StatusCode.BAD_REQUEST, "Could not locate a player with the given username and password"); 
+          error(Http.StatusCode.BAD_REQUEST, "Ops! Seems like your username or password is wrong"); 
+          return;
        }
        
        else
        {
-          renderJSON(player);
+        if(player.rfid != null && player.rfid != verifiedPlayer.rfid)  
+         {
+             verifiedPlayer.rfid = player.rfid;
+             verifiedPlayer.save(); 
+         }
+         
+         renderJSON(verifiedPlayer);
        }
+       
+    }
+    
+    public static void getPlayerByRFID(long rfid)
+    {
+       
+       if(rfid < 1)
+       {
+          error(Http.StatusCode.BAD_REQUEST, "Please provide an non-empty RFID code"); 
+          return;
+       }   
+        
+       Player player = Player.find("rfid = ?", rfid).first();
+       
+       if(player == null)
+       {
+          error(Http.StatusCode.BAD_REQUEST, "Could not find a user with the given RFID-code <br /><br /> Please sign-in, to connect this card to your account");  
+          return;
+       }
+          renderJSON(player);      
     }
     
     public static void registerPlayer(JsonElement body)
@@ -92,12 +122,6 @@ public class Api extends Controller
           player.password = Crypto.encryptAES(player.password);
           player.save();
           
-          // Registers the team
-          Team team = new Team();
-          team.team_name = player.username; 
-          team.player1 = player;
-          team.save();
-
           renderJSON(player);
        }
     }    
@@ -146,16 +170,21 @@ public class Api extends Controller
           verifiedTeam = Team.find("player1_id = ? and player2_id = ?", team.player1.id, team.player2.id).first();
        
        
-       //We tried to look for the team
-       //specified, if we coult not find it, then we will create it;
+       //We tried to look for the team specified,
+       //specified, if we could not find it, then we will create it;
        if(verifiedTeam == null)
        {
+         verifiedTeam = new Team(); 
+         verifiedTeam.player1 = team.player1; 
+         if(team.memberCount() == 2) 
+         verifiedTeam.player2 = team.player2;
+         
          String name = team.player1.username; 
-         if(team.memberCount() > 1) 
+         if(team.memberCount() == 2) 
              name += " & " + team.player2.username;
                      
-         team.team_name = name;  
-         verifiedTeam = team.save();
+         verifiedTeam.team_name = name;  
+         verifiedTeam.save();
        }
         
        
@@ -165,7 +194,6 @@ public class Api extends Controller
        }
        else
        {
-           Logger.info("i authenticated team: " + verifiedTeam.getId());
            renderJSON(verifiedTeam);
        }
     }
@@ -231,6 +259,17 @@ public class Api extends Controller
            verified.home_score = game.home_score; 
            verified.visitor_score = game.visitor_score; 
            verified.winner = (verified.home_score > verified.visitor_score ? verified.home_team : verified.visitor_team); 
+           if(verified.home_team == verified.winner)
+           {
+               verified.home_team.won++;
+               verified.visitor_team.lost++;
+           }
+           else
+           {
+               verified.visitor_team.won++;
+               verified.home_team.lost++;
+           }
+           
            verified.end_time = new Date();
            
            //Calculates and sets team score if the game mode is ranked

@@ -10,7 +10,8 @@
 # API
 
 GET     /api/player/autocomplete/{username}           Api.autocomplete
-GET     /api/player/login/{username}/{password}       Api.fetchPlayer
+GET     /api/player/login/rfid/{rfid}                 Api.getPlayerByRFID
+POST    /api/player/login                             Api.getPlayer
 POST    /api/player/register                          Api.registerPlayer
 POST    /api/team                                     Api.fetchTeam
 POST    /api/game                                     Api.initializeGame  

@@ -4,12 +4,15 @@ $(document).ready(function(){
     window.serverURL = "/api";
     
     
-    Backbone.View.prototype.close = function(){
+    Backbone.View.prototype.close = function()
+    {
+        this.trigger('close');
         this.remove();
         this.unbind();
         if (this.onClose){
             this.onClose();
         }
+        
     }
     
     /************************************************************************/
@@ -46,6 +49,7 @@ $(document).ready(function(){
             attrs.id = response.id; 
             attrs.username = response.username; 
             attrs.image = response.image; 
+            attrs.rfid = response.rfid;
             return attrs;
         },
 
@@ -55,7 +59,8 @@ $(document).ready(function(){
             'id': undefined,
             'username' : undefined,
             'image': undefined,
-            'password': undefined
+            'password': undefined,
+            'rfid': undefined
         }
     }); 
     
@@ -121,19 +126,7 @@ $(document).ready(function(){
             var attrs = {};
             attrs.id = response.id;
             attrs.rating = response.rating;
-            
-            // If the team name is not set, then 
-            // we will use a combination of both player names.
-//            if(!response.team_name)
-//            { 
-//               var p1 = response.player1.username;
-//               var p2 = (!response.player2) ? undefined : ' + ' + response.player2.username; 
-//               
-//               response.team_name = p1; 
-//               response.team_name += (!p2) ? '' : p2; 
-//            }
-//            
-//            attrs.name = response.team_name;
+            attrs.team_name = response.team_name;            
             return attrs;
         },
         
@@ -220,8 +213,8 @@ $(document).ready(function(){
         initialize: function()
         {
             _.bindAll(this, 'isReady', 'start', 'finish', 'restart', 'reset');
-            this.set('home_team', new Foosball.Team());
-            this.set('visitor_team',new Foosball.Team());
+            this.set('home_team', new Foosball.Team({side: 'home'}));
+            this.set('visitor_team',new Foosball.Team({side: 'visitor'}));
         },
        
         isReady: function()
@@ -327,7 +320,6 @@ $(document).ready(function(){
                success: function()
                {
                  console.log("the game has been authenticated by the server");   
-                 
                },
                error: function()
                {
@@ -458,11 +450,11 @@ $(document).ready(function(){
            }
            else if(home_score > visitor_score)
            {
-               return 'home_team'; 
+               return game.get('home_team');
            }
            else
            {
-               return 'visitor_team'; 
+               return game.get('visitor_team');
            }
         },
         
@@ -480,11 +472,13 @@ $(document).ready(function(){
       
     window.PlayerView = Backbone.View.extend
     ({
-        className: 'player',
+        className: 'player-container',
         template: _.template($('#player-template').html()),
         
         events: 
         {
+          'focus .player' : 'focus',
+          'blur .player' : 'unfocus',
           'click .player-login' : 'login',
           'click .player-logout' : 'logout',
           'click .player-score .player-image' : 'displayOptions', 
@@ -492,16 +486,25 @@ $(document).ready(function(){
           'click .goal-options-score' : 'score',
           'click .goal-options-backfire' : 'backfire',
           'click .goal-options-unscore' : 'unscore'
+          
         },
       
         initialize: function()
         {
-            _.bindAll(this, 'render', 'login', 'logout', 'score', 'unscore', 'handleGamestate', 'displayOptions', 'hideOptions', 'backfire');
+            _.bindAll(this, 'render', 'login', 'logout', 'score', 'unscore', 'handleGamestate', 'displayOptions', 'hideOptions', 'backfire', 'focus', 'unfocus');
             this.player = this.options.player;
             this.player.set('position', this.options.position);
             
             this.player.on('change:id', this.render);
             window.game.on('change:state', this.handleGamestate);
+        },
+        
+        focus: function(){
+            this.$el.find('.player-image').addClass('strong-shadow');
+        },
+        
+        unfocus: function(){
+            this.$el.find('.player-image').removeClass('strong-shadow');
         },
       
         render: function()
@@ -512,9 +515,8 @@ $(document).ready(function(){
         
         
         login: function()
-        {
-          var login = new Foosball.LoginView({player: this.player});
-          Foosball.board.show(login);
+        { 
+          Foosball.board.showLoginView(this.player);  
         },
         
         logout: function()
@@ -571,6 +573,30 @@ $(document).ready(function(){
             window.game.off('change:state', this.handleGamestate);
         }
     }); 
+    
+    window.TeamNameView = Backbone.View.extend
+    ({
+        className: 'team-name-container',
+        initialize: function()
+        {   
+            this.team = this.options.team;
+            this.defaultName = 'Home team';
+            if(this.team === window.game.get('visitor_team'))
+                this.defaultName = 'Visitor team';
+            
+            this.team.on("change:team_name", this.render, this);
+        },
+      
+        render: function()
+        {
+            var name =  this.team.get('team_name'); 
+            if(!name)
+                name = this.defaultName;
+            
+            this.$el.html('<h2 class="team-name">' + name + "</h2>"); 
+            return this;
+        }
+    });
 
     window.TeamView = Backbone.View.extend
     ({
@@ -592,58 +618,77 @@ $(document).ready(function(){
                 player: this.team.get('player2')
             });
             
+            var teamNameView = new TeamNameView({team: this.team});
+            
             this.$el.empty();
+            this.$el.append(teamNameView.render().el);
             this.$el.append(player1View.render().el);
             this.$el.append(player2View.render().el);
             return this;
         }
     });
  
- // OLD
- /*
-  window.TeamView = Backbone.View.extend
-    ({
-        initialize: function()
-        {   
-            this.team = this.options.team;
-            this.render();
-        },
-      
-        render: function()
-        {
-            var player1View = new PlayerView({
-                position: 1, 
-                player: this.team.get('player1')
-            });
-            
-            var player2View = new PlayerView({
-                position: 2, 
-                player: this.team.get('player2')
-            });
-            
-            this.$el.empty();
-            this.$el.append(player1View.render().el);
-            this.$el.append(player2View.render().el);
-            return this;
-        }
-    });
- */
+ 
+
+
 
     Foosball.LoginView = Backbone.View.extend
     ({
         template: _.template($('#login-template').html()),
         events: 
         {
+            'keypress #rfid-input' : 'rfidInput',
+            'click #rfid' : 'rfid',
             'click #login' : 'authenticate',
             'click #register' : 'register'
         },
       
         initialize: function()
         {
-            _.bindAll(this, 'authenticate', 'register', 'isPlayerPresent', 'success', 'error');
+            _.bindAll(this, 'authenticate', 'register', 'isPlayerPresent', 'success', 'error', 'rfid', 'rfidInput');
             this.player = this.options.player; 
         },
-      
+        
+        rfid: function()
+        {
+            Foosball.message.showMessage("Please scan your RFID-card", true); 
+            var input = this.$el.find('#rfid-input');
+            input.val(''); 
+            input.focus(); 
+        },
+        
+        rfidInput: function(e)
+        {
+            if (e.keyCode == 13)             
+            {
+                  Foosball.message.hide(); 
+                  
+                  var rfid = this.$el.find('#rfid-input').val();
+                  if(this.isPlayerPresent(rfid) === false)
+                  {
+                      this.player.set('rfid', rfid, {silent: true});
+                      var options = 
+                      {
+                        url: window.serverURL + '/player/login/rfid/' + rfid,
+                        async: true,
+                        success: this.success,
+                        error: this.error,
+                        wait:true
+                      };
+
+                   /* 
+                   Performs an GET request to the server
+                   based on the options provided. 
+
+                   If the user is found, and properly authenticated, 
+                   Then the server will send us a new instance of the user.
+                   */
+                   this.player.fetch(options);
+                  }
+               e.preventDefault();
+            }
+        },
+        
         render: function()
         {
             $(this.el).html(this.template);
@@ -661,20 +706,20 @@ $(document).ready(function(){
             return this;
         },
   
-        isPlayerPresent: function(username)
+        isPlayerPresent: function(id)
         {
           /*
-             Used to check if a player with a given username is 
+             Used to check if a player with a given username or rfid is 
              present in one if the teams.
            */
           var comparator = function(player)
           {
-              return player.isAuthenticated() && player.get('username') === username;
+              return player.isAuthenticated() && (player.get('username') === id || player.get('rfid') == id);
           }; 
           
           var isPresent = window.game.get('home_team').find(comparator) !== undefined || 
                           window.game.get('visitor_team').find(comparator) !== undefined;
-                      
+                                           
           if(isPresent === true) 
             Foosball.message.showError('Woops! This player is allready logged in!');
                                 
@@ -697,7 +742,7 @@ $(document).ready(function(){
           {
               var options = 
                   {
-                    url: window.serverURL + '/player/login/' + username + '/' + password,
+                    url: window.serverURL + '/player/login',
                     async: true,
                     success: this.success,
                     error: this.error,
@@ -711,7 +756,8 @@ $(document).ready(function(){
                If the user is found, and properly authenticated, 
                Then the server will send us a new instance of the user.
                */
-               this.player.fetch(options);
+               this.player.set({username: username, password: password}, {silent:true});
+               this.player.save({},options);
             }
         },
         
@@ -722,7 +768,8 @@ $(document).ready(function(){
         
         error: function(model, response)
         {
-             Foosball.message.showError(response.responseText);    
+           model.reset(); 
+           Foosball.message.showError(response.responseText);    
         },
         
         register: function()
@@ -732,7 +779,7 @@ $(document).ready(function(){
           
           if(!username || !password)
           {
-            Foosball.message.showError("Hei! Please provide us with an username and password!"); 
+            Foosball.message.showError("Hey! Please provide us with an username and password!"); 
             return;
           }
           
@@ -860,8 +907,8 @@ $(document).ready(function(){
             {
                 var attributes = 
                 {
-                   isFriendlyActive: mode === 'friendly' ? 'button-active' : '',
-                   isRankedActive: mode === 'ranked' ? 'button-active' : ''
+                   isFriendlyActive: mode === 'friendly' ? 'button-active yellow' : '',
+                   isRankedActive: mode === 'ranked' ? 'button-active yellow' : ''
                 }
                 
                 this.$el.html(this.template(attributes)).show(); 
@@ -900,8 +947,8 @@ $(document).ready(function(){
         {
            var data = 
                 {
-                    homeTeam: window.game.get('home_team').get('name'),
-                    visitorTeam: window.game.get('visitor_team').get('name'),
+                    homeTeam: window.game.get('home_team'),
+                    visitorTeam: window.game.get('visitor_team'),
                     winner: window.referee.getMatchLeader()
                 };
             
@@ -939,9 +986,9 @@ $(document).ready(function(){
           this.showWelcomeMessage();
         },
         
-        handleGameState: function(game)
+        handleGameState: function()
         {
-            var state = game.get('state');
+            var state = window.game.get('state');
             if(state === 'new')
             {
                 this.showWelcomeMessage();
@@ -963,61 +1010,86 @@ $(document).ready(function(){
             this.show(scoreBoard);
         },
         
-        show: function(view)
+        showLoginView: function(player)
         {
-            if(this.current !== undefined)
-                this.current.close();
-            
-            this.current = view;
-            $(this.el).empty();
-            $(this.el).html(view.render().el);
-        }
+          var login = new Foosball.LoginView({player: player});
+          this.show(login);
+        },
         
+        show: function(view)
+        { 
+            if(this.current !== undefined)
+            {    
+                this.current.off();
+                this.current.close();
+                
+            }
+            
+            view.on('close', this.handleGameState, this);
+            this.current = view;
+           
+                $(this.el).empty();
+                $(this.el).html(view.render().el);
+        }
     });
     
     Foosball.MessageView = Backbone.View.extend
     ({
         el: '#messages', 
         template: _.template($('#message-template').html()),
+        
+        events:
+        {   
+            'click #close-message' : 'hide'
+        },
        
-        showMessage: function(message)
+        showMessage: function(message, hold)
         {
+            if(!hold)
+            hold = false;
+        
             var data = 
             {
                 message: message,
-                type: 'message'
+                type: 'message',
+                hold: hold
             };
             this.$el.html(this.template(data));
-            this.show();
+            this.show(hold);
         },
         
-        showError: function(message)
+        showError: function(message, hold)
         {
             var data = 
             {
                 message: message,
-                type: 'error'
+                type: 'error',
+                hold: hold
             };
             $(this.el).html(this.template(data));
-            this.show();
+            this.show(hold);
         },
         
-        show: function()
+        show: function(hold)
         {
           var self = this;
-          $(self.el).slideDown();   
-            if(self.timer)
+          $(self.el).slideDown(150);   
+            if(!hold)
+            {
+                if(self.timer)
                 clearTimeout(self.timer);
+                
                 self.timer = setTimeout(function() 
                 {
                   self.hide();
                   self.timer = null;
-                }, 2000);
+                }, 4000);
+            }
         },
         
         hide: function()
         {
-          $(this.el).slideUp(); 
+          $(this.el).slideUp(150); 
         }
     }); 
     
@@ -1076,10 +1148,11 @@ $(document).ready(function(){
     // we want show an indicator until the server responds to us
     $(document).ajaxStart(function()
     { 
-      $('#request-indicator').slideDown(350); 
+        $('#request-indicator').stop().slideDown(250); 
+  
     }).ajaxStop(function()
     { 
-        $('#request-indicator').slideUp(350);
+        $('#request-indicator').stop().fadeOut(150);
     });
 
  

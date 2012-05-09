@@ -22,6 +22,8 @@ public class Team extends Model {
     public String bio = null;
     public Date registered = new Date();
     public String image = "team.png";
+    public int won = 0;
+    public int lost = 0;
     @ManyToOne
     public Player player1 = null;
     @ManyToOne

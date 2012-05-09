@@ -8,7 +8,6 @@
         <script src="@{'/public/javascripts/underscore.js'}" type="text/javascript" charset="${_response_encoding}"></script>
         <script src="@{'/public/javascripts/json2.js'}" type="text/javascript" charset="${_response_encoding}"></script>
         <script src="@{'/public/javascripts/backbone.js'}" type="text/javascript" charset="${_response_encoding}"></script>
-        <link rel="stylesheet" href="@{'/public/bootstrap/css/bootstrap.min.css'}" />
         <link rel="stylesheet" href="@{'/public/stylesheets/game.css'}" />
 
     </head>
@@ -68,6 +67,7 @@
                 }
             }
             %>
+            <div class="player" tabindex="0">
             <div class="<%= playerClass %>">
                 <div class="goal-options">
                     <div class="goal-options-score"><span class="goal-options-label">score!</span></div>
@@ -75,29 +75,45 @@
                     <div class="goal-options-unscore"><span class="goal-options-label">regret<br/>goal!</span></div>
                     <div class="goal-options-cancel"><span class="goal-options-label">cancel</span></div>
                 </div>
-                <div class="player-image"></div>
+                <% 
+                    var imagePath = "/public/images/game/";
+                    if(image)
+                    {
+                        imagePath += image; 
+                    }
+                    else
+                    {
+                        imagePath += "player.png"
+                    }
+                
+                %>
+                <div class="player-image" style="background-image: url('<%= imagePath %>');"></div>
                 <div class="player-status"><%= playerStatus %></div>
             </div><!-- END .player-class --> 
+            </div><!-- END .player --> 
             <h2 class="player-name"><%= username %></h2>
         </script>
 
         <script type="text/template" id="login-template">
             <div id="login-container">
+                <button id="rfid" class="button"><img id="rfidlogo" src="/public/images/game/rfidlogo.png" alt="RFID" /></button>
+                <input type="password" id="rfid-input" style="width:1px; height:1px; background-color: transparent; border: 0px; padding:0; margin:0; z-index: 10; font-size: 1px"/>
                 <input type="text" id="username" class="shadow" placeholder="username" data-provide="typeahead" />
                 <input type="password" id="password" class="shadow" placeholder="password"/>
+                
                 <button id="login" class="button green">Login</button>
                 <button id="register" class="button yellow">Register</button>
             </div>
         </script>
-
+       
         <script type="text/template" id="result-template">
             <div id="result-container">
-            <h2 id="result-title">Game ended !</h2>
+            <div id="result-title"><%= winner.get('team_name') %> won the match!</div>
             <div id="result-teams">
             <div id="result-home">
                 <div class="result-medal">
                     <%
-                    if(winner === 'homeTeam')
+                    if(winner === homeTeam)
                     {
                      %>
                      <img src="/public/images/game/medal.png" />
@@ -106,13 +122,13 @@
                      %>
                 </div>
                 <div class="result-info">
-                    <h3><%= homeTeam %></h3>
+                    <h3><%= homeTeam.get('team_name') %></h3>
                 </div>
             </div>
             <div id="result-visitor">
                 <div class="result-medal">
                     <%
-                    if(winner === 'visitorTeam')
+                    if(winner === visitorTeam)
                     {
                      %>
                      <img src="/public/images/game/medal.png" />
@@ -121,7 +137,7 @@
                      %>
                 </div>
                 <div class="result-info">
-                    <h3><%= visitorTeam %></h3>
+                    <h3><%= visitorTeam.get('team_name') %></h3>
                 </div>
             </div>
             </div><!-- END #result-teams --> 
@@ -149,17 +165,16 @@
 
         <script type="text/template" id="message-template">
             <div id="message" class="<%= type %>">
-            <%= message %>
+            <p><%= message %></p>
+            <% if(hold){ %>
+            <button id="close-message" class="button yellow">x</button>    
+            <% } %>
              </div>
         </script>
         
         <script type="text/template" id="mode-template">
             <h3>Game mode</h3>
             <div class="btn-group">               
-                <!-- 
-                <button id="friendly-mode-button" class="btn btn-large <%= isFriendlyActive %>">friendly</button>    
-                <button id="ranked-mode-button" class="btn btn-large <%= isRankedActive %>">ranked</button> 
-                -->
                 <button id="friendly-mode-button" class="button <%= isFriendlyActive %>">friendly</button>    
                 <button id="ranked-mode-button" class="button <%= isRankedActive %>">ranked</button> 
             </div>
