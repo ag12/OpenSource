@@ -296,4 +296,10 @@ public class TeamController extends Controller {
         }
         return notNull;
     }
+    
+    
+    public static List<Team> getTopRankedTeams(int limit ){
+        List<Team> teams = Team.find("ORDER BY rating DESC").fetch(5);
+        return teams;
+    }
 }

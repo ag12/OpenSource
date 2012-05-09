@@ -284,9 +284,9 @@
             
             
             
-            #{if !session.login}
+            
             <div class="span4 card section shadow">
-
+#{if !session.login}
                 <form id="profile-signin" action="@{PlayerController.loginPlayer()}" method="POST">
                     <input type="text" name="player.username" 
                            autofocus="autofocus" autocomplete="on" class="input-xlarge"
@@ -322,8 +322,26 @@
 
                     <button type="submit" class="btn btn-warning">Sign up for OpenFoos</button>
                 </form>
+                  #{/if}
+                  
+                  
+                  #{if session.login}
+                                             <div id="rank1" class="tab-pane active" >
+
+                                            <div class="thumbnail" style="margin-bottom: 5px;">
+                                                <img src="/public/images/medium/player.png" alt="" class="small-image">
+
+                                                <p><strong>Neberd</strong> er en av de beste spilerne som har hatt en rekord på</p>
+                                                <p>Registered: 20.05.2012</p>
+                                                <p><strong>Winn %:</strong> 100</p>
+                                                      <p><strong>Neberd</strong> er en av de beste spilerne som har hatt en rekord på</p>
+                                                <p>Registered: 20.05.2012</p>
+                                                <p><strong>Winn %:</strong> 100</p>
+                                            </div>
+                                        </div>
+                       #{/if}
             </div>
-            #{/if}
+          
         </div>
     </div>
 </div>

@@ -134,7 +134,9 @@ public class StatisticRepository {
             }
             resultset.close();
         } catch (SQLException e) {
-        } finally {
+            System.out.println(e.toString());
+        } catch (Exception e){
+             System.out.println(e.toString());
         }
 
         if (statistic.games_playd >= 1) {

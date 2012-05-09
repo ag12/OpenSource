@@ -1,16 +1,17 @@
 package controllers;
 
-import play.*;
-import play.mvc.*;
-
-import java.util.*;
-
-import models.*;
-import play.libs.Crypto;
+import java.util.ArrayList;
+import java.util.List;
+import models.Game;
+import models.Player;
+import models.Team;
+import play.mvc.Controller;
+import repositories.GameRepository;
 
 public class Application extends Controller {
 
     public static void index() {
+       
         render();
     }
 
@@ -19,7 +20,9 @@ public class Application extends Controller {
     }
 
     public static void main_page() {
-        render();
+       List<Game> games =  GameRepository.getOngoingGames();
+       List<Team> teams = TeamController.getTopRankedTeams(5);
+       render();
     }
 
     public static void login() {
@@ -31,8 +34,8 @@ public class Application extends Controller {
     public static void ofError(){
         render();
     }
+    
     //Player is login
-
     public static boolean afterLogin(Player exist) {
 
         session.put("login", true);

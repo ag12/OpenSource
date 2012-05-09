@@ -24,10 +24,7 @@ public class Game extends Model {
     public Date start_time = null;
     
     public Date end_time = null;
-   
-    
-    
-   
+
     @ManyToOne
     public Team home_team = null;
    
