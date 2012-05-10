@@ -157,7 +157,7 @@ public class PlayerController extends Controller {
             List<Statistic> statistics = null;
             List<Game> games = null;
             if ( team != null){
-            teams = TeamController.getTeams(team.getId());
+            teams = TeamController.getTeams(player.getId());
              
             statistic = StatisticRepository.getStatistics(team.getId());
             statistics = new StatisticRepository().getMoreInfo(team.getId());
@@ -286,21 +286,9 @@ public class PlayerController extends Controller {
                 String playerImage = "openfoos_player_" + id + imageEnd;
                 existingplayer.image = playerImage;
                 String main_path = Play.applicationPath + "/public/images/";
-                //String small_path = main_path + "small/" + playerImage;
-                String xsmall_path = main_path + "xsmall/" + playerImage;
-                String medium_path = main_path + "medium/" + playerImage;
-                String large_path = main_path + "large/" + playerImage;
-
-
-                //since the image name i uniqe here, the system wil auto change players image if exists
-                //xsmall 72x72       
-                Images.resize(image, new File(xsmall_path), 72, 72, true);
-                //small 127x80
-                // Images.resize(image, new File(small_path), 127, 80, true);
-                //medium 85x120 
-                Images.resize(image, new File(medium_path), 85, 120, true);
-                //Large 260x180
-                Images.resize(image, new File(large_path), 180, 260, true);
+                main_path += "players/" + playerImage;
+                Images.resize(image, new File(main_path), 200, 160, true);
+           
 
                 hasChanged = true;
             }

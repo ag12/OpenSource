@@ -7,6 +7,7 @@ import models.Player;
 import models.Team;
 import play.mvc.Controller;
 import repositories.GameRepository;
+import repositories.TeamRepository;
 
 public class Application extends Controller {
 
@@ -20,9 +21,26 @@ public class Application extends Controller {
     }
 
     public static void main_page() {
-       List<Game> games =  GameRepository.getOngoingGames();
-       List<Team> teams = TeamController.getTopRankedTeams(5);
-       render();
+       Player onlinePlayer;
+       if(session.get("login") != null){
+           boolean login = Boolean.parseBoolean(session.get("login"));
+           if (login){
+               Long id = Long.parseLong(session.get("pid"));
+               onlinePlayer = Player.findById(id);
+               if ( onlinePlayer != null){
+                 System.out.println("Online"); 
+                 String f = ""; f.length();
+               }
+           }
+       }else {
+            System.out.println("Offline");  
+       }
+       List<Game> onGoingGames =  GameRepository.getOngoingGames();
+       List<Team> topRankedteams = TeamController.getTopRankedTeams(5);
+       List<Team> biggestWinner = TeamRepository.getBiggestWinner();
+       List<Team> biggestLoser = TeamRepository.getBiggestLoser();
+       
+       render(topRankedteams,onGoingGames,biggestWinner,biggestLoser);
     }
 
     public static void login() {

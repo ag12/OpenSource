@@ -25,7 +25,7 @@
 <!--                /teams/profile/${team?.team_name}-->
                 <li>
                     <a href="@{TeamController.profile(team?.team_name)}" class="thumbnail">
-                        <img src="@{'/public/images/medium'}/${team?.image}" alt="${team?.team_name}">
+                        <img src="@{'/public/images/teams'}/${team?.image}" alt="${team?.team_name}">
                     </a>
                 </li>
                 <li>
@@ -63,7 +63,7 @@
                         <fieldset>
                             <div class="control-group">
                                 <label class="control-label" for="fileInput">Picture</label>
-                                <img src="@{'/public/images/xsmall'}/${team?.image}" style="float: left; margin: 0 20px 0 20px;"/>
+                                <img src="@{'/public/images/teams'}/${team?.image}" style="float: left; margin: 0 20px 0 20px;"/>
                                 <div class="controls">
                                     <input type="file" name="image" id="team_image" /><br/>
                                     Maximum size of 700k.<br/> 

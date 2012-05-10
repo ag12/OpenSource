@@ -226,7 +226,7 @@
 <div class="row section">
     <div id="profile-info-container" class="span12 card">
         <div class="row">
-            <img src="@{'/public/images/medium'}/${team?.image}" id="profile-image" class="span3 small-image" />
+            <img src="@{'/public/images/teams'}/${team?.image}" id="profile-image" class="span3 small-image" />
 
 
             <div id="profile-description" class="span7">
@@ -450,7 +450,7 @@
                                </tr>
                                </thead>
                                </table>">
-                                <img src="@{'/public/images/medium'}/${teams?.image}" alt="${teams?.team_name}" class="small-image" />
+                                <img src="@{'/public/images/players'}/${teams?.player1?.image}" alt="${teams?.team_name}" class="small-image" />
 
                                 <h3 class="team-name">@ ${teams?.player1?.username}</h3>
 
@@ -565,7 +565,7 @@
                                </thead>
                                </table>">
 
-                                <img src="@{'/public/images/medium'}/${statistics?.target_team.image}" alt="${statistics?.target_team?.team_name}" class="small-image" />
+                                <img src="@{'/public/images/teams'}/${statistics?.target_team.image}" alt="${statistics?.target_team?.team_name}" class="small-image" />
 
 
                                 <h3 class="team-name"> @${statistics?.target_team.team_name}</h3>

@@ -6,88 +6,73 @@
 
 window.versus_options = {
                         
+
     chart: {
         renderTo: 'team_statistic',
-        type: 'bar'
+        type: 'bar',
+        spacingBottom: 40
+    },
+    rangeSelector : {
+        selected : 1
+                
     },
     title: {
         text: 'Your game\'s'
     },
     subtitle: {
-    //text: 'Source: Google Analytics'
+        text: '',
+        floating: true,
+        align: 'right',
+        verticalAlign: 'bottom',
+        y: 15
     },
+ 
     xAxis: {
-        categories: ['Game\'s played', 'Game\'s won', 'Game\'s lost']
+        categories: ['Game\'s played', 'Game\'s won', 'Game\'s lost'],
+       
+        tickInterval: 1,
+        title: {
+            text: 'Played games'
+        },
+        labels: {
+            formatter: function() {
+                return this.value;
+            }
+        }
+      
     },
     yAxis: {
         title: {
             text: 'Games played'
-        }
-    },
-    legend: {},
-    tooltip: {},
-    plotOptions: {}  
-
-
-};
-
-window.openfoosHighChartGamesOptions = {
-                        
-    chart: {
-        renderTo: 'game_statistic',
-        type: 'line'
-        
-    },
-    title: {
-        text: 'Your game\'s'
-    },
-    subtitle: {
-    
-    
-    },
-    xAxis: {
-       title:{
-           text: 'X-Axis'
-       },
+        },
         labels: {
-                    formatter: function() {
-                        return this.value;
-                    }
-        }
+            formatter: function() {
+                return this.value;
+            }
+            ,
+            tickInterval: 1
+        }, 
+        tickInterval: 1
     },
-    yAxis: {
-        title: {
-            text: 'Y-Axiss'
-        }
-      
-    },
-    legend: {
-        
-    },
-    tooltip: {
-        crosshairs: true,
-                shared: true,
-               formatter: function() {
-					return '<b>'+ "this.series.name" +'</b><br/>'+
-					this.x +': '+ this.y +'Â°C';
-			}
-        
-    },
+    tooltip: {}
+    ,
     plotOptions: {
-        
-    }, 
-    series:{
-        
+        area: {
+            fillOpacity: 0.5
+        }
+    },
+    credits: {
+        enabled: false
     }
 
-
 };
+
 
 
 /**
- * Dark blue theme for Highcharts JS
- * @author Torstein Hønsi
- */
+* Dark blue theme for Highcharts JS
+* @author Torstein Hønsi
+*/
 
 Highcharts.theme = {
     colors: ["#DDDF0D", "#55BF3B", "#DF5353", "#7798BF", "#aaeeee", "#ff0066", "#eeaaee",

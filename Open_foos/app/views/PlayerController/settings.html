@@ -22,7 +22,7 @@
             <ul class="thumbnails">
                 <li>
                     <a href="/players/profile/${player?.username}" class="thumbnail">
-                        <img src="@{'/public/images/medium'}/${player?.image}" alt="${player?.username}">
+                        <img src="@{'/public/images/players'}/${player?.image}" alt="${player?.username}">
                     </a>
                 </li>
                 <li>
@@ -90,7 +90,7 @@
                         <fieldset>
                             <div class="control-group">
                                 <label class="control-label" for="fileInput">Picture</label>
-                                <img src="@{'/public/images/xsmall'}/${player?.image}" style="float: left; margin: 0 20px 0 20px;"/>
+                                <img src="@{'/public/images/players'}/${player?.image}" style="float: left; margin: 0 20px 0 20px;"/>
                                 <div class="controls">
                                     <input class="input-file" type="file" name="image" id="image"/><br/>
                                     Maximum size of 700kb.<br/> 

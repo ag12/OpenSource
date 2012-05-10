@@ -168,19 +168,8 @@ public class TeamController extends Controller {
             String teamImage = "openfoos_team_" + id + imageEnd;
             existingTeam.image = teamImage;
             String main_path = Play.applicationPath + "/public/images/";
-            String xsmall_path = main_path + "xsmall/" + teamImage;
-            String medium_path = main_path + "medium/" + teamImage;
-            String large_path = main_path + "large/" + teamImage;
-
-
-            //since the image name i uniqe here, the system wil auto change players image if exists
-            //xsmall 72x72       
-            Images.resize(image, new File(xsmall_path), 72, 72, true);
-            //small 127x80
-            //medium 85x120 
-            Images.resize(image, new File(medium_path), 85, 120, true);
-            //Large 260x180
-            Images.resize(image, new File(large_path), 180, 260, true);
+            main_path +=  "teams/" + teamImage;
+            Images.resize(image, new File(main_path), 200, 160, true);
             hasChanged = true;
         }
         if ( team.arch_rival.team_name.equals("")){

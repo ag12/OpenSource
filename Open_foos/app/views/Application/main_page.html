@@ -5,136 +5,82 @@
     <div class="span12">
         <div class="row">   
             <div id="main_info" class="span8 card">
-                <!-- Endre høyden på bildet fra 320 til 360px
-                <img src="/public/images/back.jpg" style="width: 620px; height: 360px" />-->
-
-
-
-            
-                <!-- ----------------------------------------------------------
-                DETTE ER NYTT DATO 02.05.2012
-                -------------------------------------------------------------->
                 <div class="tabbable"> 
                     <ul class="nav nav-tabs">
-                        <li class="active"><a href="#tab1" data-toggle="tab">Rank</a></li>
-                        <li><a href="#tab2" data-toggle="tab">Ongoing matches</a></li>
-                        <li><a href="#tab3" data-toggle="tab">Biggest loser</a></li>
-                        <li><a href="#tab4" data-toggle="tab">Biggest winner</a></li>
+                        <li class="active"><a href="#rankingTab" data-toggle="tab">Rank</a></li>
+                        <li><a href="#onGoingGamesTab" data-toggle="tab">Ongoing matches</a></li>
+                        <li><a href="#biggestW" data-toggle="tab">Biggest winner</a></li>
+                        <li><a href="#tab4" data-toggle="tab">Biggest loser</a></li>
                     </ul>
                     <div class="tab-content">
-                        <div class="tab-pane active" id="tab1">
-                            <div class="tabbable">
-                                <div id="left_bar" class="span4">
-                                    <ul class="nav nav-tabs nav-stacked">
+                        <div class="tab-pane active" id="rankingTab"><!-- START RANKING TAB-->
+                            <div class="tabbable"><!-- START tabbable -->
+                                <div id="left_bar" class="span4"><!-- START left_bar -->
+                                  
+                                    
+                                    <ul class="nav nav-tabs nav-stacked">           
+                                       
+                                        
+                                        #{list items:topRankedteams, as:'trt'} 
+                                       #{if trt_index == 1}
                                         <li class="active">
-                                            <a href="#rank1" data-toggle="tab">
-                                                <table class="table table-striped change_color">
-                                                    <tbody>
-                                                        <tr>
-                                                            <td>1</td>
-                                                            <td>Neberd</td>
-                                                            <td>100p</td>
-                                                        </tr>
-                                                    </tbody>
-                                                </table>
-                                            </a>
-                                        </li>
+                                        #{/if} 
+                                         #{if trt_index > 1}
                                         <li>
-                                            <a href="#rank2" data-toggle="tab">
+                                        #{/if} 
+                                            <a href="#${trt?.team_name}" data-toggle="tab">
                                                 <table class="table table-striped change_color">
-                                                    <thead></thead>
                                                     <tbody>
                                                         <tr>
-                                                            <td>2</td>
-                                                            <td>Kari</td>
-                                                            <td>5550p</td>
+                                                            <td>${trt_index}</td>
+                                                            <td>${trt?.team_name}</td>
+                                                            <td>${trt?.rating.format('0')} point's</td>
                                                         </tr>
                                                     </tbody>
                                                 </table>
                                             </a>
                                         </li>
-                                        <li>
-                                            <a href="#rank3" data-toggle="tab">
-                                                <table class="table table-striped change_color">
-                                                    <tbody>
-                                                        <tr>
-                                                            <td>3</td>
-                                                            <td>Marcel</td>
-                                                            <td>10p</td>
-                                                        </tr>
-                                                    </tbody>
-                                                </table>
-                                            </a>
-                                        </li>
-                                        <li>
-                                            <a href="#rank4" data-toggle="tab">
-                                                <table class="table table-striped change_color">
-                                                    <tbody>
-                                                        <tr>
-                                                            <td>4</td>
-                                                            <td>Valentin</td>
-                                                            <td>1p</td>
-                                                        </tr>
-                                                    </tbody>
-                                                </table>
-                                            </a>
-                                        </li>
-                                        <li>
-                                            <a href="#rank5" data-toggle="tab">
-                                                <table class="table table-striped change_color">
-                                                    <tbody>
-                                                        <tr>
-                                                            <td>5</td>
-                                                            <td>Ola</td>
-                                                            <td>1000p</td>
-
-                                                        </tr>
-                                                    </tbody>
-                                                </table>
-                                            </a>
-                                        </li>
+                                     #{/list}
+                                    
+                                    
                                     </ul>
-                                </div>
+                                </div><!-- END left_bar -->
 
                                 <div class="span3">
                                     <div id="right_bar" class="tab-content">
-                                        <div id="rank1" class="tab-pane active" >
-
+                                       
+                                       
+                                        #{list items:topRankedteams, as:'trt'} 
+                                       #{if trt_index == 1}
+                                        <div id="${trt?.team_name}" class="tab-pane active" >
+                                        #{/if} 
+                                         #{if trt_index > 1}
+                                         <div id="${trt?.team_name}" class="tab-pane" >
+                                        #{/if} 
                                             <div class="thumbnail" style="margin-bottom: 5px;">
-                                                <img src="/public/images/medium/player.png" alt="" class="small-image">
-
-                                                <p><strong>Neberd</strong> er en av de beste spilerne som har hatt en rekord på</p>
-                                                <p>Registered: 20.05.2012</p>
+                                                <img src="@{'/public/images/players'}/${trt?.player1.image}" alt="" class="small-image">
+                                                <p><strong>${trt?.team_name}</strong> 
+                                                    
+                                                    #{if  trt?.bio != null && trt?.bio.length() <= 50 }
+                                                    ${trt?.bio}
+                                                    #{/if}
+                                                </p>
+                                                <p>${trt?.registered.format('dd MMMM yyyy')}</p>
+                                                <p>${trt?.registered.since(false)}</p>
                                                 <p><strong>Winn %:</strong> 100</p>
                                             </div>
                                         </div>
+                                        
+                                         #{/list}
+                                        
+                                        
+                                    </div><!-- END right_bar -->
+                                </div><!-- END span3 -->
 
-                                        <div class="tab-pane" id="rank2">
-                                            <div class="thumbnail">
-                                                <img src="http://placehold.it/128x128" alt="">
+                            </div><!-- END tabbable -->
+                        </div><!-- END RANKING TAB-->
 
-                                                <p><strong>Amir</strong> er en av de beste spilerne som har hatt en rekord på</p>
-                                                <p>Registered: 20.05.2012</p>
-                                                <p><strong>Winn %:</strong> 100</p>
-                                            </div>
-                                        </div>
-
-                                        <div class="tab-pane" id="rank3">
-                                            <p>Marcel, hva skjer.</p>
-                                        </div>
-                                        <div class="tab-pane" id="rank4">
-                                            <p>Vaelntin, hva skjer.</p>
-                                        </div>
-                                        <div class="tab-pane" id="rank5">
-                                            <p>Ola, hva skjer.</p>
-                                        </div>
-                                    </div>
-                                </div>
-
-                            </div>
-                        </div>
-
-                        <div class="tab-pane" id="tab2">
+                        <div class="tab-pane" id="onGoingGamesTab"><!-- START TABEL ONGOING GAMES-->
                             <table class="table table-condensed">
                                 <thead style="background-color: #eee">
                                     <tr>
@@ -142,139 +88,85 @@
                                         <th>Home-team</th>
                                         <th>Visitor-team</th>
                                         <th>Results</th>
+                                        <th>Mode</th>
+                                        <th>Started</th>
                                         <th>Winner</th>
                                     </tr>
                                 </thead>
                                 <tbody>
+                                      #{list items:onGoingGames, as:'ogg'} 
                                     <tr>
-                                        <td>1</td>
-                                        <td>Ali</td>
-                                        <td>Morasd</td>
-                                        <td>5 - 3</td>
-                                        <td>Ali</td>
+                                        <td>${ogg_index}</td>
+                                        
+                                        <td>${ogg?.home_team?.team_name}</td>
+                                        
+                                        <td>${ogg?.visitor_team?.team_name}</td>
+                                        
+                                        #{if ogg?.end_time != null }
+                                        <td>${ogg?.home_score} - ${ogg?.visitor_score}</td>
+                                        #{/if}
+                                        
+                                        
+                                        #{if ogg?.end_time == null }
+                                        <td>in progress</td>
+                                        #{/if}
+                                        
+                                        
+                                        <td>${ogg?.mode} </td>
+                                        <td>${ogg?.start_time.since(false)}</td>
+                                        <td>${ogg?.winner}</td>
                                     </tr>
-                                    <tr>
-                                        <td>1</td>
-                                        <td>Ali</td>
-                                        <td>Morasd</td>
-                                        <td>5 - 3</td>
-                                        <td>Ali</td>
-                                    </tr>
+                                         #{/list}
+                                   
                                 </tbody>
-                            </table>
-
-                            <table class="table table-striped table-bordered table-condensed">
-                                <thead>
-                                    <tr>
-                                        <th>Match</th>
-                                        <th>Home-Team</th>
-                                        <th>Visitor-Team</th>
-                                        <th>Home-score</th>
-                                        <th>Visitor-score</th>
-                                        <th>Winner</th>
-                                    </tr>
-                                </thead>
-                                <tbody>
-                                    <tr>
-                                        <td>1</td>
-                                        <td>Neberd</td>
-                                        <td>Amir</td>
-                                        <td>5</td>
-                                        <td>3</td>
-                                        <td>-</td>
-                                    </tr>
-                                    <tr>
-                                        <td>2</td>
-                                        <td>Neberd</td>
-                                        <td>Valentin</td>
-                                        <td>8</td>
-                                        <td>0</td>
-                                        <td>-</td>
-                                    </tr>
-                                    <tr>
-                                        <td>3</td>
-                                        <td>Marcel</td>
-                                        <td>Amir</td>
-                                        <td>5</td>
-                                        <td>3</td>
-                                        <td>-</td>
-                                    </tr>
-                                    <tr>
-                                        <td>4</td>
-                                        <td>Neberd</td>
-                                        <td>Amir</td>
-                                        <td>5</td>
-                                        <td>3</td>
-                                        <td>-</td>
-                                    </tr>
-                                    <tr>
-                                        <td>5</td>
-                                        <td>Neberd</td>
-                                        <td>Amir</td>
-                                        <td>5</td>
-                                        <td>3</td>
-                                        <td>-</td>
-                                    </tr>
-                                </tbody>
-                            </table>
-                        </div>
-                        <div class="tab-pane" id="tab3">
-                            <div id="top">
-                                <img src="/public/images/default/down.png" />
-                                <h3>Worst players/teams</h3>
-                            </div>
-
-                            <table class='table'>
-
-                                <thead>
-
-                                </thead>
-                                <tbody>
-                                    <tr>
-                                        <td>1</td>
-                                        <td>Neberd</td>
-                                        <td>300p</td>
-                                    </tr>
-                                    <tr>
-                                        <td>2</td>
-                                        <td>Ola Nordmann</td>
-                                        <td>3p</td>
-                                    </tr>
-                                    <tr>
-                                        <td>3</td>
-                                        <td>Ali Morad Hassan</td>
-                                        <td>30p</td>
-                                    </tr>
-                                </tbody>
-                            </table>
-                        </div>
-                        <div class="tab-pane" id="tab4">
+                            </table>    
+                        </div><!-- END TABEL ONGOING GAMES-->
+                        <div class="tab-pane" id="biggestW">
+                          
                             <div id="top">
                                 <img src="/public/images/default/up.png" />
                                 <h3>Best players/teams</h3>
                             </div>
 
+
                             <table class='table'>
 
                                 <thead>
 
                                 </thead>
                                 <tbody>
+                                   
+                                     #{list items:biggestWinner, as:'bw'} 
                                     <tr>
-                                        <td>1</td>
-                                        <td>Neberd</td>
-                                        <td>300p</td>
+                                        <td>${bw_index}</td>
+                                        <td>${bw?.team_name}</td>
+                                        <td>${bw?.won} winns out of ${bw?.won+bw?.lost}</td>
                                     </tr>
+                                     #{/list}
+                               
+                                </tbody>
+                            </table>
+                        </div><!-- END TABEL Biggest winner-->
+                        <div class="tab-pane" id="tab4">
+                              <div id="top">
+                                <img src="/public/images/default/down.png" />
+                                <h3>Worst players/teams</h3>
+                            </div>
+                            <table class='table'>
+
+                                <thead>
+
+                                </thead>
+                                <tbody>
+                             
+                                      #{list items:biggestLoser, as:'bl'} 
                                     <tr>
-                                        <td>2</td>
-                                        <td>Ola Nordmann</td>
-                                        <td>3p</td>
+                                        <td>${bl_index}</td>
+                                        <td>${bl?.team_name}</td>
+                                        <td>${bl?.lost} losts out of ${bw?.won+bw?.lost}</td>
                                     </tr>
-                                    <tr>
-                                        <td>3</td>
-                                        <td>Ali Morad Hassan</td>
-                                        <td>30p</td>
-                                    </tr>
+                                     #{/list}
+                                     
                                 </tbody>
                             </table>
                         </div>
@@ -329,7 +221,7 @@
                                              <div id="rank1" class="tab-pane active" >
 
                                             <div class="thumbnail" style="margin-bottom: 5px;">
-                                                <img src="/public/images/medium/player.png" alt="" class="small-image">
+                                                <img src="/public/images/players/player.png" alt="" class="small-image">
 
                                                 <p><strong>Neberd</strong> er en av de beste spilerne som har hatt en rekord på</p>
                                                 <p>Registered: 20.05.2012</p>

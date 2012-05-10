@@ -90,13 +90,17 @@
                     chart: {
                         renderTo: 'game_statistic',
                         type: 'area',
-                        spacingBottom: 30
+                        spacingBottom: 40
+                    },
+                    rangeSelector : {
+                        selected : 1
+                
                     },
                     title: {
                         text: '${team?.team_name}' + '\'s' + ' played games'
                     },
                     subtitle: {
-                        text: '',
+                        text: 'subtitle:',
                         floating: true,
                         align: 'right',
                         verticalAlign: 'bottom',
@@ -106,10 +110,10 @@
                         layout: 'vertical',
                         align: 'left',
                         verticalAlign: 'top',
-                        x: 150,
-                        y: 100,
+                        x: 100,
+                        y: 0,
                         floating: true,
-                        borderWidth: 1,
+                        borderWidth: 2,
                         backgroundColor: '#FFFFFF'
                     },
                     xAxis: {
@@ -120,7 +124,8 @@
                             formatter: function() {
                                 return this.value;
                             }
-                        }              
+                        },
+                        tickInterval: 1
                     },
                     yAxis: {
                         title: {
@@ -132,7 +137,8 @@
                             }
                         }, 
                         minRange: -1,
-                        max: 2
+                        max: 2,
+                        tickInterval: 1
                     },
                     tooltip: {
                         formatter: function() {
@@ -171,10 +177,33 @@
                     series:[
                         {
                             name : 'Winns',
-                            data : countWin},
+                            data : countWin,
+                            marker : {
+                                enabled : true,
+                                radius : 8
+                            },
+                            shadow : true,
+                            tooltip : {
+                                valueDecimals : 2
+                            }
+                        
+                        
+                        },
+                        
+                        
                         {
                             name : 'Losts',
-                            data : countLost}]
+                            data : countLost
+                            ,
+                            marker : {
+                                enabled : true,
+                                radius : 8
+                            },
+                            shadow : true,
+                            tooltip : {
+                                valueDecimals : 2
+                            }
+                        }]
                 });
             });               
         }                    
@@ -216,7 +245,7 @@
 <div class="row section">
     <div id="profile-info-container" class="span12 card">
         <div class="row">
-            <img src="@{'/public/images/medium'}/${player.image}" id="profile-image" class="span3 small-image" />
+            <img src="@{'/public/images/players'}/${player.image}" id="profile-image" class="span3 small-image" />
 
 
             <div id="profile-description" class="span7">
@@ -449,9 +478,9 @@
                                </tr>
                                </thead>
                                </table>">
-                                <!--                                <img src="@{'/public/images/medium'}/${teams?.image}" alt="${teams?.team_name}">-->
 
-                                <img src="@{'/public/images/medium'}/${teams?.image}" alt="${teams?.team_name}" class="small-image" />
+
+                                <img src="@{'/public/images/teams'}/${teams?.image}" alt="${teams?.team_name}" class="small-image" />
 
                                 <h3 class="team-name">@${teams?.team_name}</h3>
 
@@ -561,8 +590,8 @@
                                </thead>
                                </table>">
 
-                                <!--                                <img src="@{'/public/images/medium'}/${statistics?.target_team.image}" alt="${statistics?.target_team?.team_name}">-->
-                                <img src="@{'/public/images/medium'}/${statistics?.target_team.image}" 
+
+                                <img src="@{'/public/images/teams'}/${statistics?.target_team.image}" 
                                      class="small-image" alt="${statistics?.target_team?.team_name}">
 
                                 <h3 class="team-name"> @${statistics?.target_team.team_name}</h3>
@@ -582,8 +611,8 @@
 
                     <h2 class="underline section">${team?.team_name}</h2>
 
-                    <!--                    <img src="@{'/public/images/large'}/${team.image}" alt="${team.team_name}"/>-->
-                    <img src="@{'/public/images/large'}/${team.image}" alt="${team.team_name}" class="large-image"/>
+
+                    <img src="@{'/public/images/teams'}/${team.image}" alt="${team.team_name}" class="large-image"/>
 
                     <div id="team_box">
                         <p>@${team?.team_name}</p>
