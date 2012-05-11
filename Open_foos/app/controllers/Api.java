@@ -28,7 +28,6 @@ public class Api extends Controller
     
     public static void autocomplete(String username)
     {   
-        await("1s");
        if(StringUtils.isNullOrEmpty(username))
        {
           badRequest();
@@ -121,6 +120,11 @@ public class Api extends Controller
 
           player.password = Crypto.encryptAES(player.password);
           player.save();
+          
+          // Creates and saves a team for the player;
+          Team team = new Team(); 
+          team.player1 = player; 
+          team.save();
           
           renderJSON(player);
        }

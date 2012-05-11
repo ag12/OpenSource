@@ -22,10 +22,6 @@ $(document).ready(function(){
     
     Foosball.Player = Backbone.Model.extend
     ({
-        initialize: function()
-        {
-          
-        },
         
         isAuthenticated: function()
         {
@@ -127,6 +123,9 @@ $(document).ready(function(){
             attrs.id = response.id;
             attrs.rating = response.rating;
             attrs.team_name = response.team_name;            
+            attrs.won = response.won;            
+            attrs.lost = response.lost;            
+            
             return attrs;
         },
         
@@ -141,7 +140,9 @@ $(document).ready(function(){
         {
             'id': undefined,
             'team_name': undefined,
-            'rating': 0
+            'rating': 0,
+            'won': 0,
+            'lost': 0
         }
     });
 
@@ -156,6 +157,26 @@ $(document).ready(function(){
             'timestamp': 0
         }
    }); 
+   
+   Foosball.Clock = Backbone.Model.extend
+   ({ 
+       tick: function()
+       {
+           this.set('seconds', (this.get('seconds') + 1));
+       },
+       
+       reset: function()
+       {
+           this.set('seconds', 0);
+       },
+       
+       defaults:
+       {
+            'seconds': 0
+       }
+   }); 
+   
+   
     
    Foosball.Goals = Backbone.Collection.extend
    ({
@@ -268,27 +289,24 @@ $(document).ready(function(){
            
            return false;
         },
-       
+        
+        end: function()
+        {
+            this.set('state', 'end');
+        },
+        
         finish: function() 
         {
-            var winner = this.get('home_score') > this.get('visitor_score') ? this.get('home_team') : this.get('visitor_team'); 
             this.set('state', 'finish'); 
-            this.save({}, {
-                success: function()
-                {
-                   console.log('the game was saved');
-                },
-                error: function()
-                {
-                    throw new Error('game was not saved');
-                }
-            }); 
+            this.save();
+            this.reset();
         },
        
         restart: function()
         {
             // Re-sets some of the game variables to default-values. 
             // We still keep information about authenticated teams and players
+            this.save();
             this.set
             ({
                 id: undefined,
@@ -311,6 +329,11 @@ $(document).ready(function(){
             // Re-sets the teams and players
             this.get('home_team').reset(); 
             this.get('visitor_team').reset(); 
+        },
+        
+        onOvertime: function()
+        {
+            this.set('state', 'overtime');
         },
         
         authenticate: function()
@@ -361,22 +384,29 @@ $(document).ready(function(){
         initialize: function()
         { 
             this.set('goals', new Foosball.Goals());
-            this.set('time', 0);
             window.game.on('change:state', this.handleGameState, this);
         },
         
         handleGameState: function(game)
         {
             var state = game.get('state');
+            
             if(state === 'started')
             {
                 this.reset();
                 this.startClock();
             }
-            
+            else if(state === 'end' || state === 'new')
+            {
+                this.stopClock();
+            }
             else if(state === 'finish')
             {
                 this.get('goals').save();
+            }
+            else if(state === 'overtime')
+            {
+                this.startClock();
             }
         },
         
@@ -390,22 +420,20 @@ $(document).ready(function(){
                                            timestamp: new Date().getTime()
                                          });
             this.get('goals').add(goal);
-
             var team = window.game.get('home_team').contains(player) ? 'home' : 'visitor';
-            
             if(backfire)
             {
                 team = team === 'home' ? 'visitor' : 'home';
             }
             
             window.game.set(team + '_score', window.game.get(team + '_score') + 1);
-            
+            Foosball.message.showMessage('GOOOOOOAL!',false)
             this.isGameWon();
         },
        
         removeGoal: function(player)
         {
-            // remove the last goal
+            // Remove the last goal
             var goal = this.get('goals').pop(player);
 
             if(goal !== undefined)
@@ -418,17 +446,30 @@ $(document).ready(function(){
                     team = team === 'home' ? 'visitor' : 'home';
                 }
                 
-                window.game.set(team + '_score', window.game.get(team + '_score') - 1);}
+                window.game.set(team + '_score', window.game.get(team + '_score') - 1);
+            }
+            
+            if(window.game.get('state') === 'end')
+            {
+                window.game.onOvertime();
+            }
         },
         
         startClock: function()
         {
-            // tick tock; 
+            if(!this.clockInterval)
+            {
+                this.clockInterval = setInterval(function()
+                {
+                    Foosball.clock.tick();
+                }, 1000); 
+            }
         },
         
         stopClock: function()
         {
-           // tock tick 
+           clearInterval(this.clockInterval);
+           this.clockInterval = undefined;
         },
         
        
@@ -436,7 +477,7 @@ $(document).ready(function(){
         {
             if(window.game.get('home_score') === 10 || window.game.get('visitor_score') === 10 )
             {
-                window.game.finish();
+                window.game.end();
             }
         },
         
@@ -461,7 +502,7 @@ $(document).ready(function(){
         reset:function()
         {
            this.get('goals').reset();
-           this.set('time', 0);
+           Foosball.clock.reset();
         }
     });
     
@@ -477,16 +518,14 @@ $(document).ready(function(){
         
         events: 
         {
-          'focus .player' : 'focus',
-          'blur .player' : 'unfocus',
           'click .player-login' : 'login',
           'click .player-logout' : 'logout',
           'click .player-score .player-image' : 'displayOptions', 
           'click .goal-options-cancel' : 'hideOptions',
           'click .goal-options-score' : 'score',
           'click .goal-options-backfire' : 'backfire',
-          'click .goal-options-unscore' : 'unscore'
-          
+          'click .goal-options-unscore' : 'unscore',
+          'click .player-image' : 'focus' 
         },
       
         initialize: function()
@@ -500,16 +539,22 @@ $(document).ready(function(){
         },
         
         focus: function(){
-            this.$el.find('.player-image').addClass('strong-shadow');
+            if(!this.isFocused)
+            {
+                this.$el.find('.player').css('background-color', '#cfff84');
+                this.isFocused = true;
+            }
         },
         
         unfocus: function(){
-            this.$el.find('.player-image').removeClass('strong-shadow');
+            this.$el.find('.player').css('background-color', 'whiteSmoke');
+            this.isFocused = false;
         },
       
         render: function()
         {
-            $(this.el).html(this.template(this.player.toJSON()));   
+            this.$el.html(this.template(this.player.toJSON()));   
+            this.isFocused = false;
             return this;
         },
         
@@ -532,6 +577,7 @@ $(document).ready(function(){
         hideOptions: function()
         {
             this.$el.find('div.goal-options').fadeOut(250);
+            this.unfocus();
         },
         
         score: function()
@@ -576,7 +622,7 @@ $(document).ready(function(){
     
     window.TeamNameView = Backbone.View.extend
     ({
-        className: 'team-name-container',
+        className: 'team-name-container cursive dark-green',
         initialize: function()
         {   
             this.team = this.options.team;
@@ -638,18 +684,18 @@ $(document).ready(function(){
         events: 
         {
             'keypress #rfid-input' : 'rfidInput',
-            'click #rfid' : 'rfid',
-            'click #login' : 'authenticate',
+            'click #rfid' : 'rfidOption',
+            'click #login' : 'authenticateOptions',
             'click #register' : 'register'
         },
       
         initialize: function()
         {
-            _.bindAll(this, 'authenticate', 'register', 'isPlayerPresent', 'success', 'error', 'rfid', 'rfidInput');
+            _.bindAll(this, 'authenticate', 'register', 'isPlayerPresent', 'success', 'error', 'rfidOption', 'rfidInput', 'authenticateOptions');
             this.player = this.options.player; 
         },
         
-        rfid: function()
+        rfidOption: function()
         {
             Foosball.message.showMessage("Please scan your RFID-card", true); 
             var input = this.$el.find('#rfid-input');
@@ -666,7 +712,8 @@ $(document).ready(function(){
                   var rfid = this.$el.find('#rfid-input').val();
                   if(this.isPlayerPresent(rfid) === false)
                   {
-                      this.player.set('rfid', rfid, {silent: true});
+                      this.lastRFID = rfid;
+                      //this.player.set('rfid', rfid, {silent: true});
                       var options = 
                       {
                         url: window.serverURL + '/player/login/rfid/' + rfid,
@@ -691,19 +738,23 @@ $(document).ready(function(){
         
         render: function()
         {
-            $(this.el).html(this.template);
-            this.$el.find('#username').typeahead({
+            this.$el.html(this.template);
+            this.$el.find('#username').typeahead
+            ({
                 items: 3, 
                 source: function (typeahead, query) {
-                    return $.get('/api/player/autocomplete/' + query, {
+                    return $.get('/api/player/autocomplete/' + query, 
+                    {
                         query: ''
-                    }, function (data) 
+                    }, 
+                    function (data) 
                     {
                         return typeahead.process(data);
                     });
                 }
             });
-            return this;
+
+          return this;
         },
   
         isPlayerPresent: function(id)
@@ -725,9 +776,22 @@ $(document).ready(function(){
                                 
           return isPresent;  
         },
+        
+        authenticateOptions: function(){
+            
+            if(this.lastRFID)
+            {
+                var self = this;
+                Foosball.message.showOptionDialog('Do you want to set this RFID?', function(){self.authenticate(true)}, function(){self.authenticate(false)}); 
+            }
+            else
+            {
+                this.authenticate(false);
+            }
+        },
       
-        authenticate: function()
-        {
+        authenticate: function(setRFID)
+        {            
           // Get form values
           var username = $('#username').attr('value'); 
           var password = $('#password').attr('value'); 
@@ -756,6 +820,12 @@ $(document).ready(function(){
                If the user is found, and properly authenticated, 
                Then the server will send us a new instance of the user.
                */
+               if(setRFID === true)
+               {    
+                    this.player.set({rfid: this.lastRFID}, {silent:true});
+               }
+               
+               this.lastRFID = undefined;
                this.player.set({username: username, password: password}, {silent:true});
                this.player.save({},options);
             }
@@ -763,6 +833,7 @@ $(document).ready(function(){
         
         success: function()
         {
+            this.lastRFID = undefined;
             this.close();
         },
         
@@ -799,6 +870,14 @@ $(document).ready(function(){
                   
                this.player.save({}, options);
            }
+        },
+        
+        onClose: function()
+        {
+            // Sometimes, if the server is slow to respond, then the 
+            // typeahead container might still be displayed. If it is present, we simply wish to remove it
+            var typeahead = $('.typeahead'); 
+            if(typeahead) typeahead.remove();
         }
     }); 
     
@@ -813,7 +892,6 @@ $(document).ready(function(){
         
         initialize: function()
         {
-           _.bindAll(this, 'render');
            window.game.on('change:state', this.render, this);
            this.render();
         },
@@ -821,10 +899,11 @@ $(document).ready(function(){
         render: function()
         {
            var state = window.game.get('state');
-           if(state !== 'started')
-           $(this.el).html('<button id="start-game-button" class="button green">start</button>');
+           if(state === 'started' || state === 'overtime')
+           $(this.el).html('<button id="cancel-game-button" class="button yellow">Abort</button>');    
+           
            else
-           $(this.el).html('<button id="cancel-game-button" class="button yellow">cancel</button>');    
+           $(this.el).html('<button id="start-game-button" class="button green">Start!</button>');
         },
         
         start: function()
@@ -838,6 +917,53 @@ $(document).ready(function(){
         }        
     });
     
+    Foosball.ClockView = Backbone.View.extend
+    ({
+        id: 'clock',
+        template: _.template($('#clock-template').html()),
+       
+        initialize: function()
+        {
+            Foosball.clock.on('change:seconds', this.update, this);
+        }, 
+        
+        render: function()
+        {
+            this.$el.html(this.template()); 
+            this.seconds = this.$el.find('#seconds');
+            this.minutes = this.$el.find('#minutes');
+            return this;
+        },
+        
+        update: function(clock)
+        {
+            var s = clock.get('seconds'),
+            fseconds = this.format(s%60), 
+            fminutes = this.format(parseInt(s/60)); 
+            
+            this.seconds.html(fseconds);
+            this.minutes.html(fminutes);
+        },
+        
+       format: function(value)
+       {
+            value = value + "";
+            if(value.length < 2)
+            {
+                return "0" + value;
+            }
+            else
+            {
+                return value;
+            }
+       },
+       
+       onClose:function()
+       {
+           Foosball.clock.off('change:seconds', this.update, this);
+       }
+        
+    });
     
     Foosball.ScoreBoardView = Backbone.View.extend
     ({
@@ -850,20 +976,35 @@ $(document).ready(function(){
         
         initialize: function()
         {
-            _.bindAll(this, 'render', 'regretGoal');
-            window.game.on('change:home_score change:visitor_score', this.render, this);
+            _.bindAll(this, 'render', 'regretGoal', 'update');
+            window.game.on('change:home_score change:visitor_score', this.update, this);
         },
         
         render: function()
         {
-            var score = 
-            {
-                homeScore: window.game.get('home_score'),
-                visitorScore: window.game.get('visitor_score')
-            };
+            // Renders the template for the scoreboard
+            this.$el.html(this.template());
             
-            $(this.el).html(this.template(score));
+            // Renders the clock view inside the scoreboard
+            this.clock = new Foosball.ClockView();
+            this.$el.find('#clock-container').html(this.clock.render().el);
+            
+            // Fetches refrences to the home-score and visitor-score containers
+            // so that we won't have to look for them every time we wish to update them
+            this.homeScore = this.$el.find('#home-score');
+            this.visitorScore = this.$el.find('#visitor-score');
+            
             return this;
+        },
+        
+        update: function(game)
+        {
+            // If a player scores in-game. We only re-render the score label of the team. 
+            // Remember that homeScore is a local refrence to the label that is created 
+            // when we first render the scoreboard.
+            
+            this.homeScore.html(game.get('home_score'));
+            this.visitorScore.html(game.get('visitor_score'));
         },
         
         regretGoal: function()
@@ -873,6 +1014,7 @@ $(document).ready(function(){
         
         onClose: function()
         {
+           this.clock.close();
            window.game.off('change:home_score', this.render);  
            window.game.off('change:visitor_score', this.render);  
         }
@@ -930,7 +1072,7 @@ $(document).ready(function(){
     
     Foosball.ResultView = Backbone.View.extend
     ({
-        id: 'result',
+        el: '#result-container',
         template: _.template($('#result-template').html()),
         events:
         {
@@ -940,7 +1082,21 @@ $(document).ready(function(){
         
         initialize: function()
         {
-            _.bindAll(this, 'render', 'finishGame', 'restartGame');
+            _.bindAll(this, 'render', 'finishGame', 'restartGame', 'handleGameState');
+            window.game.on('change:state', this.handleGameState);
+        },
+        
+        handleGameState: function(game)
+        {
+          var state = game.get('state');  
+          if(state === 'end')
+          {
+              this.render();
+          }
+          else
+          {
+              this.$el.hide();
+          }
         },
         
         render: function()
@@ -954,9 +1110,9 @@ $(document).ready(function(){
             
             this.$el.html(this.template(data));
             
-            $('#result-container').css(
-            {
-                left: $(window).width() / 2 - $('#result-container').width() / 2
+            this.$el.css
+            ({
+                left: $(window).width() / 2 - this.$el.width() / 2
             });
             
             this.$el.fadeIn();
@@ -965,21 +1121,31 @@ $(document).ready(function(){
         
         finishGame: function()
         {
-            window.game.reset(); 
-            this.close();
+            window.game.finish(); 
         },
         
         restartGame: function()
         {
             window.game.restart(); 
-            this.close();
         }
     }); 
     
+    Foosball.WelcomeView = Backbone.View.extend
+    ({
+        id: 'welcome',
+        template: _.template($('#welcome-template').html()),
+        render: function()
+        {
+           this.$el.html(this.template()); 
+           return this;
+        }
+        
+    });
+    
     Foosball.BoardView = Backbone.View.extend
     ({
-        el: '#board',
-        
+        //el: '#board',    
+        id: 'board-content',
         initialize: function()
         {
           window.game.on('change:state', this.handleGameState, this);  
@@ -1001,7 +1167,8 @@ $(document).ready(function(){
         
         showWelcomeMessage: function()
         {
-            $(this.el).html('<div id="welcome"><h1>Welcome to openfoos</h1><h2>Click on a player to log-in</h2></div>');
+            var welcomeView = new Foosball.WelcomeView();
+            this.show(welcomeView);
         },
         
         showScoreBoard: function()
@@ -1019,17 +1186,19 @@ $(document).ready(function(){
         show: function(view)
         { 
             if(this.current !== undefined)
-            {    
-                this.current.off();
+            { 
+                this.current.off('close', this.handleGameState, this);   
                 this.current.close();
-                
             }
             
             view.on('close', this.handleGameState, this);
+            
             this.current = view;
-           
-                $(this.el).empty();
-                $(this.el).html(view.render().el);
+            var self = this.$el;
+            self.fadeOut('fast', function(){
+                self.html(view.render().el);
+                self.fadeIn();
+            })
         }
     });
     
@@ -1040,9 +1209,23 @@ $(document).ready(function(){
         
         events:
         {   
-            'click #close-message' : 'hide'
+            'click #close-message' : 'hide',
+            'click #message-confirm-option' : 'confirm',
+            'click #message-decline-option' : 'decline'
         },
-       
+        
+        confirm: function()
+        {
+          this.confirmCallback(); 
+          this.hide();
+        },
+        
+        decline: function()
+        {
+            this.declineCallback(); 
+            this.hide();
+        },
+        
         showMessage: function(message, hold)
         {
             if(!hold)
@@ -1054,8 +1237,7 @@ $(document).ready(function(){
                 type: 'message',
                 hold: hold
             };
-            this.$el.html(this.template(data));
-            this.show(hold);
+            this.show(data, hold);
         },
         
         showError: function(message, hold)
@@ -1066,30 +1248,49 @@ $(document).ready(function(){
                 type: 'error',
                 hold: hold
             };
-            $(this.el).html(this.template(data));
-            this.show(hold);
+            
+            this.show(data, hold);
         },
         
-        show: function(hold)
+        showOptionDialog: function(message, confirmCallback, declineCallback)
+        {
+            var hold = true;
+            var data = 
+            {
+                message: message,
+                type: 'option',
+                hold: hold
+            };
+            this.confirmCallback = confirmCallback;
+            this.declineCallback = declineCallback;
+            this.show(data, hold);
+        },
+        
+        show: function(data, hold)
         {
           var self = this;
-          $(self.el).slideDown(150);   
+          self.hide();
+          self.$el.html(self.template(data));
+          self.$el.slideDown(150);   
+            
             if(!hold)
             {
-                if(self.timer)
-                clearTimeout(self.timer);
-                
                 self.timer = setTimeout(function() 
                 {
                   self.hide();
-                  self.timer = null;
                 }, 4000);
             }
         },
         
         hide: function()
         {
-          $(this.el).slideUp(150); 
+          var self = this;
+          self.$el.slideUp(150);
+          if(self.timer)
+          {
+              clearTimeout(this.timer);
+              self.timer = undefined;
+          }
         }
     }); 
     
@@ -1126,11 +1327,6 @@ $(document).ready(function(){
             {                
                 this.renderTeams();
             }
-            else if(state === 'finish')
-            {                
-                var resultView = new Foosball.ResultView();
-                $(this.el).append(resultView.render().el);
-            }
         }
     });
     
@@ -1138,9 +1334,13 @@ $(document).ready(function(){
     window.referee = new Foosball.Referee();
     Foosball.message = new Foosball.MessageView();
     Foosball.board = new Foosball.BoardView();
-    Foosball.application = new Foosball.Field();
+    $('#board').html(Foosball.board.render().el);
+    Foosball.application = new Foosball.Field(); // TODO: Fiks!
     Foosball.gameMode = new Foosball.GameModeView();
-    Foosball.gameState = new Foosball.GameStateView(); 
+    Foosball.gameState = new Foosball.GameStateView();
+    Foosball.results = new Foosball.ResultView();
+    Foosball.clock = new Foosball.Clock();
+    
     
     
     // Request indicator. 
