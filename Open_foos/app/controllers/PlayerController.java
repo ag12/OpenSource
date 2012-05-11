@@ -160,7 +160,7 @@ public class PlayerController extends Controller {
             teams = TeamController.getTeams(player.getId());
              
             statistic = StatisticRepository.getStatistics(team.getId());
-            statistics = new StatisticRepository().getMoreInfo(team.getId());
+            statistics = new StatisticRepository().getMoreInfoForOneTeam(team.getId());
             games = GamesController.getTeamGames(team.getId(),"id desc",20);
 
             }

@@ -23,10 +23,10 @@ public class Player extends Model {
 
     @Column(unique = true)
     @Required
-    @MinSize(3)
+    @MinSize(1)
     public String username = null;
     @Required
-    @MinSize(6)
+    @MinSize(1)
     @Password
     public String password = null;
     @Column(unique = true)

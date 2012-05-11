@@ -64,7 +64,7 @@ public class TeamController extends Controller {
 
 
             //This team morestatistic, as most played against and so on
-            List<Statistic> statistics = new StatisticRepository().getMoreInfo(team.id);
+            List<Statistic> statistics = new StatisticRepository().getMoreInfoForOneTeam(team.id);
 
             //This team have 100% two players, and them have their own teams as well
             //So we get them too

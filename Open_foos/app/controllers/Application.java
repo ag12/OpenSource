@@ -4,9 +4,11 @@ import java.util.ArrayList;
 import java.util.List;
 import models.Game;
 import models.Player;
+import models.Statistic;
 import models.Team;
 import play.mvc.Controller;
 import repositories.GameRepository;
+import repositories.StatisticRepository;
 import repositories.TeamRepository;
 
 public class Application extends Controller {
@@ -21,26 +23,28 @@ public class Application extends Controller {
     }
 
     public static void main_page() {
-       Player onlinePlayer;
+       Player onlinePlayer = null;
+       Statistic statistic = null;
        if(session.get("login") != null){
            boolean login = Boolean.parseBoolean(session.get("login"));
            if (login){
                Long id = Long.parseLong(session.get("pid"));
                onlinePlayer = Player.findById(id);
                if ( onlinePlayer != null){
-                 System.out.println("Online"); 
-                 String f = ""; f.length();
+                   Team team = TeamController.getTeam(onlinePlayer.getId());
+                   statistic = StatisticRepository.getStatistics(team.getId());
+                 System.out.println("player is Online"); 
                }
            }
        }else {
-            System.out.println("Offline");  
+            System.out.println("player is Offline");  
        }
        List<Game> onGoingGames =  GameRepository.getOngoingGames();
        List<Team> topRankedteams = TeamController.getTopRankedTeams(5);
        List<Team> biggestWinner = TeamRepository.getBiggestWinner();
        List<Team> biggestLoser = TeamRepository.getBiggestLoser();
        
-       render(topRankedteams,onGoingGames,biggestWinner,biggestLoser);
+       render(topRankedteams,onGoingGames,biggestWinner,biggestLoser, onlinePlayer,statistic);
     }
 
     public static void login() {

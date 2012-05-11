@@ -49,8 +49,10 @@
                 
                 
         function this_drawGameChart(id){
+            if(id !== null){
             $.getJSON("@{GamesController.getTeamGamesForChart()}", {team_id : id},function(data){
-                var teamId = parseFloat("${team.id}");
+                
+                var teamId = parseFloat(id);
                 var winArray = new Array();
                 var lostArray = new Array();
                 for( var i = 0; i < data.length; i++){
@@ -100,7 +102,7 @@
                         text: '${team?.team_name}' + '\'s' + ' played games'
                     },
                     subtitle: {
-                        text: 'subtitle:',
+                        text: '',
                         floating: true,
                         align: 'right',
                         verticalAlign: 'bottom',
@@ -206,7 +208,7 @@
                         }]
                 });
             });               
-        }                    
+        } }                    
         function this_AddTodrawChart(id, username){
                
             $.getJSON("@{StatisticController.data()}", {id : "${team.id}"},function(data1){

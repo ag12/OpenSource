@@ -3,238 +3,243 @@
 
 <div class="row" style="margin-top: 100px;">
     <div class="span12">
-        <div class="row">   
+        <div class="row">
+            #{if !session.login}
             <div id="main_info" class="span8 card">
-                <div class="tabbable"> 
-                    <ul class="nav nav-tabs">
-                        <li class="active"><a href="#rankingTab" data-toggle="tab">Rank</a></li>
-                        <li><a href="#onGoingGamesTab" data-toggle="tab">Ongoing matches</a></li>
-                        <li><a href="#biggestW" data-toggle="tab">Biggest winner</a></li>
-                        <li><a href="#tab4" data-toggle="tab">Biggest loser</a></li>
-                    </ul>
-                    <div class="tab-content">
-                        <div class="tab-pane active" id="rankingTab"><!-- START RANKING TAB-->
-                            <div class="tabbable"><!-- START tabbable -->
-                                <div id="left_bar" class="span4"><!-- START left_bar -->
-                                  
-                                    
-                                    <ul class="nav nav-tabs nav-stacked">           
-                                       
-                                        
-                                        #{list items:topRankedteams, as:'trt'} 
-                                       #{if trt_index == 1}
-                                        <li class="active">
-                                        #{/if} 
-                                         #{if trt_index > 1}
-                                        <li>
-                                        #{/if} 
-                                            <a href="#${trt?.team_name}" data-toggle="tab">
-                                                <table class="table table-striped change_color">
-                                                    <tbody>
-                                                        <tr>
-                                                            <td>${trt_index}</td>
-                                                            <td>${trt?.team_name}</td>
-                                                            <td>${trt?.rating.format('0')} point's</td>
-                                                        </tr>
-                                                    </tbody>
-                                                </table>
-                                            </a>
-                                        </li>
-                                     #{/list}
-                                    
-                                    
-                                    </ul>
-                                </div><!-- END left_bar -->
+                #{/if}
+                #{else}
+                <div id="main_info" class="span8 card" style="height: auto;">
+                    #{/else}
+                    <div class="tabbable"> 
+                        <ul class="nav nav-tabs">
+                            <li class="active"><a href="#rankingTab" data-toggle="tab">Rank</a></li>
+                            <li><a href="#onGoingGamesTab" data-toggle="tab">Ongoing matches</a></li>
+                            <li><a href="#biggestW" data-toggle="tab">Biggest winner</a></li>
+                            <li><a href="#tab4" data-toggle="tab">Biggest loser</a></li>
+                        </ul>
+                        <div class="tab-content">
+                            <div class="tab-pane active" id="rankingTab"><!-- START RANKING TAB-->
+                                <div class="tabbable"><!-- START tabbable -->
+                                    <div id="left_bar" class="span4"><!-- START left_bar -->
 
-                                <div class="span3">
-                                    <div id="right_bar" class="tab-content">
-                                       
-                                       
-                                        #{list items:topRankedteams, as:'trt'} 
-                                       #{if trt_index == 1}
-                                        <div id="${trt?.team_name}" class="tab-pane active" >
-                                        #{/if} 
-                                         #{if trt_index > 1}
-                                         <div id="${trt?.team_name}" class="tab-pane" >
-                                        #{/if} 
-                                            <div class="thumbnail" style="margin-bottom: 5px;">
-                                                <img src="@{'/public/images/players'}/${trt?.player1.image}" alt="" class="small-image">
-                                                <p><strong>${trt?.team_name}</strong> 
-                                                    
-                                                    #{if  trt?.bio != null && trt?.bio.length() <= 50 }
-                                                    ${trt?.bio}
-                                                    #{/if}
-                                                </p>
-                                                <p>${trt?.registered.format('dd MMMM yyyy')}</p>
-                                                <p>${trt?.registered.since(false)}</p>
-                                                <p><strong>Winn %:</strong> 100</p>
-                                            </div>
-                                        </div>
-                                        
-                                         #{/list}
-                                        
-                                        
-                                    </div><!-- END right_bar -->
-                                </div><!-- END span3 -->
 
-                            </div><!-- END tabbable -->
-                        </div><!-- END RANKING TAB-->
+                                        <ul class="nav nav-tabs nav-stacked">           
 
-                        <div class="tab-pane" id="onGoingGamesTab"><!-- START TABEL ONGOING GAMES-->
-                            <table class="table table-condensed">
-                                <thead style="background-color: #eee">
-                                    <tr>
-                                        <th>#</th>
-                                        <th>Home-team</th>
-                                        <th>Visitor-team</th>
-                                        <th>Results</th>
-                                        <th>Mode</th>
-                                        <th>Started</th>
-                                        <th>Winner</th>
-                                    </tr>
-                                </thead>
-                                <tbody>
-                                      #{list items:onGoingGames, as:'ogg'} 
-                                    <tr>
-                                        <td>${ogg_index}</td>
-                                        
-                                        <td>${ogg?.home_team?.team_name}</td>
-                                        
-                                        <td>${ogg?.visitor_team?.team_name}</td>
-                                        
-                                        #{if ogg?.end_time != null }
-                                        <td>${ogg?.home_score} - ${ogg?.visitor_score}</td>
-                                        #{/if}
-                                        
-                                        
-                                        #{if ogg?.end_time == null }
-                                        <td>in progress</td>
-                                        #{/if}
-                                        
-                                        
-                                        <td>${ogg?.mode} </td>
-                                        <td>${ogg?.start_time.since(false)}</td>
-                                        <td>${ogg?.winner}</td>
-                                    </tr>
-                                         #{/list}
-                                   
-                                </tbody>
-                            </table>    
-                        </div><!-- END TABEL ONGOING GAMES-->
-                        <div class="tab-pane" id="biggestW">
-                          
-                            <div id="top">
-                                <img src="/public/images/default/up.png" />
-                                <h3>Best players/teams</h3>
+
+                                            #{list items:topRankedteams, as:'trt'} 
+                                            #{if trt_index == 1}
+                                            <li class="active">
+                                                #{/if} 
+                                                #{if trt_index > 1}
+                                            <li>
+                                                #{/if} 
+                                                <a href="#${trt?.team_name}" data-toggle="tab">
+                                                    <table class="table table-striped change_color">
+                                                        <tbody>
+                                                            <tr>
+                                                                <td>${trt_index}</td>
+                                                                <td>${trt?.team_name}</td>
+                                                                <td>${trt?.rating.format('0')} point's</td>
+                                                            </tr>
+                                                        </tbody>
+                                                    </table>
+                                                </a>
+                                            </li>
+                                            #{/list}
+
+
+                                        </ul>
+                                    </div><!-- END left_bar -->
+
+                                    <div class="span3">
+                                        <div id="right_bar" class="tab-content">
+
+
+                                            #{list items:topRankedteams, as:'trt'} 
+                                            #{if trt_index == 1}
+                                            <div id="${trt?.team_name}" class="tab-pane active" >
+                                                #{/if} 
+                                                #{if trt_index > 1}
+                                                <div id="${trt?.team_name}" class="tab-pane" >
+                                                    #{/if} 
+                                                    <div class="thumbnail" style="margin-bottom: 5px;">
+                                                        <img src="@{'/public/images/players'}/${trt?.player1.image}" alt="" class="small-image">
+                                                        <p><strong>${trt?.team_name}</strong> 
+
+                                                            #{if  trt?.bio != null && trt?.bio.length() <= 50 }
+                                                            ${trt?.bio}
+                                                            #{/if}
+                                                        </p>
+                                                        <p>${trt?.registered.format('dd MMMM yyyy')}</p>
+                                                        <p>${trt?.registered.since(false)}</p>
+                                                        <p><strong>Winn %:</strong> 100</p>
+                                                    </div>
+                                                </div>
+
+                                                #{/list}
+
+
+                                            </div><!-- END right_bar -->
+                                        </div><!-- END span3 -->
+
+                                    </div><!-- END tabbable -->
+                                </div><!-- END RANKING TAB-->
+
+                                <div class="tab-pane" id="onGoingGamesTab"><!-- START TABEL ONGOING GAMES-->
+                                    <table class="table table-condensed">
+                                        <thead style="background-color: #eee">
+                                            <tr>
+                                                <th>#</th>
+                                                <th>Home-team</th>
+                                                <th>Visitor-team</th>
+                                                <th>Results</th>
+                                                <th>Mode</th>
+                                                <th>Started</th>
+                                                <th>Winner</th>
+                                            </tr>
+                                        </thead>
+                                        <tbody>
+                                            #{list items:onGoingGames, as:'ogg'} 
+                                            <tr>
+                                                <td>${ogg_index}</td>
+
+                                                <td>${ogg?.home_team?.team_name}</td>
+
+                                                <td>${ogg?.visitor_team?.team_name}</td>
+
+                                                #{if ogg?.end_time != null }
+                                                <td>${ogg?.home_score} - ${ogg?.visitor_score}</td>
+                                                #{/if}
+
+
+                                                #{if ogg?.end_time == null }
+                                                <td>in progress</td>
+                                                #{/if}
+
+
+                                                <td>${ogg?.mode} </td>
+                                                <td>${ogg?.start_time.since(false)}</td>
+                                                <td>${ogg?.winner}</td>
+                                            </tr>
+                                            #{/list}
+
+                                        </tbody>
+                                    </table>    
+                                </div><!-- END TABEL ONGOING GAMES-->
+                                <div class="tab-pane" id="biggestW">
+
+                                    <div id="top">
+                                        <img src="/public/images/default/up.png" />
+                                        <h3>Best players/teams</h3>
+                                    </div>
+
+
+                                    <table class='table'>
+
+                                        <thead>
+
+                                        </thead>
+                                        <tbody>
+
+                                            #{list items:biggestWinner, as:'bw'} 
+                                            <tr>
+                                                <td>${bw_index}</td>
+                                                <td>${bw?.team_name}</td>
+                                                <td>${bw?.won} winns out of ${bw?.won+bw?.lost}</td>
+                                            </tr>
+                                            #{/list}
+
+                                        </tbody>
+                                    </table>
+                                </div><!-- END TABEL Biggest winner-->
+                                <div class="tab-pane" id="tab4">
+                                    <div id="top">
+                                        <img src="@{'/public/images/default/down.png'}" />
+                                        <h3>Worst players/teams</h3>
+                                    </div>
+                                    <table class='table'>
+
+                                        <thead>
+
+                                        </thead>
+                                        <tbody>
+
+                                            #{list items:biggestLoser, as:'bl'} 
+                                            <tr>
+                                                <td>${bl_index}</td>
+                                                <td>${bl?.team_name}</td>
+                                                <td>${bl?.lost} losts out of ${bw?.won+bw?.lost}</td>
+                                            </tr>
+                                            #{/list}
+
+                                        </tbody>
+                                    </table>
+                                </div>
                             </div>
-
-
-                            <table class='table'>
-
-                                <thead>
-
-                                </thead>
-                                <tbody>
-                                   
-                                     #{list items:biggestWinner, as:'bw'} 
-                                    <tr>
-                                        <td>${bw_index}</td>
-                                        <td>${bw?.team_name}</td>
-                                        <td>${bw?.won} winns out of ${bw?.won+bw?.lost}</td>
-                                    </tr>
-                                     #{/list}
-                               
-                                </tbody>
-                            </table>
-                        </div><!-- END TABEL Biggest winner-->
-                        <div class="tab-pane" id="tab4">
-                              <div id="top">
-                                <img src="/public/images/default/down.png" />
-                                <h3>Worst players/teams</h3>
-                            </div>
-                            <table class='table'>
-
-                                <thead>
-
-                                </thead>
-                                <tbody>
-                             
-                                      #{list items:biggestLoser, as:'bl'} 
-                                    <tr>
-                                        <td>${bl_index}</td>
-                                        <td>${bl?.team_name}</td>
-                                        <td>${bl?.lost} losts out of ${bw?.won+bw?.lost}</td>
-                                    </tr>
-                                     #{/list}
-                                     
-                                </tbody>
-                            </table>
                         </div>
                     </div>
+
+
+
+
+                    <div class="span4 card section shadow">
+                        #{if !session.login}
+                        <form id="profile-signin" action="@{PlayerController.loginPlayer()}" method="POST">
+                            <input type="text" name="player.username" 
+                                   autofocus="autofocus" autocomplete="on" class="input-xlarge"
+                                   placeholder="Type your username"/>
+
+                            <br/>
+                            <input type="password" name="player.password"
+                                   autocomplete="on" class="input-xlarge"
+                                   placeholder="Type your password"/>
+
+                            <br/>
+                            <button type="submit" class="btn btn-primary">Sign in</button>
+
+                        </form>
+                    </div>
+
+                    <div class="span4 card shadow" style="margin-top: 28px;">
+                        <h4 class="section">
+                            New to Openfoos? Sign up here
+                        </h4>
+
+                        <form id="profile-signup" action="@{PlayerController.registerPlayer()}" method="POST">
+
+                            <input type="text" name="player.username" 
+                                   autocomplete="on" class="input-xlarge "
+                                   placeholder="Type your username"/>
+
+                            <p class="help-block">This address will be used as a login identifier.</p>
+
+                            <input type="password" name="player.password"
+                                   class="input-xlarge"
+                                   placeholder="Type your password"/>
+
+                            <button type="submit" class="btn btn-warning">Sign up for OpenFoos</button>
+                        </form>
+                        #{/if}
+
+
+                        #{if session.login}
+                        <div id="openfoos_player" class="tab-pane active" >
+
+                            <div class="thumbnail" style="margin-bottom: 5px;">
+                                 <p>Registered : ${onlinePlayer?.registered.since(false)}</p>
+                                <img src="@{'/public/images/players'}/${onlinePlayer.image}" 
+                                     alt="${onlinePlayer.username}" class="small-image">
+
+                                <p><strong>${onlinePlayer?.username}</strong>${onlinePlayer?.bio}</p>
+                                <p>${onlinePlayer?.registered.since(false)}</p>
+                                <p><strong>${statistic?.last_three_games_played}</strong> 100</p>
+                             
+                            </div>
+                        </div>
+                        #{/if}
+                    </div>
+
                 </div>
             </div>
-            
-            
-            
-            
-            <div class="span4 card section shadow">
-#{if !session.login}
-                <form id="profile-signin" action="@{PlayerController.loginPlayer()}" method="POST">
-                    <input type="text" name="player.username" 
-                           autofocus="autofocus" autocomplete="on" class="input-xlarge"
-                           placeholder="Type your username"/>
-
-                    <br/>
-                    <input type="password" name="player.password"
-                            autocomplete="on" class="input-xlarge"
-                           placeholder="Type your password"/>
-
-                    <br/>
-                    <button type="submit" class="btn btn-primary">Sign in</button>
-
-                </form>
-            </div>
-
-            <div class="span4 card shadow" style="margin-top: 28px;">
-                <h4 class="section">
-                    New to Openfoos? Sign up here
-                </h4>
-
-                <form id="profile-signup" action="@{PlayerController.registerPlayer()}" method="POST">
-
-                    <input type="text" name="player.username" 
-                            autocomplete="on" class="input-xlarge "
-                           placeholder="Type your username"/>
-
-                    <p class="help-block">This address will be used as a login identifier.</p>
-
-                    <input type="password" name="player.password"
-                           class="input-xlarge"
-                           placeholder="Type your password"/>
-
-                    <button type="submit" class="btn btn-warning">Sign up for OpenFoos</button>
-                </form>
-                  #{/if}
-                  
-                  
-                  #{if session.login}
-                                             <div id="rank1" class="tab-pane active" >
-
-                                            <div class="thumbnail" style="margin-bottom: 5px;">
-                                                <img src="/public/images/players/player.png" alt="" class="small-image">
-
-                                                <p><strong>Neberd</strong> er en av de beste spilerne som har hatt en rekord på</p>
-                                                <p>Registered: 20.05.2012</p>
-                                                <p><strong>Winn %:</strong> 100</p>
-                                                      <p><strong>Neberd</strong> er en av de beste spilerne som har hatt en rekord på</p>
-                                                <p>Registered: 20.05.2012</p>
-                                                <p><strong>Winn %:</strong> 100</p>
-                                            </div>
-                                        </div>
-                       #{/if}
-            </div>
-          
         </div>
-    </div>
-</div>
 

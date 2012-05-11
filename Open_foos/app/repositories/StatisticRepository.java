@@ -393,7 +393,7 @@ public class StatisticRepository {
 //    }
 
     
-    public List<Statistic> getMoreInfo(Long team_id) {
+    public List<Statistic> getMoreInfoForOneTeam(Long team_id) {
 
         List<Statistic> statistics = new ArrayList<Statistic>();
         statistics.add(this.getMostPlayedAgainst(team_id));
@@ -407,7 +407,9 @@ public class StatisticRepository {
 
         List<Statistic> statistics = new ArrayList<Statistic>();
         for (int i = 0; i < teams.size(); i++) {
+            if(teams.get(i)!= null ){
             statistics.add(getStatistics(teams.get(i).id));
+            }
         }
 
       return statistics;
