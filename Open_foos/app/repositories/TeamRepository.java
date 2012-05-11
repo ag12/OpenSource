@@ -17,13 +17,12 @@ import models.Team;
 public class TeamRepository {
 
     public static List<Team> getBiggestWinner() {
-        StringBuilder sqlToQuery = new StringBuilder("SELECT home_team_id as team_id, ");
-        sqlToQuery.append("(SELECT count(*) FROM Game WHERE home_team_id = temp_game.home_team_id and Game.end_time != 0) AS home_games, ");
-        sqlToQuery.append("(SELECT count(*) FROM Game WHERE home_team_id = temp_game.visitor_team_id and Game.end_time != 0) AS away_games, ");
-        sqlToQuery.append("(SELECT count(*) FROM Game WHERE (home_team_id = temp_game.home_team_id OR home_team_id = temp_game.visitor_team_id) AND winner_id= team_id and Game.end_time != 0) AS win, ");
-        sqlToQuery.append("(SELECT sum(home_games+away_games)) as total ");
-        sqlToQuery.append("FROM (SELECT * FROM Game where Game.end_time != 0) AS temp_game ");
-        sqlToQuery.append("GROUP BY home_team_id ORDER BY win DESC");
+        StringBuilder sqlToQuery = new StringBuilder("SELECT Team.id, team_name, ");
+        sqlToQuery.append("SUM(Team.id = home_team_id) as home_games, ");
+        sqlToQuery.append("SUM(Team.id = visitor_team_id) as away_games, ");
+        sqlToQuery.append("SUM((Team.id = home_team_id or Team.id = visitor_team_id) and winner_id=Team.id) as win, ");
+        sqlToQuery.append("SUM(Team.id = home_team_id or Team.id = visitor_team_id) as total ");
+        sqlToQuery.append("FROM Game, Team where end_time != 0 GROUP BY Team.id ORDER BY win DESC");
 
         ResultSet resultset = OpenFoosDatabase.executeQueryToFoosBase(sqlToQuery.toString());
         List<Team> teams = new ArrayList<Team>();
@@ -31,11 +30,11 @@ public class TeamRepository {
             while (resultset.next()) {
                 Team team = Team.findById(resultset.getLong(1));
                 team.won = resultset.getInt("win");
-                if (team.won == 0) {
-                    break;
-                }
                 team.lost = resultset.getInt("total") - team.won;
-                teams.add(team);
+                if (team.won != 0) {
+                    teams.add(team);
+                }
+
             }
         } catch (SQLException e) {
             System.out.println(e.toString());
@@ -47,26 +46,28 @@ public class TeamRepository {
     }
 
     public static List<Team> getBiggestLoser() {
-        
-        StringBuilder sqlToQuery = new StringBuilder("SELECT home_team_id as team_id, ");
-        sqlToQuery.append("(SELECT count(*) FROM Game WHERE home_team_id = temp_game.home_team_id and Game.end_time != 0) AS home_games, ");
-        sqlToQuery.append("(SELECT count(*) FROM Game WHERE home_team_id = temp_game.visitor_team_id and Game.end_time != 0) AS away_games, ");
-        sqlToQuery.append("(SELECT count(*) FROM Game WHERE (home_team_id = temp_game.home_team_id OR home_team_id = temp_game.visitor_team_id) and winner_id!=team_id and Game.end_time != 0) as lost, ");
-        sqlToQuery.append("(SELECT sum(home_games+away_games)) as total ");
-        sqlToQuery.append("FROM (SELECT * FROM Game where Game.end_time != 0) AS temp_game ");
-        sqlToQuery.append("GROUP BY home_team_id ORDER BY lost DESC");
+
+        StringBuilder sqlToQuery = new StringBuilder("SELECT Team.id, team_name, ");
+        sqlToQuery.append("sum(Team.id = home_team_id) as home_games, ");
+        sqlToQuery.append("sum(Team.id = visitor_team_id) as away_games, ");
+        sqlToQuery.append("sum((Team.id = home_team_id or Team.id = visitor_team_id) and winner_id!=Team.id) as lost, ");
+        sqlToQuery.append("sum(Team.id = home_team_id or Team.id = visitor_team_id) as total ");
+        sqlToQuery.append("FROM Game, Team Where end_time != 0 GROUP BY Team.id ORDER BY lost DESC");
+
 
         ResultSet resultset = OpenFoosDatabase.executeQueryToFoosBase(sqlToQuery.toString());
         List<Team> teams = new ArrayList<Team>();
         try {
             while (resultset.next()) {
-                Team team = Team.findById(resultset.getLong(1));
+                System.out.println(resultset.getLong("id"));
+                Team team = Team.findById(resultset.getLong("id"));
                 team.lost = resultset.getInt("lost");
-                if (team.lost == 0) {
-                    break;
-                }
                 team.won = resultset.getInt("total") - team.lost;
-                teams.add(team);
+                if (team.lost != 0) {
+                    teams.add(team);
+                }
+
+
             }
         } catch (SQLException e) {
             System.out.println(e.toString());

@@ -25,18 +25,17 @@ public class TeamController extends Controller {
 
     public static Team register_team(Player player1, Player player2) {
 
-        if ( player2 == null){
-            
-        
-        Team team = new Team();
-        team.team_name = "Team_" + player1.username;
-        team.player1 = player1;
-        team.registered = new Date();
-        return team;
-        }
-        else if ( player1 != null && player2 != null){
-            
-            
+        if (player2 == null) {
+
+
+            Team team = new Team();
+            team.team_name = "Team_" + player1.username;
+            team.player1 = player1;
+            team.registered = new Date();
+            return team;
+        } else if (player1 != null && player2 != null) {
+
+
             Team team = new Team();
             team.team_name = player1.username + " and " + player2.username;
             team.player1 = player1;
@@ -48,11 +47,9 @@ public class TeamController extends Controller {
 
     }
 
-    
-    
     /*
-     * 
-     * 
+     *
+     *
      */
     public static void profile(String teamname) {
 
@@ -76,7 +73,7 @@ public class TeamController extends Controller {
             List<Statistic> teams_statistics = StatisticRepository.getMoreInfoForTeams(teams);
 
             //This teams played games
-            List<Game> games = GamesController.getTeamGames(team.id,"id desc",20);
+            List<Game> games = GamesController.getTeamGames(team.id, "id desc", 20);
 
 
             render((team != null ? team : null),
@@ -90,7 +87,7 @@ public class TeamController extends Controller {
             // send user to player profile site, where the player team info is available
             controllers.PlayerController.profile(team.player1.username);
         } else {
-           controllers.Application.ofError();
+            controllers.Application.ofError();
         }
     }
 
@@ -108,9 +105,8 @@ public class TeamController extends Controller {
         return teams;
     }
 
-    
     /*
-     * 
+     *
      */
     public static void editTeam(Long id, Team team, File image) {
 
@@ -134,7 +130,9 @@ public class TeamController extends Controller {
 
 
         }
-        if (team.bio != null /*&& !"".equals(team.bio)*/) {
+        if (team.bio != null /*
+                 * && !"".equals(team.bio)
+                 */) {
 
 
             if (existingTeam.bio == null || !existingTeam.bio.equals(team.bio)) {
@@ -168,16 +166,18 @@ public class TeamController extends Controller {
             String teamImage = "openfoos_team_" + id + imageEnd;
             existingTeam.image = teamImage;
             String main_path = Play.applicationPath + "/public/images/";
-            main_path +=  "teams/" + teamImage;
+            main_path += "teams/" + teamImage;
             Images.resize(image, new File(main_path), 200, 160, true);
             hasChanged = true;
         }
-        if ( team.arch_rival.team_name.equals("")){
+        if (team.arch_rival.team_name.equals("")) {
             existingTeam.arch_rival = null;
             hasChanged = true;
         }
         //User picks arch rival from the list
-        if (team.arch_rival.team_name != null /*&& !team.arch_rival.team_name.equals("")*/) {
+        if (team.arch_rival.team_name != null /*
+                 * && !team.arch_rival.team_name.equals("")
+                 */) {
 
             Team arch_rival = Team.find("byTeam_name", team.arch_rival.team_name).first();
 
@@ -185,49 +185,49 @@ public class TeamController extends Controller {
 
                 if (existingTeam.id != arch_rival.id) {
 
-                        if (existingTeam.arch_rival != null) {
+                    if (existingTeam.arch_rival != null) {
 
 
-                            if (existingTeam.memberCount() == 2) {
-                                if (existingTeam.arch_rival.id != arch_rival.id
-                                        && existingTeam.player1.id != arch_rival.id
-                                        && existingTeam.player2.id != arch_rival.id) {
+                        if (existingTeam.memberCount() == 2) {
+                            if (existingTeam.arch_rival.id != arch_rival.id
+                                    && existingTeam.player1.id != arch_rival.id
+                                    && existingTeam.player2.id != arch_rival.id) {
 
 
-                                    existingTeam.arch_rival = arch_rival;
-                                    hasChanged = true;
-                                }
-                            } else if (existingTeam.memberCount() == 1) {
-                                if (existingTeam.arch_rival.id != arch_rival.id
-                                        && existingTeam.player1.id != arch_rival.id) {
-
-
-                                    existingTeam.arch_rival = arch_rival;
-                                    hasChanged = true;
-                                }
+                                existingTeam.arch_rival = arch_rival;
+                                hasChanged = true;
                             }
-
-                        }
-                        if (existingTeam.arch_rival == null) {
-
-
-                            if (existingTeam.memberCount() == 2) {
-                                if (existingTeam.player1.id != arch_rival.id
-                                        && existingTeam.player2.id != arch_rival.id) {
+                        } else if (existingTeam.memberCount() == 1) {
+                            if (existingTeam.arch_rival.id != arch_rival.id
+                                    && existingTeam.player1.id != arch_rival.id) {
 
 
-                                    existingTeam.arch_rival = arch_rival;
-                                    hasChanged = true;
-                                }
-                            }
-                            if (existingTeam.memberCount() == 1) {
-                                if (existingTeam.player1.id != arch_rival.id) {
-
-                                    existingTeam.arch_rival = arch_rival;
-                                    hasChanged = true;
-                                }
+                                existingTeam.arch_rival = arch_rival;
+                                hasChanged = true;
                             }
                         }
+
+                    }
+                    if (existingTeam.arch_rival == null) {
+
+
+                        if (existingTeam.memberCount() == 2) {
+                            if (existingTeam.player1.id != arch_rival.id
+                                    && existingTeam.player2.id != arch_rival.id) {
+
+
+                                existingTeam.arch_rival = arch_rival;
+                                hasChanged = true;
+                            }
+                        }
+                        if (existingTeam.memberCount() == 1) {
+                            if (existingTeam.player1.id != arch_rival.id) {
+
+                                existingTeam.arch_rival = arch_rival;
+                                hasChanged = true;
+                            }
+                        }
+                    }
                 }
             }
 
@@ -259,13 +259,13 @@ public class TeamController extends Controller {
                 long pid = Long.parseLong(session.get("pid"));
                 if (team.player1.id == pid || team.player2.id == pid) {
                     int compeleted = (compeletedProfile(team) + 60);
-                    render(team,compeleted);
+                    render(team, compeleted);
                 } else {
-                   controllers.Application.ofError();
+                    controllers.Application.ofError();
                 }
             }
         } else {
-             controllers.Application.ofError();
+            controllers.Application.ofError();
         }
 
 
@@ -285,10 +285,18 @@ public class TeamController extends Controller {
         }
         return notNull;
     }
-    
-    
-    public static List<Team> getTopRankedTeams(int limit ){
+
+    public static List<Team> getTopRanked(int limit) {
         List<Team> teams = Team.find("ORDER BY rating DESC").fetch(5);
+        return teams;
+    }
+
+    public static List<Team> getTopRankedTeams(int limit) {
+        List<Team> teams = Team.find("player1_id != NULL AND player2_id != NULL ORDER BY rating DESC").fetch(5);
+        return teams;
+    }
+    public static List<Team> getTopRankedPlayers(int limit) {
+        List<Team> teams = Team.find("player2_id = NULL ORDER BY rating DESC").fetch(5);
         return teams;
     }
 }

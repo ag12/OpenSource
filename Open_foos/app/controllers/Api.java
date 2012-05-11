@@ -123,7 +123,8 @@ public class Api extends Controller
           
           // Creates and saves a team for the player;
           Team team = new Team(); 
-          team.player1 = player; 
+          team.player1 = player;
+          team.team_name = player.username;
           team.save();
           
           renderJSON(player);

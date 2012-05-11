@@ -38,7 +38,7 @@ public class Player extends Model {
     //default "player.png"
     public String image = "player.png";
     public String bio = null;
-    public Date registered = null;
+    public Date registered = new Date();
 
     @Override
     public String toString() {

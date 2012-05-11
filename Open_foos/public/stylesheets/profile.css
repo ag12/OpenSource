@@ -298,6 +298,26 @@ DETTE ER NYTT DATO 02.04.2012
     height: 260px;
     width: 270px;
 }
+#left_bar2{
+    margin: 0px;
+}
+
+#right_bar2{
+    background-color: #eee;
+    border-radius: 5px;
+    height: 260px;
+    width: 270px;
+}
+#left_bar3{
+    margin: 0px;
+}
+
+#right_bar3{
+    background-color: #eee;
+    border-radius: 5px;
+    height: 260px;
+    width: 270px;
+}
 
 .change_color {
     margin-bottom: 0px;

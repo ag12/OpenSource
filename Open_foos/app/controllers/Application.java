@@ -41,11 +41,13 @@ public class Application extends Controller {
             System.out.println("player is Offline");  
        }
        List<Game> onGoingGames =  GameRepository.getOngoingGames();
-       List<Team> topRankedteams = TeamController.getTopRankedTeams(5);
+       List<Team> topRanked = TeamController.getTopRanked(5);
+       List<Team> topTeams = TeamController.getTopRankedTeams(5);
+       List<Team> topPlayer = TeamController.getTopRankedPlayers(5);
        List<Team> biggestWinner = TeamRepository.getBiggestWinner();
        List<Team> biggestLoser = TeamRepository.getBiggestLoser();
        
-       render(topRankedteams,onGoingGames,biggestWinner,biggestLoser, onlinePlayer,statistic,team );
+       render(topRanked,onGoingGames,biggestWinner,biggestLoser, onlinePlayer,statistic,team,topTeams,topPlayer);
     }
 
     public static void login() {
