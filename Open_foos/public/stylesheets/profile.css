@@ -276,6 +276,11 @@ pre{
     padding: 5px;
 }
 
+.online_player_stat{
+    color: black;
+    font-weight: bold;
+}
+
 /*****************************************************************************
 DETTE ER NYTT DATO 02.04.2012
 *****************************************************************************/
@@ -390,3 +395,4 @@ DETTE ER NYTT DATO 02.04.2012
    background-color: grey; 
    color: white; 
 }
+

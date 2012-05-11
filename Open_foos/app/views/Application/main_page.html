@@ -226,14 +226,36 @@
                         <div id="openfoos_player" class="tab-pane active" >
 
                             <div class="thumbnail" style="margin-bottom: 5px;">
-                                 <p>Registered : ${onlinePlayer?.registered.since(false)}</p>
+                                <p><strong>Registered : ${onlinePlayer?.registered.since(false)}</strong></p>
                                 <img src="@{'/public/images/players'}/${onlinePlayer.image}" 
                                      alt="${onlinePlayer.username}" class="small-image">
 
-                                <p><strong>${onlinePlayer?.username}</strong>${onlinePlayer?.bio}</p>
-                                <p>${onlinePlayer?.registered.since(false)}</p>
-                                <p><strong>${statistic?.last_three_games_played}</strong> 100</p>
-                             
+                                <p><strong>${onlinePlayer?.username}</strong></p>
+                                <ul class="profile-right-corner">
+                                    <li>
+                                        <h6 class="underline">PLAYED<p class="stat-para">${statistic?.games_playd}</p></h6>
+                                    </li>
+                                    <li>
+                                        <h6 class="underline">WON<p class="stat-para">${statistic?.winns}</p></h6>
+                                    </li>
+                                    <li>
+                                        <h6 class="underline">LOST<p class="stat-para">${statistic?.losts}</p></h6>    
+                                    </li> 
+                                    #{if statistic?.games_playd > 0 }
+                                    <li>
+                                        <h6 class="underline">FORM<p class="stat-para">${statistic?.last_three_games_played}</p></h6>    
+                                    </li> 
+                                   
+                                     <li>
+                                        <h6 class="underline">Win %<p class="stat-para">${statistic?.win_prosent}</p></h6>    
+                                    </li> 
+                                    <li>
+                                        <h6 class="underline">Rank <p class="stat-para">${team?.rating}</p></h6>    
+                                    </li> 
+                                     #{/if}
+                                    
+                                </ul>
+
                             </div>
                         </div>
                         #{/if}

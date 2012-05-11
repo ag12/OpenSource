@@ -24,6 +24,7 @@ public class Application extends Controller {
 
     public static void main_page() {
        Player onlinePlayer = null;
+       Team team = null;
        Statistic statistic = null;
        if(session.get("login") != null){
            boolean login = Boolean.parseBoolean(session.get("login"));
@@ -31,7 +32,7 @@ public class Application extends Controller {
                Long id = Long.parseLong(session.get("pid"));
                onlinePlayer = Player.findById(id);
                if ( onlinePlayer != null){
-                   Team team = TeamController.getTeam(onlinePlayer.getId());
+                   team = TeamController.getTeam(onlinePlayer.getId());
                    statistic = StatisticRepository.getStatistics(team.getId());
                  System.out.println("player is Online"); 
                }
@@ -44,7 +45,7 @@ public class Application extends Controller {
        List<Team> biggestWinner = TeamRepository.getBiggestWinner();
        List<Team> biggestLoser = TeamRepository.getBiggestLoser();
        
-       render(topRankedteams,onGoingGames,biggestWinner,biggestLoser, onlinePlayer,statistic);
+       render(topRankedteams,onGoingGames,biggestWinner,biggestLoser, onlinePlayer,statistic,team );
     }
 
     public static void login() {
