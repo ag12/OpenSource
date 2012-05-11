@@ -226,7 +226,14 @@ img{
 width: 202px;
 height: 235px;
 overflow: hidden;
-float: left;
+}
+
+#home-team .player-container{
+    float: left;
+}
+
+#visitor-team .player-container{
+    float: right;
 }
     
 .player-status{
