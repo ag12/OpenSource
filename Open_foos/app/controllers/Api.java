@@ -78,7 +78,6 @@ public class Api extends Controller
     
     public static void getPlayerByRFID(long rfid)
     {
-       
        if(rfid < 1)
        {
           error(Http.StatusCode.BAD_REQUEST, "Please provide an non-empty RFID code"); 
@@ -119,11 +118,16 @@ public class Api extends Controller
        {
 
           player.password = Crypto.encryptAES(player.password);
+          player.registered = new Date();
           player.save();
           
           // Creates and saves a team for the player;
           Team team = new Team(); 
+<<<<<<< HEAD
           team.player1 = player;
+=======
+          team.player1 = player; 
+>>>>>>> Fixed a bug related to async game persistence. Also added a registration date for new players
           team.team_name = player.username;
           team.save();
           

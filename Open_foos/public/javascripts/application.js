@@ -280,14 +280,20 @@ $(document).ready(function(){
             
            if(teamsAuthenticated === true)
            {   
+             var self = this;
+             var successCallback = function(){
+                 self.set('state', 'started');
+             };
+             self.authenticate(successCallback);
+             /*
              if(this.authenticate() === true)
              {
-                this.set('state', 'started');
+                
                 return true;
              }
+             */
            }
            
-           return false;
         },
         
         end: function()
@@ -297,25 +303,36 @@ $(document).ready(function(){
         
         finish: function() 
         {
-            this.set('state', 'finish'); 
-            this.save();
-            this.reset();
+            var self = this;
+            
+            var successCallback = function(){
+                self.set('state', 'finish'); 
+                self.reset();
+            };
+            
+            self.authenticate(successCallback);
+            
         },
        
         restart: function()
         {
             // Re-sets some of the game variables to default-values. 
             // We still keep information about authenticated teams and players
-            this.save();
-            this.set
-            ({
-                id: undefined,
-                home_score: 0,
-                visitor_score: 0,
-                state: 'ready'
-            });
-            // Starts the game
-            this.start();
+            var self = this;
+            var successCallback = function(){
+                self.set('state', 'restart');
+                self.set
+                ({
+                    id: undefined,
+                    home_score: 0,
+                    visitor_score: 0,
+                    state: 'ready'
+                });
+                // Starts the game
+                self.start();
+            };
+            self.authenticate(successCallback);
+            
         },
        
         reset: function()
@@ -336,18 +353,21 @@ $(document).ready(function(){
             this.set('state', 'overtime');
         },
         
-        authenticate: function()
+        authenticate: function(successCallback)
         {
            this.save({}, {
-               async: false,
+               async: true,
                success: function()
                {
+                 successCallback();  
                  console.log("the game has been authenticated by the server");   
                },
                error: function()
                {
+                 Foosball.message.showError("An error occured when trying to authenticate the game", false);  
                  throw new Error("the game was not been authenticated by the server");  
                }
+               
            });
            
            return this.isAuthenticated();
@@ -1348,7 +1368,7 @@ $(document).ready(function(){
     // we want show an indicator until the server responds to us
     $(document).ajaxStart(function()
     { 
-        $('#request-indicator').stop().slideDown(250); 
+        $('#request-indicator').slideDown(250); 
   
     }).ajaxStop(function()
     { 
