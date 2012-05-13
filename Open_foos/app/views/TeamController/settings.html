@@ -55,7 +55,18 @@
         </div>
 
         <div class="span3">
-       
+                   #{ifError 'itsok'}
+            <div class="alert alert-success">
+
+                <button class="close" data-dismiss="alert">×</button>
+                <h1>Changes…</h1>
+                <br/>
+                #{errors}
+                <li>${error}</li>
+                #{/errors}
+                <br/>
+            </div>
+            #{/ifError}
     
         </div>
 

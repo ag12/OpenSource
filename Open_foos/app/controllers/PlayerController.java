@@ -373,6 +373,10 @@ public class PlayerController extends Controller {
             }
             Validation.keep();
         }
+        if ( !hasChanged){
+            Validation.addError("itsok", "You have not changed anything.");
+            Validation.keep();
+        }
 
         settings();
     }

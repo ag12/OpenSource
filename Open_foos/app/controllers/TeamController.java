@@ -109,7 +109,7 @@ public class TeamController extends Controller {
             if (!team.bio.equals(existingTeam.bio)) {
                 existingTeam.bio = team.bio;
                 hasChanged = true;
-                changes.add("Your  bio changed.");
+                changes.add("Your teams bio changed.");
                     
             }
         }
@@ -141,7 +141,7 @@ public class TeamController extends Controller {
             main_path += "teams/" + teamImage;
             Images.resize(image, new File(main_path), 180, 140, true);
             hasChanged = true;
-            changes.add("Your picture is now changed.");
+            changes.add("Your teams picture is now changed.");
                     
 
         }
@@ -159,7 +159,7 @@ public class TeamController extends Controller {
 
                 existingTeam.image = "team.png";
                 hasChanged = true;
-                changes.add("Your picture is now reset.");
+                changes.add("Your teams picture is now reset.");
                     
             }
 
@@ -169,27 +169,27 @@ public class TeamController extends Controller {
         if (team.arch_rival.team_name.equals("") && existingTeam.arch_rival != null) {
             existingTeam.arch_rival = null;
             hasChanged = true;
-            changes.add("Your arch rival is now removed.");
+            changes.add("Your teams arch rival is now removed.");
                     
         }
         //User picks arch rival from the list
         if (team.arch_rival.team_name != null && team.arch_rival.team_name.length() > 1/*
                  * && !team.arch_rival.team_name.equals("")
                  */) {
-            System.out.println("arch er ikke null, og større en 1");
+           
             Team arch_rival = Team.find("byTeam_name", team.arch_rival.team_name).first();
 
             if (arch_rival != null && existingTeam.arch_rival != arch_rival) {
-                System.out.println("arch er faktisk et lag som finnes");
+              
                 //User cant pick them self
                 if (existingTeam.id != arch_rival.id) {
 
-                    System.out.println("lagets id er ikke like arch sin id");
+                  
                     if (existingTeam.arch_rival != null) {
 
-                        System.out.println("dette laget har archrival fra før og vil bytte");
+                       
                         if (existingTeam.memberCount() == 2) {
-                            System.out.println("dette laget har to spillere ");
+                          
                             if (existingTeam.arch_rival.id != arch_rival.id
                                     && existingTeam.player1.id != arch_rival.id
                                     && existingTeam.player2.id != arch_rival.id) {
@@ -197,21 +197,21 @@ public class TeamController extends Controller {
 
                                 existingTeam.arch_rival = arch_rival;
                                 hasChanged = true;
-                                changes.add("Your arch rival is now changed.");
+                                changes.add("Your teams arch rival is now changed.");
                                 
 
                             }
                         } else if (existingTeam.memberCount() == 1) {
 
-                            System.out.println("dette laget har kunn en spiller ");
+                         
                             if (existingTeam.arch_rival.id != arch_rival.id
                                     && existingTeam.player1.id != arch_rival.id && existingTeam.player1.id != 
                                     arch_rival.player1.id) {
 
-                                System.out.println("arch er en ny arch og player1 id av laget er ikke lig arch heller");
+                            
                                 existingTeam.arch_rival = arch_rival;
                                 hasChanged = true;
-                                changes.add("Your arch rival is now changed.");
+                                changes.add("Your teams arch rival is now changed.");
 
                             }
                         }
@@ -219,27 +219,27 @@ public class TeamController extends Controller {
                     }//END existingTeam.arch_rival != null
                     if (existingTeam.arch_rival == null) {
 
-                        System.out.println("laget har ikke arch fra før");
+                      
                         if (existingTeam.memberCount() == 2) {
-                            System.out.println("to mans lag");
+                          
                             if (existingTeam.player1.id != arch_rival.id
                                     && existingTeam.player2.id != arch_rival.id) {
 
 
                                 existingTeam.arch_rival = arch_rival;
                                 hasChanged = true;
-                                changes.add("Your arch rival is now changed.");
+                                changes.add("Your teams arch rival is now changed.");
 
                             }
                         }
                         if (existingTeam.memberCount() == 1) {
-                            System.out.println("en mans lag");
+                           
                             if (existingTeam.player1.id != arch_rival.id && existingTeam.player1.id != 
                                     arch_rival.player1.id) {
 
                                 existingTeam.arch_rival = arch_rival;
                                 hasChanged = true;
-                                changes.add("Your arch rival is now changed.");
+                                changes.add("Your teams arch rival is now changed.");
 
                             }
                         }
@@ -261,6 +261,10 @@ public class TeamController extends Controller {
               for ( int i = 0; i < changes.size(); i++){
             Validation.addError("itsok", changes.get(i));
             }
+            Validation.keep();
+        }
+        if ( !hasChanged){
+            Validation.addError("itsok", "You have not changed anything.");
             Validation.keep();
         }
         if (existingTeam.memberCount() == 1) {
