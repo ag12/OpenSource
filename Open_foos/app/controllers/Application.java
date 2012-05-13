@@ -44,7 +44,6 @@ public class Application extends Controller {
        List<Team> topPlayer = TeamController.getTopRankedPlayers(5);
        List<Team> biggestWinner = TeamRepository.getBiggestWinner();
        List<Team> biggestLoser = TeamRepository.getBiggestLoser();
-       
        render(topRanked,onGoingGames,biggestWinner,biggestLoser, onlinePlayer,statistic,team,topTeams,topPlayer);
     }
 

@@ -11,7 +11,20 @@
 
 
   $('.bar').css('width', '${compeleted}%')
-
+            $('#playerArchRival').typeahead({
+            items: 3, 
+            source: function (typeahead) {
+                return $.get('/application/everybody ',  function (data) 
+                {
+                    return typeahead.process(data);
+                });
+            },
+            onselect: function (data){
+                  
+                  
+               
+            }
+        });
         
     });
    
@@ -84,7 +97,7 @@
                             <div class="control-group">
                                 <label class="control-label" for="arch-rival">Arch-rival</label>
                                 <div class="controls">
-                                    <input type="text" data-provide="typeahead" class="input-xlarge" id="arch-rival" 
+                                    <input type="text" data-provide="typeahead" class="input-xlarge" id="playerArchRival" 
                                            value="${team?.arch_rival?.team_name}" name="team.arch_rival.team_name">
                                     <p class="help-block">Don't worry we will find them for you .</p>
                                 </div>

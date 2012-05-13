@@ -41,7 +41,7 @@
                                                             <tr>
                                                                 <td>${topRank_index}</td>
                                                                 <td>${topRank?.team_name}</td>
-                                                                <td>${topRank?.rating.format('.00')}</td>
+                                                                <td>${topRank?.rating.format('0')}</td>
                                                             </tr>
                                                         </tbody>
                                                     </table>
@@ -125,7 +125,7 @@
                                                             <tr>
                                                                 <td>${topteam_index}</td>
                                                                 <td>${topteam?.team_name}</td>
-                                                                <td>${topteam?.rating.format('0')} point's</td>
+                                                                <td>${topteam?.rating.format('0')}</td>
                                                             </tr>
                                                         </tbody>
                                                     </table>
@@ -199,7 +199,7 @@
                                                             <tr>
                                                                 <td>${top_index}</td>
                                                                 <td>${top?.team_name}</td>
-                                                                <td>${top?.rating.format('0')} point's</td>
+                                                                <td>${top?.rating.format('0')}</td>
                                                             </tr>
                                                         </tbody>
                                                     </table>
@@ -364,7 +364,12 @@
 
                                             <td>${ogg?.mode} </td>
                                             <td>${ogg?.start_time.since(false)}</td>
+                                            #{if ogg?.winner == null}
+                                            <td style="text-align: center">- </td>
+                                            #{/if}
+                                            #{else}
                                             <td>${ogg?.winner}</td>
+                                            #{/else}
                                         </tr>
                                         #{/list}
 
@@ -390,7 +395,7 @@
                                         <tr>
                                             <td>${bw_index}</td>
                                             <td>${bw?.team_name}</td>
-                                            <td>${bw?.won} winns out of ${bw?.won+bw?.lost}</td>
+                                            <td>${bw?.won} winns out of ${bw?.won+bw?.lost} games played</td>
                                         </tr>
                                         #{/list}
 
@@ -413,7 +418,7 @@
                                         <tr>
                                             <td>${bl_index}</td>
                                             <td>${bl?.team_name}</td>    
-                                            <td>${bl?.lost} losts out of ${bl?.won+bl?.lost}</td>
+                                            <td>${bl?.lost} losts out of ${bl?.won+bl?.lost} games played</td>
                                         </tr>
                                         #{/list}
 
@@ -472,8 +477,8 @@
 
                         <div class="thumbnail" style="margin-bottom: 5px;">
                             
-                            <img src="@{'/public/images/players'}/${onlinePlayer.image}" 
-                                 alt="${onlinePlayer.username}" class="small-image">
+                            <img src="@{'/public/images/players'}/${onlinePlayer?.image}" 
+                                 alt="${onlinePlayer?.username}" class="small-image">
 
                             <p><strong>${onlinePlayer?.username}</strong></p>
                             <ul class="profile-right-corner">
@@ -492,10 +497,10 @@
                                 </li> 
 
                                 <li>
-                                    <h6 class="underline">Win %<p class="stat-para">${statistic?.win_prosent}</p></h6>    
+                                    <h6 class="underline">Win %<p class="stat-para">${statistic?.win_prosent.format('0')}</p></h6>    
                                 </li> 
                                 <li>
-                                    <h6 class="underline">Rank <p class="stat-para">${team?.rating}</p></h6>    
+                                    <h6 class="underline">Rank <p class="stat-para">${team?.rating.format('0')}</p></h6>    
                                 </li> 
                                 #{/if}
 

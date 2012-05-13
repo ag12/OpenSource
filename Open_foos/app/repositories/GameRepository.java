@@ -6,10 +6,11 @@ package repositories;
 
 import java.sql.ResultSet;
 import java.sql.SQLException;
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.List;
 import models.Game;
-import models.Team;
 
 /**
  *
@@ -37,5 +38,23 @@ public class GameRepository {
             System.out.println(e.toString());
         }
         return games;
+    }
+
+    public static void countAllTime() {
+        StringBuilder sqlToQuery =
+                new StringBuilder("select ((sum(start_time)) - (sum(end_time))) as total from Game where end_time != 0");
+        ResultSet resultset = OpenFoosDatabase.executeQueryToFoosBase(sqlToQuery.toString());
+        try {
+            while (resultset.next()) {
+                Long time = resultset.getLong(1);
+
+               
+            }
+        } catch (SQLException e) {
+            System.out.println(e.toString());
+        } catch (Exception e) {
+            System.out.println(e.toString());
+        }
+
     }
 }

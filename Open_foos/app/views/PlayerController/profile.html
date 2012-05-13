@@ -178,7 +178,7 @@
                     },
                     series:[
                         {
-                            name : 'Winns',
+                            name : 'Win',
                             data : countWin,
                             marker : {
                                 enabled : true,
@@ -194,7 +194,7 @@
                         
                         
                         {
-                            name : 'Losts',
+                            name : 'Lost',
                             data : countLost
                             ,
                             marker : {
@@ -258,7 +258,7 @@
                 <h2 class="title">@ ${player?.username}
 
                 </h2>
-                <p><strong>${player?.bio}</strong></p>
+                <p>${player?.bio}</p>
             </div>
             <div class="span2 pull-right">
 
@@ -495,13 +495,13 @@
                 </div>
 
                 <div id="stat" class="tab-pane">
-                    <h2 class="underline section">Statistic</h2>
+                    <h2 class="underline section">Statistic graph</h2>
 
                     <div id="statisticDiv">
-                        <p>Let the scaner scan you rfid, so you can logon with it.</p>
+                        <p>Compare your self with other teams and players</p>
                         <input type="text" class="input-large search-query"
                                id="highchartTypeahead" data-provide="typeahead"
-                               placeholder="Search for your team mates here"/>
+                               placeholder="Search for other teams and players here"/>
 
 
                     </div>
@@ -615,16 +615,23 @@
                     <h2 class="underline section">${team?.team_name}</h2>
 
 
-                    <img src="@{'/public/images/players'}/${player.image}" alt="${team.team_name}" class="large-image"/>
+                    <img src="@{'/public/images/players'}/${player?.image}" alt="${team.team_name}" class="large-image"/>
 
                     <div id="team_box">
-                        <p>Have been registered since ${team?.registered.since(false)}</p>
-                        <p>@${team?.team_name}</p>
-                        <pre style="font-style: oblique">${team?.bio}</pre>
+                        <p>Have been registered since <strong>${team?.registered.since(false)}</strong>!</p>
+                        <p><strong>Team name: </strong> ${team?.team_name}</p>
+     
+                        <p style="font-style: italic"><strong>${team?.bio}</strong></p>
                         #{if team?.arch_rival != null}
-                        <strong>Arch rival:</strong> <a href="@{TeamController.profile(team?.arch_rival?.team_name)}"> ${team?.arch_rival?.team_name}</a>
+                        <strong>Arch rival </strong> <a href="@{TeamController.profile(team?.arch_rival?.team_name)}"> @ ${team?.arch_rival?.team_name}</a>
                         #{/if}
-                        
+                        <br/> <br/>
+                        #{if scoredGoal != 0 && statistic?.score_for > 0 }
+                        <p>${team?.team_name} have scored <strong>${scoredGoal - statistic?.score_for}</strong> goals while playing in other teams.</p>
+                        #{/if} 
+                        #{if ownGoal != 0}
+                        <p>And scored <strong>${ownGoal}</strong> own goals.</p>
+                        #{/if}
                     </div>
                 </div>
 
@@ -679,14 +686,14 @@
                                <table class='table'>
                                <thead>
                                <tr>
-                               <th>Played</th>
-                               <th class='prosent'>${games?.start_time.since(false)}</th>
+                               <th>Started</th>
+                               <th class='prosent'>${games?.start_time.format('dd MMMM yyyy hh:mm:ss', 'fr')}</th>
                                </tr>
                                </thead>
-                                <thead class='red-title'>
+                                <thead>
                                <tr>
                                <th>Ended</th>
-                               <th class='prosent'>${games?.end_time.since(false)}</th>
+                               <th class='prosent'>${games?.end_time.format('dd MMMM yyyy hh:mm:ss', 'fr')}</th>
                                </tr>
                                </thead>
                                </table>
@@ -850,7 +857,7 @@
                 </div><!-- info -->
 
                 <div id="gamesMap" class="tab-pane">
-                    <h2 class="underline section">YEAH</h2>
+                    <h2 class="underline section">Graphical presentation of ${team?.team_name}'s played games</h2>
 
 
 

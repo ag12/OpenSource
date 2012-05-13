@@ -12,7 +12,7 @@
         
         $('.bar').css('width', '${compeleted}%')
         
-            $('#playerArchRival').typeahead({
+        $('#playerArchRival').typeahead({
             items: 3, 
             source: function (typeahead) {
                 return $.get('/application/everybody ',  function (data) 
@@ -36,7 +36,7 @@
             <ul class="thumbnails">
                 <li>
                     <a href="/players/profile/${player?.username}" class="thumbnail">
-                        <img src="@{'/public/images/players'}/${player?.image}" alt="${player?.username}" width="170" >
+                        <img src="@{'/public/images/players'}/${player?.image}" alt="${player?.username}" >
                     </a>
                 </li>
                 <li>
@@ -44,16 +44,16 @@
                     <p class="subheader">View your profile page</p>
                 </li>
             </ul>
-            
+
             <div class="progress progress-striped
                  active">
-                
+
                 <div class="bar" 
-                    
+
                      style="width:100%; "></div>
-                    
-                </div>
-         You have compeleted ${compeleted}% of you profile
+
+            </div>
+            You have compeleted ${compeleted}% of you profile
         </div>
 
 
@@ -73,19 +73,35 @@
                     </a>
                 </li>
             </ul>
-             #{if errors}
-<div class="alert alert-block">
-  <a class="close" data-dismiss="alert" href="#">×</a>
-  <h4 class="alert-heading">Warning!</h4>
- <ul>
-#{errors}
-    <li>${error}</li>
-#{/errors}
-</ul>
-</div>
- #{/if}
-            
-            
+
+
+
+
+            #{ifError 'email'}
+            <div class="alert alert-error">
+
+                <button class="close" data-dismiss="alert">×</button>
+                <h1>Oops…</h1>
+                <br/>
+                <li>#{error 'email' /}</li>
+                <br/>
+            </div>
+            #{/ifError}
+
+            #{ifError 'itsok'}
+            <div class="alert alert-success">
+
+                <button class="close" data-dismiss="alert">×</button>
+                <h1>Changes…</h1>
+                <br/>
+                #{errors}
+                <li>${error}</li>
+                #{/errors}
+                <br/>
+            </div>
+            #{/ifError}
+
+
         </div>
 
     </div>
@@ -105,25 +121,25 @@
                         <fieldset>
                             <div class="control-group">
                                 <label class="control-label" for="fileInput">Picture</label>
-                                <img src="@{'/public/images/players'}/${player?.image}" style="float: left; margin: 0 20px 0 20px;"/>
+                                <img src="@{'/public/images/players'}/${player?.image}" width="79" height="79" style="float: left; margin: 0 20px 0 20px;"/>
                                 <div class="controls">
                                     <input class="input-file" type="file" name="image" id="image"/><br/>
                                     Maximum size of 700kb.<br/> 
                                     JPG, GIF, PNG
-                                   <p class="help-block"><strong>Reset profile picture.</strong>&nbsp;&nbsp;
-                                    <input id="reset" type="checkbox" name="reset"
-                                       title="Reset profile picture"/></p>
-                                 
-                                   
+                                    <p class="help-block"><strong>Reset profile picture.</strong>&nbsp;&nbsp;
+                                        <input id="reset" type="checkbox" name="reset"
+                                               title="Reset profile picture"/></p>
+
+
                                 </div>
-                                
+
                             </div>   
-                            
+
                             <div class="control-group">
                                 <label class="control-label" for="rfid">Rf-id</label>
                                 <div class="controls">
                                     <input type="password" class="input-xlarge" id="rfid" placeholder="Scan your rfid" 
-                                           value="${player?.rfid}" name="player.rfid" autofocus="autofocus">
+                                           value="${player?.rfid}" name="player.rfid" autofocus="autofocus" disabled="">
 
                                     <p class="help-block">Let the scaner scan you rfid, so you can logon with it.</p>
                                 </div>
@@ -180,7 +196,7 @@
                                 <div class="controls">
                                     <input type="password" class="input-xlarge" id="current_password" 
                                            placeholder="Enter your current password" name="player.password">
-                                    
+
                                     <p class="help-block">Have you forgotten your password?</p>
                                 </div>
                             </div>
@@ -231,8 +247,8 @@
                                     Maximum size of 700k.<br/> 
                                     JPG, GIF, PNG
                                     <p class="help-block"><strong>Reset profile picture.</strong>&nbsp;&nbsp;
-                                    <input id="reset2" type="checkbox" name="reset"
-                                       title="Reset profile picture"/></p>
+                                        <input id="reset2" type="checkbox" name="reset"
+                                               title="Reset profile picture"/></p>
                                 </div>
                             </div>  
                             <div class="control-group">
@@ -263,8 +279,8 @@
                             </div>
                         </fieldset>
                     </form>
-                    
-                    
+
+
                 </div>
             </div>
         </div>

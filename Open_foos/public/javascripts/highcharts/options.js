@@ -32,7 +32,7 @@ window.versus_options = {
        
         tickInterval: 1,
         title: {
-            text: 'Played games'
+            text: ''
         },
         labels: {
             formatter: function() {

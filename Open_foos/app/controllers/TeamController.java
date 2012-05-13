@@ -13,6 +13,7 @@ import models.Player;
 import models.Statistic;
 import models.Team;
 import play.Play;
+import play.data.validation.Validation;
 import play.libs.Images;
 import play.mvc.Controller;
 import repositories.StatisticRepository;
@@ -91,12 +92,14 @@ public class TeamController extends Controller {
         System.out.println("START");
         Team existingTeam = Team.findById(id);
         boolean hasChanged = false;
-
+        List<String> changes = new ArrayList<String>();
         if (team.team_name != null && !"".equals(team.team_name) && !existingTeam.team_name.equals(team.team_name)) {
             Team t = Team.find("byTeam_name", team.team_name).first();
             if (t == null) {
                 existingTeam.team_name = team.team_name;
                 hasChanged = true;
+                changes.add("Your teams name is now changed.");
+                    
             }
         }
         if (team.bio != null /*
@@ -106,6 +109,8 @@ public class TeamController extends Controller {
             if (!team.bio.equals(existingTeam.bio)) {
                 existingTeam.bio = team.bio;
                 hasChanged = true;
+                changes.add("Your  bio changed.");
+                    
             }
         }
 
@@ -134,8 +139,10 @@ public class TeamController extends Controller {
             }
             existingTeam.image = teamImage;
             main_path += "teams/" + teamImage;
-            Images.resize(image, new File(main_path), 200, 160, true);
+            Images.resize(image, new File(main_path), 180, 140, true);
             hasChanged = true;
+            changes.add("Your picture is now changed.");
+                    
 
         }
 
@@ -152,6 +159,8 @@ public class TeamController extends Controller {
 
                 existingTeam.image = "team.png";
                 hasChanged = true;
+                changes.add("Your picture is now reset.");
+                    
             }
 
 
@@ -160,6 +169,8 @@ public class TeamController extends Controller {
         if (team.arch_rival.team_name.equals("") && existingTeam.arch_rival != null) {
             existingTeam.arch_rival = null;
             hasChanged = true;
+            changes.add("Your arch rival is now removed.");
+                    
         }
         //User picks arch rival from the list
         if (team.arch_rival.team_name != null && team.arch_rival.team_name.length() > 1/*
@@ -186,6 +197,8 @@ public class TeamController extends Controller {
 
                                 existingTeam.arch_rival = arch_rival;
                                 hasChanged = true;
+                                changes.add("Your arch rival is now changed.");
+                                
 
                             }
                         } else if (existingTeam.memberCount() == 1) {
@@ -198,6 +211,7 @@ public class TeamController extends Controller {
                                 System.out.println("arch er en ny arch og player1 id av laget er ikke lig arch heller");
                                 existingTeam.arch_rival = arch_rival;
                                 hasChanged = true;
+                                changes.add("Your arch rival is now changed.");
 
                             }
                         }
@@ -214,6 +228,7 @@ public class TeamController extends Controller {
 
                                 existingTeam.arch_rival = arch_rival;
                                 hasChanged = true;
+                                changes.add("Your arch rival is now changed.");
 
                             }
                         }
@@ -224,6 +239,7 @@ public class TeamController extends Controller {
 
                                 existingTeam.arch_rival = arch_rival;
                                 hasChanged = true;
+                                changes.add("Your arch rival is now changed.");
 
                             }
                         }
@@ -240,9 +256,15 @@ public class TeamController extends Controller {
         }
 
         if (hasChanged) {
+            
             existingTeam.save();
+              for ( int i = 0; i < changes.size(); i++){
+            Validation.addError("itsok", changes.get(i));
+            }
+            Validation.keep();
         }
         if (existingTeam.memberCount() == 1) {
+            
             controllers.PlayerController.settings();
         } else {
             settings(existingTeam.team_name);

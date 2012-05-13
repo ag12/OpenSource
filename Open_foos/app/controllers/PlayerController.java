@@ -5,6 +5,7 @@
 package controllers;
 
 import java.io.File;
+import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 import models.Game;
@@ -31,33 +32,32 @@ public class PlayerController extends Controller {
      * Here the player can change settings, the actuale code is edit();
      */
     public static void settings() {
-        
-        if (session.get("login") != null && session.get("pid") != null){
 
-        Long id = Long.parseLong(session.get("pid"));
+        if (session.get("login") != null && session.get("pid") != null) {
 
-        String username = session.get("pname");
+            Long id = Long.parseLong(session.get("pid"));
 
-        if (id != null && (username != null && !username.equals(""))) {
+            String username = session.get("pname");
 
-            Player player = Player.find("id = ? and username = ?", id, username).first();
-            //getPlayer(id, username);
+            if (id != null && (username != null && !username.equals(""))) {
 
-            Team team = TeamController.getTeam(id);
+                Player player = Player.find("id = ? and username = ?", id, username).first();
+                //getPlayer(id, username);
 
-            int compeleted = (compeletedProfile(player)
-                    + controllers.TeamController.compeletedProfile(team));
+                Team team = TeamController.getTeam(id);
 
-            render(player, team, compeleted);
+                int compeleted = (compeletedProfile(player)
+                        + controllers.TeamController.compeletedProfile(team));
+                boolean where = false;
+                render(player, team, compeleted, where);
 
+            } else {
+                controllers.Application.error();
+            }
         } else {
             controllers.Application.error();
         }
-        }else
-        {
-            controllers.Application.error();
-        }
-         
+
     }
 
     public static void registerPlayer(@Valid Player player) {
@@ -82,7 +82,7 @@ public class PlayerController extends Controller {
             player.password = player.password.trim();
             player.password = Crypto.encryptAES(player.password);
             player.save();
-            Team team = new Team(); 
+            Team team = new Team();
             team.player1 = player;
             team.team_name = player.username;
             team.save();
@@ -162,6 +162,9 @@ public class PlayerController extends Controller {
             List<Team> teams = null;
             List<Statistic> statistics = null;
             List<Game> games = null;
+            int scoredGoal = GoalController.getIndividualGoalScoreds(player.getId());
+            int ownGoal = GoalController.getIndividualOwnGoal(player.getId());
+
             if (team != null) {
                 teams = TeamController.getTeams(player.getId());
 
@@ -181,7 +184,7 @@ public class PlayerController extends Controller {
                     (statistic != null ? statistic : null),
                     (statistics != null ? statistics : null),
                     (teams_statistics != null ? teams_statistics : null),
-                    (games != null ? games : null));
+                    (games != null ? games : null), scoredGoal, ownGoal);
 
 
         } else if (player == null) {
@@ -217,6 +220,7 @@ public class PlayerController extends Controller {
         }
         //indicates if player have changed any info
         boolean hasChanged = false;
+        List<String> changes = new ArrayList<String>();
         if (existingplayer != null) {
 
             //FIRST_NAME
@@ -228,6 +232,8 @@ public class PlayerController extends Controller {
 
                     existingplayer.first_name = player.first_name;
                     hasChanged = true;
+                    changes.add("Your first name is now changed.");
+                    
                 }
 
             }
@@ -241,6 +247,7 @@ public class PlayerController extends Controller {
 
                     existingplayer.last_name = player.last_name;
                     hasChanged = true;
+                     changes.add("Your last name is now changed.");
                 }
             }
             //BIO
@@ -252,6 +259,7 @@ public class PlayerController extends Controller {
 
                     existingplayer.bio = player.bio;
                     hasChanged = true;
+                     changes.add("Your bio is now changed.");
                 }
 
             }
@@ -262,19 +270,41 @@ public class PlayerController extends Controller {
 
                 if (existingplayer.email == null || !existingplayer.email.equals(player.email)) {
 
-                    existingplayer.email = player.email;
-                    hasChanged = true;
+                    if (player.email.equals("")) {
+                        existingplayer.email = player.email;
+                        hasChanged = true;
+                         changes.add("Your email is now changed.");
+                    } else {
+                        validation.required(player.email);
+                        validation.email(player.email);
+                        if (!Validation.hasErrors()) {
+                            existingplayer.email = player.email;
+                            hasChanged = true;
+                             changes.add("Your email is now changed.");
+                        } else if (Validation.hasErrors()) {
+                            Validation.addError("email", "You email is incorrect.", player.username);
+                            Validation.keep();
+                        }
+                    }
+
+
+
                 }
             }
+
+
             //RFID
             if (player.rfid != null && player.rfid >= 1) {
                 if (existingplayer.rfid == null || existingplayer.rfid != player.rfid) {
                     Player byRfid = Player.find("byRfid", player.rfid).first();
-                    if( byRfid == null){
-                    existingplayer.rfid = player.rfid;
-                    hasChanged = true;
-                    }else if ( byRfid != null){
+                    if (byRfid == null) {
+                        existingplayer.rfid = player.rfid;
+                        hasChanged = true;
+                         changes.add("Your rfid is now changed.");
+                    } else if (byRfid != null && !byRfid.equals(existingplayer)) {
                         //OBS
+                        Validation.addError("email", "There is a nother user with the same rfid.", player.username);
+                        Validation.keep();
                     }
                 }
             }
@@ -296,46 +326,54 @@ public class PlayerController extends Controller {
                 }
                 String playerImage = "openfoos_player_" + id + imageEnd;
                 String main_path = Play.applicationPath + "/public/images/";
-                if ( !existingplayer.image.equals("player.png") && existingplayer.image != null){
-                     String delete_path = main_path + "players/" + existingplayer.image;
+                if (!existingplayer.image.equals("player.png") && existingplayer.image != null) {
+                    String delete_path = main_path + "players/" + existingplayer.image;
                     File file = new File(delete_path);
-                    if ( file != null && file.exists()){
+                    if (file != null && file.exists()) {
                         file.delete();
                     }
                 }
                 existingplayer.image = playerImage;
-                
+
                 main_path += "players/" + playerImage;
                 Images.resize(image, new File(main_path), 180, 140, true);
 
 
                 hasChanged = true;
+                changes.add("Your picture is now changed.");
+
             }
             if (reset) {
 
-                if (!existingplayer.image.equals("player.png")){
-                String main_path = Play.applicationPath + "/public/images/";
-                main_path += "players/" + existingplayer.image;
-                File file = new File(main_path);
-                
-                if (file != null && file.exists()) {
-                    file.delete();
-                }
-              
+                if (!existingplayer.image.equals("player.png")) {
+                    String main_path = Play.applicationPath + "/public/images/";
+                    main_path += "players/" + existingplayer.image;
+                    File file = new File(main_path);
+
+                    if (file != null && file.exists()) {
+                        file.delete();
+                    }
+
                     existingplayer.image = "player.png";
                     hasChanged = true;
+                    changes.add("Your picture is now reseted.");
                 }
-              
+
 
             }
 
         }
+
 
         if (hasChanged) {
 
             existingplayer.save();
-
+            for ( int i = 0; i < changes.size(); i++){
+            Validation.addError("itsok", changes.get(i));
+            }
+            Validation.keep();
         }
+
         settings();
     }
 

@@ -98,7 +98,7 @@
                 
                     },
                     title: {
-                        text: '${team?.team_name}' + '\'s' + ' played games'
+                        text: ' ${team?.player1?.username} & ${team?.player2?.username}' + '\'s' + ' played games'
                     },
                     subtitle: {
                         text: '',
@@ -111,7 +111,7 @@
                         layout: 'vertical',
                         align: 'left',
                         verticalAlign: 'top',
-                        x: 100,
+                        x: 80,
                         y: 0,
                         floating: true,
                         borderWidth: 2,
@@ -177,7 +177,7 @@
                     },
                     series:[
                         {
-                            name : 'Winns',
+                            name : 'Win',
                             data : countWin,
                             marker : {
                                 enabled : true,
@@ -193,7 +193,7 @@
                         
                         
                         {
-                            name : 'Losts',
+                            name : 'Lost',
                             data : countLost
                             ,
                             marker : {
@@ -258,7 +258,8 @@
                 <p><strong>${team?.bio}</strong></p>
                 #{/if}
                 #{if team?.arch_rival != null}
-                <p><strong> Arch rival </strong>@ ${team?.arch_rival?.team_name}</p>
+
+                <strong>Arch rival </strong> <a href="@{TeamController.profile(team?.arch_rival?.team_name)}"> @ ${team?.arch_rival?.team_name}</a>
                 #{/if}
 
             </div>
@@ -301,12 +302,17 @@
                 </li>
                 #{ if statistic.games_playd >= 1 } 
                 <li>
-                    <a href="#stat" data-toggle="tab">Statistic maps
+                    <a href="#stat" data-toggle="tab">Statistic graph
+                        <i class="icon-chevron-right pull-right"></i>
+                    </a>
+                </li>
+                 <li>
+                    <a href="#gamesMap" data-toggle="tab">Game graph
                         <i class="icon-chevron-right pull-right"></i>
                     </a>
                 </li>
                 <li>
-                    <a href="#info" data-toggle="tab">All info
+                    <a href="#info" data-toggle="tab">Form table
                         <i class="icon-chevron-right pull-right"></i>
                     </a>
                 </li>
@@ -321,11 +327,7 @@
                         <i class="icon-chevron-right pull-right"></i>
                     </a>
                 </li>
-                <li>
-                    <a href="#gamesMap" data-toggle="tab">Game table
-                        <i class="icon-chevron-right pull-right"></i>
-                    </a>
-                </li>
+               
                 #{/if}
             </ul>  
         </div>
@@ -484,12 +486,13 @@
 
                 </div>
                 <div id="stat" class="tab-pane">
-                    <h2 class="underline section">Statistic</h2>
+                    <h2 class="underline section">Statistic graph</h2>
                     <div id="mDiv">
+                        <p>Compare your self with other teams and players</p>
                         <input type="text" class="input-large search-query"
                                id="highchartTypeahead" data-provide="typeahead"
-                               placeholder="Search for your team mates here">
-                        <button type="submit" class="btn btn-primary" id="mysub">Search</button>
+                               placeholder="Search for other teams and players here">
+                       
                     </div>
                     <div id="team_statistic"></div>
                 </div>
@@ -499,7 +502,7 @@
 
 
                 <div id="game" class="tab-pane">
-                    <h2 class="underline section">Game statistics</h2>
+                    <h2 class="underline section">Funny facts about ${team?.team_name}'s opponents.</h2>
                     #{if statistics.size() >= 1}
                     <ul class="thumbnails center">
 
@@ -604,12 +607,7 @@
 
 
                 </div>
-                <div id="test" class="tab-pane">
-                    <h2 class="underline section">Test 4 Content</h2>
-                    <a href="">
-                        <img src="http://placehold.it/160x120" alt=""></img>
-                    </a>
-                </div>
+              
                 <div id="games" class="tab-pane">
                     <h2 class="underline section">Games played by ${team?.team_name}!</h2>
 
@@ -659,12 +657,17 @@
                                </table>
 
 
-
                                <table class='table'>
-                               <thead class='red-title'>
+                               <thead>
                                <tr>
-                               <th>Length</th>
-                               <th class='prosent'> 120 min</th>
+                               <th>Started</th>
+                               <th class='prosent'>${games?.start_time.format('dd MMMM yyyy hh:mm:ss', 'fr')}</th>
+                               </tr>
+                               </thead>
+                                <thead>
+                               <tr>
+                               <th>Ended</th>
+                               <th class='prosent'>${games?.end_time.format('dd MMMM yyyy hh:mm:ss', 'fr')}</th>
                                </tr>
                                </thead>
                                </table>
@@ -699,7 +702,7 @@
 
                 <!-- DETTE ER NYTT PSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSS -->
                 <div id="info" class="tab-pane">
-                    <h2 class="underline section">All info</h2>
+                    <h2 class="underline section">Over all form table</h2>
 
                     <!-- ***************************************************************************
                     DETTE ER NYTT DATO 01.MAI.2012
@@ -797,6 +800,7 @@
                             </tbody>
 
                         </table>
+                        
                         <table class="table table-striped table-bordered table-condensed" style="width: auto;display: inline-block; float: right;">
                             <thead>
                                 <tr>
@@ -830,7 +834,7 @@
                     </div>
                 </div><!-- info -->
                 <div id="gamesMap" class="tab-pane">
-                    <h2 class="underline section">YEAH</h2>
+                    <h2 class="underline section">Graphical presentation of ${team?.team_name}'s played games</h2>
 
 
 
