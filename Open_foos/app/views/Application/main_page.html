@@ -41,7 +41,7 @@
                                                             <tr>
                                                                 <td>${topRank_index}</td>
                                                                 <td>${topRank?.team_name}</td>
-                                                                <td>${topRank?.rating.format('0')} point's</td>
+                                                                <td>${topRank?.rating.format('.00')}</td>
                                                             </tr>
                                                         </tbody>
                                                     </table>
@@ -83,13 +83,11 @@
                                                     
                                                     <p><strong>${topRank?.team_name}</strong> 
 
-                                                        #{if  topRank?.bio != null && topRank?.bio.length() <= 50 }
+                                                      
                                                         ${topRank?.bio}
-                                                        #{/if}
+                                                      
                                                     </p>
-                                                    <p>${topRank?.registered.format('dd MMMM yyyy')}</p>
-                                                    <p>${topRank?.registered.since(false)}</p>
-                                                   
+                                                  
                                                 </div>
                                             </div>
 
@@ -152,19 +150,17 @@
                                              #{/else} 
                                              
                                                 <div class="thumbnail" style="margin-bottom: 5px;">
-                                                    
+                                                       <p><strong>Registered : ${toptemp?.registered.since(false)}</strong></p>
                                                     <img src="@{'/public/images/teams'}/${toptemp?.image}" 
                                                          alt="" class="small-image">
                                                     
                                                     <p><strong>${toptemp?.team_name}</strong> 
 
-                                                        #{if  toptemp?.bio != null && toptemp?.bio.length() <= 50 }
+                                                    
                                                         ${toptemp?.bio}
-                                                        #{/if}
+                                                       
                                                     </p>
-                                                    <p>${toptemp?.registered.format('dd MMMM yyyy')}</p>
-                                                    <p>${toptemp?.registered.since(false)}</p>
-                                                    <p><strong>Winn %:</strong> 100</p>
+                                                   
                                                 </div>
                                             </div>
 
@@ -225,13 +221,14 @@
                                             <div id="${topplayer?.id}z" class="tab-pane" >
                                                 #{/else} 
                                                 <div class="thumbnail" style="margin-bottom: 5px;">
+                                                     <p><strong>Registered : ${topplayer?.registered.since(false)}</strong></p>
                                                     <img src="@{'/public/images/players'}/${topplayer?.player1.image}" 
                                                          alt="" class="small-image">
                                                     <p><strong>${topplayer?.team_name}</strong> 
 
-                                                        #{if  topplayer?.bio != null && topPlayer?.bio.length() <= 50 }
+                                                       
                                                         ${topplayer?.bio}
-                                                        #{/if}
+                                                       
                                                     </p>
                                                     <p>${topplayer?.registered.format('dd MMMM yyyy')}</p>
                                                     <p>${topplayer?.registered.since(false)}</p>
@@ -415,8 +412,8 @@
                                         #{list items:biggestLoser, as:'bl'} 
                                         <tr>
                                             <td>${bl_index}</td>
-                                            <td>${bl?.team_name}</td>
-                                            <td>${bl?.lost} losts out of ${bw?.won+bw?.lost}</td>
+                                            <td>${bl?.team_name}</td>    
+                                            <td>${bl?.lost} losts out of ${bl?.won+bl?.lost}</td>
                                         </tr>
                                         #{/list}
 
@@ -474,7 +471,7 @@
                     <div id="openfoos_player" class="tab-pane active" >
 
                         <div class="thumbnail" style="margin-bottom: 5px;">
-                            <p><strong>Registered : ${onlinePlayer?.registered.since(false)}</strong></p>
+                            
                             <img src="@{'/public/images/players'}/${onlinePlayer.image}" 
                                  alt="${onlinePlayer.username}" class="small-image">
 

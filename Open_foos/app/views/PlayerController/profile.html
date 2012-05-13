@@ -307,7 +307,7 @@
                 #{/if}
                 #{if teams.size() >= 1}
                 <li>
-                    <a href="#teams" data-toggle="tab">Teams
+                    <a href="#teams" data-toggle="tab">Team members
                         <i class="icon-chevron-right pull-right"></i>
                     </a>
                 </li>
@@ -317,12 +317,17 @@
 
                 #{ if statistic.games_playd >= 1 } 
                 <li>
-                    <a href="#stat" data-toggle="tab">Statistic maps
+                    <a href="#stat" data-toggle="tab">Statistic graph
+                        <i class="icon-chevron-right pull-right"></i>
+                    </a>
+                </li>
+                   <li>
+                    <a href="#gamesMap" data-toggle="tab">Game graph
                         <i class="icon-chevron-right pull-right"></i>
                     </a>
                 </li>
                 <li>
-                    <a href="#info" data-toggle="tab">All info
+                    <a href="#info" data-toggle="tab">Form table
                         <i class="icon-chevron-right pull-right"></i>
                     </a>
                 </li>
@@ -337,11 +342,7 @@
                         <i class="icon-chevron-right pull-right"></i>
                     </a>
                 </li>
-                <li>
-                    <a href="#gamesMap" data-toggle="tab">Game table
-                        <i class="icon-chevron-right pull-right"></i>
-                    </a>
-                </li>
+             
                 #{/if}
             </ul> 
         </div>
@@ -510,7 +511,7 @@
 
                 </div>
                 <div id="game" class="tab-pane">
-                    <h2 class="underline section">Game statistics</h2>
+                    <h2 class="underline section">Funny facts about ${player.username}'s opponents.</h2>
                     #{if statistics.size() >= 1}
                     <ul class="thumbnails center">
 
@@ -617,12 +618,13 @@
                     <img src="@{'/public/images/players'}/${player.image}" alt="${team.team_name}" class="large-image"/>
 
                     <div id="team_box">
+                        <p>Have been registered since ${team?.registered.since(false)}</p>
                         <p>@${team?.team_name}</p>
-                        <pre>${team?.bio}</pre>
+                        <pre style="font-style: inherit">${team?.bio}</pre>
                         #{if team?.arch_rival != null}
                         <strong>Arch rival:</strong> <a href="@{TeamController.profile(team?.arch_rival?.team_name)}"> ${team?.arch_rival?.team_name}</a>
                         #{/if}
-                        <p>Registered: ${team?.registered}</p>
+                        
                     </div>
                 </div>
 
@@ -675,10 +677,16 @@
 
 
                                <table class='table'>
-                               <thead class='red-title'>
+                               <thead>
                                <tr>
-                               <th>Length</th>
-                               <th class='prosent'> 120 min</th>
+                               <th>Played</th>
+                               <th class='prosent'>${games?.start_time.since(false)}</th>
+                               </tr>
+                               </thead>
+                                <thead class='red-title'>
+                               <tr>
+                               <th>Ended</th>
+                               <th class='prosent'>${games?.end_time.since(false)}</th>
                                </tr>
                                </thead>
                                </table>
@@ -703,6 +711,7 @@
 
 
                             </a>
+                        
                         </li>
 
                         #{/list}                                   
@@ -711,7 +720,7 @@
 
                 <!-- DETTE ER NYTT PSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSS -->
                 <div id="info" class="tab-pane">
-                    <h2 class="underline section">All info</h2>
+                    <h2 class="underline section">Over all form table</h2>
 
                     <!-- ***************************************************************************
                     DETTE ER NYTT DATO 01.MAI.2012

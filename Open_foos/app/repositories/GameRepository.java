@@ -22,7 +22,6 @@ public class GameRepository {
                 new StringBuilder("SELECT Game.id FROM Game, Team ");
         sqlToQuery.append("WHERE ((Game.home_team_id = Team.id OR Game.visitor_team_id = Team.id) ");
         sqlToQuery.append("AND ( NOW() - Game.start_time < 36000 )) ");
-        // sqlToQuery.append("AND (Game.end_time is null) AND ( NOW() - Game.start_time < 10800 )) ");
         sqlToQuery.append("GROUP BY Game.id DESC LIMIT 15;");
 
         ResultSet resultset = OpenFoosDatabase.executeQueryToFoosBase(sqlToQuery.toString());

@@ -12,6 +12,20 @@
         
         $('.bar').css('width', '${compeleted}%')
         
+            $('#playerArchRival').typeahead({
+            items: 3, 
+            source: function (typeahead) {
+                return $.get('/application/everybody ',  function (data) 
+                {
+                    return typeahead.process(data);
+                });
+            },
+            onselect: function (data){
+                  
+                  
+               
+            }
+        });
         
     });
     
@@ -22,7 +36,7 @@
             <ul class="thumbnails">
                 <li>
                     <a href="/players/profile/${player?.username}" class="thumbnail">
-                        <img src="@{'/public/images/players'}/${player?.image}" alt="${player?.username}">
+                        <img src="@{'/public/images/players'}/${player?.image}" alt="${player?.username}" width="170" >
                     </a>
                 </li>
                 <li>
@@ -46,11 +60,11 @@
         <div class="span4">
             <ul id="profile-menu" class="nav nav-tabs nav-stacked ">
                 <li class="active">
-                    <a href="#account" data-toggle="tab">Account
+                    <a href="#account" data-toggle="tab">Profile management
                         <i class="icon-chevron-right pull-right"></i>
                     </a></li>
 
-                <li><a href="#team" data-toggle="tab">${team.team_name}
+                <li><a href="#team" data-toggle="tab">Gamer profile ${team.team_name}
                         <i class="icon-chevron-right pull-right"></i>
                     </a>
                 </li>
@@ -79,8 +93,9 @@
         <div class="span8">
             <div class="tab-content card">
                 <div class="tab-pane active" id="account">
-                    <h2>Account</h2>
-                    <h3 class="title underline section ">Change your basic account.</h3>
+                    <h2>Profile management</h2>
+                    <h3 class="title underline section "> 
+                        This information wil be seen by people who visit your profile page.</h3>
 
 
                     <!-- FOR PLAYER INFO -->
@@ -95,8 +110,15 @@
                                     <input class="input-file" type="file" name="image" id="image"/><br/>
                                     Maximum size of 700kb.<br/> 
                                     JPG, GIF, PNG
+                                   <p class="help-block"><strong>Reset profile picture.</strong>&nbsp;&nbsp;
+                                    <input id="reset" type="checkbox" name="reset"
+                                       title="Reset profile picture"/></p>
+                                 
+                                   
                                 </div>
+                                
                             </div>   
+                            
                             <div class="control-group">
                                 <label class="control-label" for="rfid">Rf-id</label>
                                 <div class="controls">
@@ -185,7 +207,7 @@
                                 </div>
                             </div>
                             <div class="form-actions">
-                                <button id="settings_save" type="submit" class="btn btn-primary">Save changes</button>
+                                <button id="settings_save" type="submit" class="btn btn-primary">Change your password</button>
                             </div>
                         </fieldset>
                     </form>
@@ -193,19 +215,24 @@
 
 
                 <div class="tab-pane" id="team">
-                    <h2>Your teams</h2>
-                    <h3 class="title underline section ">Change your teams basic account.</h3>
+                    <h2>Your gamer profle</h2>
+                    <h3 class="title underline section ">
+                        This information will be shown while playing a match.
+                    </h3>
 
                     <form action="@{TeamController.editTeam(team.id)}" enctype="multipart/form-data" method="POST" class="form-horizontal">
                         #{authenticityToken /}
                         <fieldset>
                             <div class="control-group">
                                 <label class="control-label" for="fileInput">Picture</label>
-                                <img src="@{'/public/images/xsmall'}/${team?.image}" style="float: left; margin: 0 20px 0 20px;"/>
+                                <img src="@{'/public/images/teams'}/${team?.image}" style="float: left; margin: 0 20px 0 20px;"/>
                                 <div class="controls">
                                     <input type="file" name="image" id="team_image" /><br/>
                                     Maximum size of 700k.<br/> 
                                     JPG, GIF, PNG
+                                    <p class="help-block"><strong>Reset profile picture.</strong>&nbsp;&nbsp;
+                                    <input id="reset2" type="checkbox" name="reset"
+                                       title="Reset profile picture"/></p>
                                 </div>
                             </div>  
                             <div class="control-group">
@@ -219,7 +246,7 @@
                             <div class="control-group">
                                 <label class="control-label" for="arch-rival">Arch-rival</label>
                                 <div class="controls">
-                                    <input type="text" data-provide="typeahead" class="input-xlarge" id="arch-rival" 
+                                    <input type="text" data-provide="typeahead" class="input-xlarge" id="playerArchRival" 
                                            value="${team?.arch_rival?.team_name}" name="team.arch_rival.team_name">
                                     <p class="help-block">Don't worry we will find them for you .</p>
                                 </div>

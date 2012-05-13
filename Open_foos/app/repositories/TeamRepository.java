@@ -59,10 +59,12 @@ public class TeamRepository {
         List<Team> teams = new ArrayList<Team>();
         try {
             while (resultset.next()) {
-                System.out.println(resultset.getLong("id"));
+              
                 Team team = Team.findById(resultset.getLong("id"));
                 team.lost = resultset.getInt("lost");
                 team.won = resultset.getInt("total") - team.lost;
+                
+ 
                 if (team.lost != 0) {
                     teams.add(team);
                 }

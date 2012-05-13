@@ -6,6 +6,9 @@
 @import url(/public/bootstrap/css/bootstrap.css);
 
 
+.icon-openfoos {
+  background-image: url("/public/images/default/foosbal_icon.png");
+}
 
 /* Now my custom styles */
 
@@ -285,7 +288,10 @@ pre{
 DETTE ER NYTT DATO 02.04.2012
 *****************************************************************************/
 #main_info{
-    height: 360px;
+    /*
+   height: 360px;*/
+    height: auto;
+    min-height: 360px;
 }
 
 #left_bar{

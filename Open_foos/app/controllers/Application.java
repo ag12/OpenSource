@@ -26,7 +26,7 @@ public class Application extends Controller {
        Player onlinePlayer = null;
        Team team = null;
        Statistic statistic = null;
-       if(session.get("login") != null){
+       if(session.get("login") != null && session.get("pid") != null){
            boolean login = Boolean.parseBoolean(session.get("login"));
            if (login){
                Long id = Long.parseLong(session.get("pid"));
@@ -34,11 +34,9 @@ public class Application extends Controller {
                if ( onlinePlayer != null){
                    team = TeamController.getTeam(onlinePlayer.getId());
                    statistic = StatisticRepository.getStatistics(team.getId());
-                 System.out.println("player is Online"); 
+                 
                }
            }
-       }else {
-            System.out.println("player is Offline");  
        }
        List<Game> onGoingGames =  GameRepository.getOngoingGames();
        List<Team> topRanked = TeamController.getTopRanked(5);
@@ -79,7 +77,7 @@ public class Application extends Controller {
     public static List<Object> teamsAndPlayers() {
 
         List<Object> teamsAndPlayers = new ArrayList<Object>();
-        List<Team> teams = Team.findAll();
+        List<Team> teams = Team.find("player1_id != NULL AND player2_id != NULL").fetch();//Team.findAll();
         List<Player> players = Player.findAll();
         for (int i = 0; i < teams.size(); i++) {
             teamsAndPlayers.add(teams.get(i));

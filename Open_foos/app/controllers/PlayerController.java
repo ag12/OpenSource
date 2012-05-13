@@ -21,16 +21,18 @@ import repositories.StatisticRepository;
 
 public class PlayerController extends Controller {
 
-    public static void getPlayer(String username){
+    public static void getPlayer(String username) {
         Player p = Player.find("byUsername", username).first();
         renderJSON(p);
-    
+
     }
 
     /*
      * Here the player can change settings, the actuale code is edit();
      */
     public static void settings() {
+        
+        if (session.get("login") != null && session.get("pid") != null){
 
         Long id = Long.parseLong(session.get("pid"));
 
@@ -39,7 +41,7 @@ public class PlayerController extends Controller {
         if (id != null && (username != null && !username.equals(""))) {
 
             Player player = Player.find("id = ? and username = ?", id, username).first();
-                    //getPlayer(id, username);
+            //getPlayer(id, username);
 
             Team team = TeamController.getTeam(id);
 
@@ -51,6 +53,11 @@ public class PlayerController extends Controller {
         } else {
             controllers.Application.error();
         }
+        }else
+        {
+            controllers.Application.error();
+        }
+         
     }
 
     public static void registerPlayer(@Valid Player player) {
@@ -70,15 +77,14 @@ public class PlayerController extends Controller {
             controllers.Application.register();
         } else if (exist == null) {
 
-           
+
             player.username = player.username.trim();
             player.password = player.password.trim();
-            player.registered = new Date();
             player.password = Crypto.encryptAES(player.password);
-
-
             player.save();
-            Team team = TeamController.register_team(player, null);
+            Team team = new Team(); 
+            team.player1 = player;
+            team.team_name = player.username;
             team.save();
             controllers.Application.afterLogin(player);
             profile(player.username);
@@ -156,17 +162,17 @@ public class PlayerController extends Controller {
             List<Team> teams = null;
             List<Statistic> statistics = null;
             List<Game> games = null;
-            if ( team != null){
-            teams = TeamController.getTeams(player.getId());
-             
-            statistic = StatisticRepository.getStatistics(team.getId());
-            statistics = new StatisticRepository().getMoreInfoForOneTeam(team.getId());
-            games = GamesController.getTeamGames(team.getId(),"id desc",20);
+            if (team != null) {
+                teams = TeamController.getTeams(player.getId());
+
+                statistic = StatisticRepository.getStatistics(team.getId());
+                statistics = new StatisticRepository().getMoreInfoForOneTeam(team.getId());
+                games = GamesController.getTeamGames(team.getId(), "id desc", 20);
 
             }
             List<Statistic> teams_statistics = null;
-            if ( teams != null){
-            teams_statistics = StatisticRepository.getMoreInfoForTeams(teams);
+            if (teams != null) {
+                teams_statistics = StatisticRepository.getMoreInfoForTeams(teams);
             }
 
             render((player != null ? player : null),
@@ -190,7 +196,7 @@ public class PlayerController extends Controller {
         controllers.Application.main_page();
     }
 
-    public static void editPlayer(Player player, File image) {
+    public static void editPlayer(Player player, File image, boolean reset) {
 
         Player existingplayer = null;
         Long id = null;
@@ -263,8 +269,13 @@ public class PlayerController extends Controller {
             //RFID
             if (player.rfid != null && player.rfid >= 1) {
                 if (existingplayer.rfid == null || existingplayer.rfid != player.rfid) {
+                    Player byRfid = Player.find("byRfid", player.rfid).first();
+                    if( byRfid == null){
                     existingplayer.rfid = player.rfid;
                     hasChanged = true;
+                    }else if ( byRfid != null){
+                        //OBS
+                    }
                 }
             }
             //IMAGE
@@ -284,13 +295,38 @@ public class PlayerController extends Controller {
                     imageEnd = ".jpg";
                 }
                 String playerImage = "openfoos_player_" + id + imageEnd;
-                existingplayer.image = playerImage;
                 String main_path = Play.applicationPath + "/public/images/";
+                if ( !existingplayer.image.equals("player.png") && existingplayer.image != null){
+                     String delete_path = main_path + "players/" + existingplayer.image;
+                    File file = new File(delete_path);
+                    if ( file != null && file.exists()){
+                        file.delete();
+                    }
+                }
+                existingplayer.image = playerImage;
+                
                 main_path += "players/" + playerImage;
-                Images.resize(image, new File(main_path), 200, 160, true);
-           
+                Images.resize(image, new File(main_path), 180, 140, true);
+
 
                 hasChanged = true;
+            }
+            if (reset) {
+
+                if (!existingplayer.image.equals("player.png")){
+                String main_path = Play.applicationPath + "/public/images/";
+                main_path += "players/" + existingplayer.image;
+                File file = new File(main_path);
+                
+                if (file != null && file.exists()) {
+                    file.delete();
+                }
+              
+                    existingplayer.image = "player.png";
+                    hasChanged = true;
+                }
+              
+
             }
 
         }
@@ -330,10 +366,10 @@ public class PlayerController extends Controller {
 
                 player.username = session.get("pname");
                 player = Player.find("byUsernameAndPassword",
-                player.username, Crypto.encryptAES(player.password)).first();
-                        //dosPlayerExist(player);
-               
-                
+                        player.username, Crypto.encryptAES(player.password)).first();
+                //dosPlayerExist(player);
+
+
                 if (player != null) {
 
                     newPassword = Crypto.encryptAES(newPassword);
@@ -344,7 +380,7 @@ public class PlayerController extends Controller {
                 if (player == null) {
 
                     Validation.addError("message", "Your password is inncoret.", "error");
-              
+
                     params.flash();
                     Validation.keep();
                     settings();

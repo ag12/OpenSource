@@ -23,30 +23,6 @@ import repositories.StatisticRepository;
  */
 public class TeamController extends Controller {
 
-    public static Team register_team(Player player1, Player player2) {
-
-        if (player2 == null) {
-
-
-            Team team = new Team();
-            team.team_name = "Team_" + player1.username;
-            team.player1 = player1;
-            team.registered = new Date();
-            return team;
-        } else if (player1 != null && player2 != null) {
-
-
-            Team team = new Team();
-            team.team_name = player1.username + " and " + player2.username;
-            team.player1 = player1;
-            team.player2 = player2;
-            team.registered = new Date();
-            return team;
-        }
-        return null;
-
-    }
-
     /*
      *
      *
@@ -106,50 +82,34 @@ public class TeamController extends Controller {
     }
 
     /*
+     * Remove the comments inside the if's if you dont want the user to sett
+     * data to empty
      *
      */
-    public static void editTeam(Long id, Team team, File image) {
+    public static void editTeam(Long id, Team team, File image, boolean reset) {
 
-
-
+        System.out.println("START");
         Team existingTeam = Team.findById(id);
         boolean hasChanged = false;
 
-
-        if (team.team_name != null && !"".equals(team.team_name)) {
-
-
-            if (!existingTeam.team_name.equals(team.team_name)) {
-
-                Team t = Team.find("byTeam_name", team.team_name).first();
-                if (t == null) {
-                    existingTeam.team_name = team.team_name;
-                    hasChanged = true;
-                }
+        if (team.team_name != null && !"".equals(team.team_name) && !existingTeam.team_name.equals(team.team_name)) {
+            Team t = Team.find("byTeam_name", team.team_name).first();
+            if (t == null) {
+                existingTeam.team_name = team.team_name;
+                hasChanged = true;
             }
-
-
         }
         if (team.bio != null /*
                  * && !"".equals(team.bio)
                  */) {
 
-
-            if (existingTeam.bio == null || !existingTeam.bio.equals(team.bio)) {
-
+            if (!team.bio.equals(existingTeam.bio)) {
                 existingTeam.bio = team.bio;
                 hasChanged = true;
             }
-
-
         }
 
         if (image != null) {
-
-
-
-
-
 
             String imageEnd = "";
             if (image.getName().endsWith(".png")) {
@@ -164,31 +124,61 @@ public class TeamController extends Controller {
             }
 
             String teamImage = "openfoos_team_" + id + imageEnd;
-            existingTeam.image = teamImage;
             String main_path = Play.applicationPath + "/public/images/";
+            if (!existingTeam.image.equals("team.png") && existingTeam.image != null) {
+                String delete_path = main_path + "teams/" + existingTeam.image;
+                File file = new File(delete_path);
+                if (file != null && file.exists()) {
+                    file.delete();
+                }
+            }
+            existingTeam.image = teamImage;
             main_path += "teams/" + teamImage;
             Images.resize(image, new File(main_path), 200, 160, true);
             hasChanged = true;
+
         }
-        if (team.arch_rival.team_name.equals("")) {
+
+        if (reset) {
+
+            if (!existingTeam.image.equals("team.png")) {
+                String main_path = Play.applicationPath + "/public/images/";
+                main_path += "teams/" + existingTeam.image;
+                File file = new File(main_path);
+
+                if (file != null && file.exists()) {
+                    file.delete();
+                }
+
+                existingTeam.image = "team.png";
+                hasChanged = true;
+            }
+
+
+        }
+
+        if (team.arch_rival.team_name.equals("") && existingTeam.arch_rival != null) {
             existingTeam.arch_rival = null;
             hasChanged = true;
         }
         //User picks arch rival from the list
-        if (team.arch_rival.team_name != null /*
+        if (team.arch_rival.team_name != null && team.arch_rival.team_name.length() > 1/*
                  * && !team.arch_rival.team_name.equals("")
                  */) {
-
+            System.out.println("arch er ikke null, og større en 1");
             Team arch_rival = Team.find("byTeam_name", team.arch_rival.team_name).first();
 
-            if (arch_rival != null) {
-
+            if (arch_rival != null && existingTeam.arch_rival != arch_rival) {
+                System.out.println("arch er faktisk et lag som finnes");
+                //User cant pick them self
                 if (existingTeam.id != arch_rival.id) {
 
+                    System.out.println("lagets id er ikke like arch sin id");
                     if (existingTeam.arch_rival != null) {
 
-
+                        System.out.println("dette laget har archrival fra før og vil bytte");
                         if (existingTeam.memberCount() == 2) {
+                            System.out.println("dette laget har to spillere ");
                             if (existingTeam.arch_rival.id != arch_rival.id
                                     && existingTeam.player1.id != arch_rival.id
                                     && existingTeam.player2.id != arch_rival.id) {
@@ -196,47 +186,61 @@ public class TeamController extends Controller {
 
                                 existingTeam.arch_rival = arch_rival;
                                 hasChanged = true;
+
                             }
                         } else if (existingTeam.memberCount() == 1) {
+
+                            System.out.println("dette laget har kunn en spiller ");
                             if (existingTeam.arch_rival.id != arch_rival.id
-                                    && existingTeam.player1.id != arch_rival.id) {
+                                    && existingTeam.player1.id != arch_rival.id && existingTeam.player1.id != 
+                                    arch_rival.player1.id) {
 
-
+                                System.out.println("arch er en ny arch og player1 id av laget er ikke lig arch heller");
                                 existingTeam.arch_rival = arch_rival;
                                 hasChanged = true;
+
                             }
                         }
 
-                    }
+                    }//END existingTeam.arch_rival != null
                     if (existingTeam.arch_rival == null) {
 
-
+                        System.out.println("laget har ikke arch fra før");
                         if (existingTeam.memberCount() == 2) {
+                            System.out.println("to mans lag");
                             if (existingTeam.player1.id != arch_rival.id
                                     && existingTeam.player2.id != arch_rival.id) {
 
 
                                 existingTeam.arch_rival = arch_rival;
                                 hasChanged = true;
+
                             }
                         }
                         if (existingTeam.memberCount() == 1) {
-                            if (existingTeam.player1.id != arch_rival.id) {
+                            System.out.println("en mans lag");
+                            if (existingTeam.player1.id != arch_rival.id && existingTeam.player1.id != 
+                                    arch_rival.player1.id) {
 
                                 existingTeam.arch_rival = arch_rival;
                                 hasChanged = true;
+
                             }
                         }
                     }
+                }//END existingTeam.id != arch_rival.id
+                else {
+                    System.out.println("samme id");
                 }
+            }//END arch_rival != null && existingTeam.arch_rival != arch_rival
+            else {
+                System.out.println("men ingen forandring eller at arch ikke finnes");
             }
 
         }
 
         if (hasChanged) {
-
             existingTeam.save();
-
         }
         if (existingTeam.memberCount() == 1) {
             controllers.PlayerController.settings();
@@ -250,20 +254,22 @@ public class TeamController extends Controller {
 
     public static void settings(String teamname) {
 
-        Team team = Team.find("byTeam_name", teamname).first();
-        if (team != null) {
-
-
-
-            if (team.memberCount() == 2) {
-                long pid = Long.parseLong(session.get("pid"));
-                if (team.player1.id == pid || team.player2.id == pid) {
-                    int compeleted = (compeletedProfile(team) + 60);
-                    render(team, compeleted);
-                } else {
-                    controllers.Application.ofError();
+        if (session.get("login") != null && session.get("pid") != null) {
+            Team team = Team.find("byTeam_name", teamname).first();
+            if (team != null) {
+                if (team.memberCount() == 2) {
+                    long pid = Long.parseLong(session.get("pid"));
+                    if (team.player1.id == pid || team.player2.id == pid) {
+                        int compeleted = (compeletedProfile(team) + 60);
+                        render(team, compeleted);
+                    } else {
+                        controllers.Application.ofError();
+                    }
                 }
+            } else {
+                controllers.Application.ofError();
             }
+
         } else {
             controllers.Application.ofError();
         }
@@ -295,6 +301,7 @@ public class TeamController extends Controller {
         List<Team> teams = Team.find("player1_id != NULL AND player2_id != NULL ORDER BY rating DESC").fetch(5);
         return teams;
     }
+
     public static List<Team> getTopRankedPlayers(int limit) {
         List<Team> teams = Team.find("player2_id = NULL ORDER BY rating DESC").fetch(5);
         return teams;
