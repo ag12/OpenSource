@@ -620,7 +620,7 @@
                     <div id="team_box">
                         <p>Have been registered since ${team?.registered.since(false)}</p>
                         <p>@${team?.team_name}</p>
-                        <pre style="font-style: inherit">${team?.bio}</pre>
+                        <pre style="font-style: oblique">${team?.bio}</pre>
                         #{if team?.arch_rival != null}
                         <strong>Arch rival:</strong> <a href="@{TeamController.profile(team?.arch_rival?.team_name)}"> ${team?.arch_rival?.team_name}</a>
                         #{/if}
