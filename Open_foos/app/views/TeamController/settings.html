@@ -54,14 +54,46 @@
              You have compeleted ${compeleted}% of you profile
         </div>
 
-        <div class="span3">
-                   #{ifError 'itsok'}
+        <div class="span4">
+            
+             #{ifError 'settings'}
+            <div class="alert alert-error">
+
+                <button class="close" data-dismiss="alert">×</button>
+                <h1>Oops…</h1>
+                <br/>
+                #{errors 'settings'}
+                <li>${error }</li>
+                 #{/errors}
+                <br/>
+            </div>
+            #{/ifError}
+            
+            
+            
+           #{ifError 'itsok'}
             <div class="alert alert-success">
 
                 <button class="close" data-dismiss="alert">×</button>
                 <h1>Changes…</h1>
                 <br/>
-                #{errors}
+                #{errors 'itsok'}
+                
+                <li>${error}</li>
+                #{/errors}
+                <br/>
+            </div>
+            #{/ifError}
+            
+            
+             #{ifError 'gay'}
+            <div class="alert alert-info">
+
+                <button class="close" data-dismiss="alert">×</button>
+                <h1>Okey....</h1>
+                <br/>
+                #{errors 'gay'}
+                
                 <li>${error}</li>
                 #{/errors}
                 <br/>
@@ -109,7 +141,7 @@
                                 <label class="control-label" for="arch-rival">Arch-rival</label>
                                 <div class="controls">
                                     <input type="text" data-provide="typeahead" class="input-xlarge" id="playerArchRival" 
-                                           value="${team?.arch_rival?.team_name}" name="team.arch_rival.team_name">
+                                           autocomplete="off" value="${team?.arch_rival?.team_name}" name="team.arch_rival.team_name">
                                     <p class="help-block">Don't worry we will find them for you .</p>
                                 </div>
                             </div>

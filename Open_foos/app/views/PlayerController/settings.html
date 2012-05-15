@@ -87,19 +87,51 @@
                 <br/>
             </div>
             #{/ifError}
+            
+            
+              #{ifError 'settings'}
+            <div class="alert alert-error">
 
+                <button class="close" data-dismiss="alert">×</button>
+                <h1>Oops…</h1>
+                <br/>
+                #{errors 'settings'}
+                <li>${error }</li>
+                 #{/errors}
+                <br/>
+            </div>
+            #{/ifError}
+
+            
+            
             #{ifError 'itsok'}
             <div class="alert alert-success">
 
                 <button class="close" data-dismiss="alert">×</button>
                 <h1>Changes…</h1>
                 <br/>
-                #{errors}
+                #{errors 'itsok'}
+                
                 <li>${error}</li>
                 #{/errors}
                 <br/>
             </div>
             #{/ifError}
+            
+             #{ifError 'gay'}
+            <div class="alert alert-info">
+
+                <button class="close" data-dismiss="alert">×</button>
+                <h1>Okey...</h1>
+                <br/>
+                #{errors 'gay'}
+                
+                <li>${error}</li>
+                #{/errors}
+                <br/>
+            </div>
+            #{/ifError}
+            
 
 
         </div>
@@ -231,7 +263,7 @@
 
 
                 <div class="tab-pane" id="team">
-                    <h2>Your gamer profle</h2>
+                    <h2>Your game profile</h2>
                     <h3 class="title underline section ">
                         This information will be shown while playing a match.
                     </h3>

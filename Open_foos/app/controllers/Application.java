@@ -39,12 +39,36 @@ public class Application extends Controller {
            }
        }
        List<Game> onGoingGames =  GameRepository.getOngoingGames();
-       List<Team> topRanked = TeamController.getTopRanked(5);
-       List<Team> topTeams = TeamController.getTopRankedTeams(5);
-       List<Team> topPlayer = TeamController.getTopRankedPlayers(5);
+       List<Team> topRanked = TeamController.getTopRanked(6);
+       List<Team> topTeams = TeamController.getTopRankedTeams(6);
+       List<Team> topPlayer = TeamController.getTopRankedPlayers(6);
        List<Team> biggestWinner = TeamRepository.getBiggestWinner();
        List<Team> biggestLoser = TeamRepository.getBiggestLoser();
-       render(topRanked,onGoingGames,biggestWinner,biggestLoser, onlinePlayer,statistic,team,topTeams,topPlayer);
+       List<Statistic> topRankedStatistics = null;
+       List<Statistic> topTeamsStatistics = null;
+       List<Statistic> topPlayerStatistics = null;
+       if ( topRanked != null && topRanked.size() > 0){
+           topRankedStatistics = StatisticRepository.getMoreInfoForTeams(topRanked);
+           
+       }
+       if ( topTeams != null && topTeams.size() > 0 ){
+           topTeamsStatistics = StatisticRepository.getMoreInfoForTeams(topTeams);
+       }
+       if (topPlayer != null && topPlayer.size() > 0){
+           topPlayerStatistics = StatisticRepository.getMoreInfoForTeams(topPlayer);
+       }
+       
+       render(topRanked,
+               onGoingGames,
+               biggestWinner,
+               biggestLoser,
+               onlinePlayer,
+               statistic,team,
+               topTeams,
+               topPlayer,
+               topTeamsStatistics,
+               topRankedStatistics,
+               topPlayerStatistics);
     }
 
     public static void login() {

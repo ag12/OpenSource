@@ -158,8 +158,11 @@ public class PlayerController extends Controller {
 
             Team team = TeamController.getTeam(player.getId());
 
+            //players team statistic
             Statistic statistic = null;
+            //players teams
             List<Team> teams = null;
+            //funn facts
             List<Statistic> statistics = null;
             List<Game> games = null;
             int scoredGoal = GoalController.getIndividualGoalScoreds(player.getId());
@@ -282,7 +285,7 @@ public class PlayerController extends Controller {
                             hasChanged = true;
                              changes.add("Your email is now changed.");
                         } else if (Validation.hasErrors()) {
-                            Validation.addError("email", "You email is incorrect.", player.username);
+                            Validation.addError("settings", "You email is incorrect.", player.username);
                             Validation.keep();
                         }
                     }
@@ -303,7 +306,7 @@ public class PlayerController extends Controller {
                          changes.add("Your rfid is now changed.");
                     } else if (byRfid != null && !byRfid.equals(existingplayer)) {
                         //OBS
-                        Validation.addError("email", "There is a nother user with the same rfid.", player.username);
+                        Validation.addError("settings", "There is a nother user with the same rfid.", player.username);
                         Validation.keep();
                     }
                 }
@@ -371,10 +374,11 @@ public class PlayerController extends Controller {
             for ( int i = 0; i < changes.size(); i++){
             Validation.addError("itsok", changes.get(i));
             }
+            params.flash();
             Validation.keep();
         }
         if ( !hasChanged){
-            Validation.addError("itsok", "You have not changed anything.");
+            Validation.addError("gay", "You have not changed anything.");
             Validation.keep();
         }
 
@@ -385,7 +389,7 @@ public class PlayerController extends Controller {
 
 
         if ((player.password == null || player.password.equals("")) || newPassword == null || newPassword2 == null) {
-            Validation.addError("message", "Missing informasjon", player.password);
+            Validation.addError("settings", "Missing informasjon", player.password);
             params.flash();
             Validation.keep();
             settings();
@@ -396,7 +400,7 @@ public class PlayerController extends Controller {
 
         if (!newPassword.equals(newPassword2)) {
 
-            Validation.addError("message", "Your passwords must bee the same.", player.password);
+            Validation.addError("settings", "Your passwords must bee the same.", player.password);
             params.flash();
             Validation.keep();
             settings();
@@ -409,19 +413,19 @@ public class PlayerController extends Controller {
                 player.username = session.get("pname");
                 player = Player.find("byUsernameAndPassword",
                         player.username, Crypto.encryptAES(player.password)).first();
-                //dosPlayerExist(player);
-
 
                 if (player != null) {
 
                     newPassword = Crypto.encryptAES(newPassword);
                     player.password = newPassword;
                     player.save();
+                    Validation.addError("itsok", "Your password is now changed", "error");
+                    Validation.keep();
                     settings();
                 }
                 if (player == null) {
 
-                    Validation.addError("message", "Your password is inncoret.", "error");
+                    Validation.addError("settings", "Your password is inncoret.", "error");
 
                     params.flash();
                     Validation.keep();

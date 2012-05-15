@@ -332,7 +332,7 @@
                     </a>
                 </li>
                 <li>
-                    <a href="#game" data-toggle="tab">Funny facts
+                    <a href="#game" data-toggle="tab">Fun facts
                         <i class="icon-chevron-right pull-right"></i>
                     </a>
                 </li>
@@ -511,7 +511,7 @@
 
                 </div>
                 <div id="game" class="tab-pane">
-                    <h2 class="underline section">Funny facts about ${player.username}'s opponents.</h2>
+                    <h2 class="underline section">Fun facts about ${player.username}'s opponents.</h2>
                     #{if statistics.size() >= 1}
                     <ul class="thumbnails center">
 
@@ -627,7 +627,7 @@
                         #{/if}
                         <br/> <br/>
                         #{if scoredGoal != 0 && statistic?.score_for > 0 }
-                        <p>${team?.team_name} have scored <strong>${scoredGoal - statistic?.score_for}</strong> goals while playing in other teams.</p>
+                        <p>${team?.team_name} have scored <strong>${scoredGoal}</strong> goals while playing in other teams.</p>
                         #{/if} 
                         #{if ownGoal != 0}
                         <p>And scored <strong>${ownGoal}</strong> own goals.</p>

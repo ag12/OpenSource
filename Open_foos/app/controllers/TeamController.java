@@ -89,9 +89,10 @@ public class TeamController extends Controller {
      */
     public static void editTeam(Long id, Team team, File image, boolean reset) {
 
-        System.out.println("START");
+
         Team existingTeam = Team.findById(id);
         boolean hasChanged = false;
+        boolean showValidationErrors = false;
         List<String> changes = new ArrayList<String>();
         if (team.team_name != null && !"".equals(team.team_name) && !existingTeam.team_name.equals(team.team_name)) {
             Team t = Team.find("byTeam_name", team.team_name).first();
@@ -99,9 +100,18 @@ public class TeamController extends Controller {
                 existingTeam.team_name = team.team_name;
                 hasChanged = true;
                 changes.add("Your teams name is now changed.");
-                    
-            }
-        }
+
+            }else if (t != null ){
+                    Validation.addError("settings", "That team name is in use......");
+                    Validation.keep();
+                  showValidationErrors = true;
+                            }
+        }else if (team.team_name.equals("")){
+                   Validation.addError("settings", "You must have a team name......");
+                    Validation.keep();
+                  showValidationErrors = true;
+                            }
+        
         if (team.bio != null /*
                  * && !"".equals(team.bio)
                  */) {
@@ -110,7 +120,7 @@ public class TeamController extends Controller {
                 existingTeam.bio = team.bio;
                 hasChanged = true;
                 changes.add("Your teams bio changed.");
-                    
+
             }
         }
 
@@ -142,7 +152,7 @@ public class TeamController extends Controller {
             Images.resize(image, new File(main_path), 180, 140, true);
             hasChanged = true;
             changes.add("Your teams picture is now changed.");
-                    
+
 
         }
 
@@ -160,7 +170,7 @@ public class TeamController extends Controller {
                 existingTeam.image = "team.png";
                 hasChanged = true;
                 changes.add("Your teams picture is now reset.");
-                    
+
             }
 
 
@@ -170,26 +180,26 @@ public class TeamController extends Controller {
             existingTeam.arch_rival = null;
             hasChanged = true;
             changes.add("Your teams arch rival is now removed.");
-                    
+
         }
         //User picks arch rival from the list
         if (team.arch_rival.team_name != null && team.arch_rival.team_name.length() > 1/*
                  * && !team.arch_rival.team_name.equals("")
                  */) {
-           
+
             Team arch_rival = Team.find("byTeam_name", team.arch_rival.team_name).first();
 
             if (arch_rival != null && existingTeam.arch_rival != arch_rival) {
-              
+
                 //User cant pick them self
                 if (existingTeam.id != arch_rival.id) {
 
-                  
+
                     if (existingTeam.arch_rival != null) {
 
-                       
+
                         if (existingTeam.memberCount() == 2) {
-                          
+
                             if (existingTeam.arch_rival.id != arch_rival.id
                                     && existingTeam.player1.id != arch_rival.id
                                     && existingTeam.player2.id != arch_rival.id) {
@@ -198,17 +208,21 @@ public class TeamController extends Controller {
                                 existingTeam.arch_rival = arch_rival;
                                 hasChanged = true;
                                 changes.add("Your teams arch rival is now changed.");
-                                
 
+
+                            } else {
+                                Validation.addError("settings", "You cant have one of your own players as arch rival......");
+                                Validation.keep();
+                                showValidationErrors = true;
                             }
                         } else if (existingTeam.memberCount() == 1) {
 
-                         
-                            if (existingTeam.arch_rival.id != arch_rival.id
-                                    && existingTeam.player1.id != arch_rival.id && existingTeam.player1.id != 
-                                    arch_rival.player1.id) {
 
-                            
+                            if (existingTeam.arch_rival.id != arch_rival.id
+                                    && existingTeam.player1.id != arch_rival.id && existingTeam.player1.id
+                                    != arch_rival.player1.id) {
+
+
                                 existingTeam.arch_rival = arch_rival;
                                 hasChanged = true;
                                 changes.add("Your teams arch rival is now changed.");
@@ -219,9 +233,9 @@ public class TeamController extends Controller {
                     }//END existingTeam.arch_rival != null
                     if (existingTeam.arch_rival == null) {
 
-                      
+
                         if (existingTeam.memberCount() == 2) {
-                          
+
                             if (existingTeam.player1.id != arch_rival.id
                                     && existingTeam.player2.id != arch_rival.id) {
 
@@ -230,12 +244,16 @@ public class TeamController extends Controller {
                                 hasChanged = true;
                                 changes.add("Your teams arch rival is now changed.");
 
+                            } else {
+                                Validation.addError("settings", "You cant have one of your own players as arch rival......");
+                                Validation.keep();
+                                showValidationErrors = true;
                             }
                         }
                         if (existingTeam.memberCount() == 1) {
-                           
-                            if (existingTeam.player1.id != arch_rival.id && existingTeam.player1.id != 
-                                    arch_rival.player1.id) {
+
+                            if (existingTeam.player1.id != arch_rival.id && existingTeam.player1.id
+                                    != arch_rival.player1.id) {
 
                                 existingTeam.arch_rival = arch_rival;
                                 hasChanged = true;
@@ -246,7 +264,9 @@ public class TeamController extends Controller {
                     }
                 }//END existingTeam.id != arch_rival.id
                 else {
-                    System.out.println("samme id");
+                    Validation.addError("settings", "You cant bee your own arch rival......");
+                    Validation.keep();
+                    showValidationErrors = true;
                 }
             }//END arch_rival != null && existingTeam.arch_rival != arch_rival
             else {
@@ -256,19 +276,19 @@ public class TeamController extends Controller {
         }
 
         if (hasChanged) {
-            
+
             existingTeam.save();
-              for ( int i = 0; i < changes.size(); i++){
-            Validation.addError("itsok", changes.get(i));
+            for (int i = 0; i < changes.size(); i++) {
+                Validation.addError("itsok", changes.get(i));
             }
             Validation.keep();
         }
-        if ( !hasChanged){
-            Validation.addError("itsok", "You have not changed anything.");
+        if (!hasChanged && !showValidationErrors) {
+            Validation.addError("gay", "You have not changed anything.....");
             Validation.keep();
         }
         if (existingTeam.memberCount() == 1) {
-            
+
             controllers.PlayerController.settings();
         } else {
             settings(existingTeam.team_name);
@@ -319,17 +339,17 @@ public class TeamController extends Controller {
     }
 
     public static List<Team> getTopRanked(int limit) {
-        List<Team> teams = Team.find("ORDER BY rating DESC").fetch(5);
+        List<Team> teams = Team.find("ORDER BY rating DESC").fetch(limit);
         return teams;
     }
 
     public static List<Team> getTopRankedTeams(int limit) {
-        List<Team> teams = Team.find("player1_id != NULL AND player2_id != NULL ORDER BY rating DESC").fetch(5);
+        List<Team> teams = Team.find("player1_id != NULL AND player2_id != NULL ORDER BY rating DESC").fetch(limit);
         return teams;
     }
 
     public static List<Team> getTopRankedPlayers(int limit) {
-        List<Team> teams = Team.find("player2_id = NULL ORDER BY rating DESC").fetch(5);
+        List<Team> teams = Team.find("player2_id = NULL ORDER BY rating DESC").fetch(limit);
         return teams;
     }
 }
