@@ -1,7 +1,0 @@
-## YAML Template.
----
-Admin(admin):
-  username: admin
-  password: c5abc7086cea5238aa8b53f36688ad05 #admin
-  email:    admin@admin.no
-  
