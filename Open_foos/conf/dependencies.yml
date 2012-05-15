@@ -4,3 +4,13 @@ require:
     - play
     - play -> module.secure
     
+    
+   
+    
+    
+# Application start up
+Admin(admin):
+  username: admin
+  password: c5abc7086cea5238aa8b53f36688ad05 
+  email:    admin@admin.no
+  

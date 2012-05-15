@@ -100,10 +100,19 @@ public class Application extends Controller {
     public static List<Object> teamsAndPlayers() {
 
         List<Object> teamsAndPlayers = new ArrayList<Object>();
-        List<Team> teams = Team.find("player1_id != NULL AND player2_id != NULL").fetch();//Team.findAll();
+        List<Team> teams = Team.findAll();//Team.find("player1_id != NULL AND player2_id != NULL").fetch();
         List<Player> players = Player.findAll();
         for (int i = 0; i < teams.size(); i++) {
-            teamsAndPlayers.add(teams.get(i));
+           
+            if ( teams.get(i) != null && teams.get(i).memberCount() == 2){
+               teamsAndPlayers.add(teams.get(i)); 
+            }else if ( teams.get(i) != null && teams.get(i).memberCount() == 1){
+                if(!teams.get(i).team_name.equals(teams.get(i).player1.username)){
+                    teamsAndPlayers.add(teams.get(i)); 
+                }
+            }
+                
+            
         }
         for (int i = 0; i < players.size(); i++) {
             teamsAndPlayers.add(players.get(i));

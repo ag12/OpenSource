@@ -167,15 +167,19 @@
 
                             </div>   
 
+                            #{if player?.rfid != null }
                             <div class="control-group">
                                 <label class="control-label" for="rfid">Rf-id</label>
                                 <div class="controls">
                                     <input type="password" class="input-xlarge" id="rfid" placeholder="Scan your rfid" 
                                            value="${player?.rfid}" name="player.rfid" autofocus="autofocus" disabled="">
 
-                                    <p class="help-block">Let the scaner scan you rfid, so you can logon with it.</p>
+                                   <p class="help-block"><strong>Reset radio frequency identification number</strong>&nbsp;&nbsp;
+                                        <input id="resetrfid" type="checkbox" name="resetrfid"
+                                               title="Reset profile picture"/></p>
                                 </div>
                             </div>
+                            #{/if}
                             <div class="control-group">
                                 <label class="control-label" for="fname">First name</label>
                                 <div class="controls">
