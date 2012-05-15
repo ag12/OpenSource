@@ -9,11 +9,14 @@ import models.Team;
 import play.data.binding.Binder;
 import play.db.Model;
 import play.exceptions.TemplateNotFoundException;
+import play.mvc.With;
 
 /**
  *
  * @author Santonas
  */
+
+@With(Secure.class)
 public class Teams extends CRUD{
     
     public static void create() throws Exception {

@@ -10,11 +10,14 @@ import play.data.binding.Binder;
 import play.db.Model;
 import play.exceptions.TemplateNotFoundException;
 import play.libs.Crypto;
+import play.mvc.With;
 
 /**
  *
  * @author Santonas
  */
+
+@With(Secure.class)
 public class Admins extends CRUD{
     
         public static void create() throws Exception {
@@ -46,5 +49,12 @@ public class Admins extends CRUD{
         }
         redirect(request.controller + ".show", object._key());
     }
+        
+    static void onDisconnected() {
+        CRUD.index();
+    }
     
+    static void onAuthenticated() {
+        CRUD.index();
+    }
 }

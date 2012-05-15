@@ -30,4 +30,8 @@ public class Admin extends Model{
     @Required
     public boolean activ = true;
     
+    public String toString(){
+        return username;
+    }
+    
 }

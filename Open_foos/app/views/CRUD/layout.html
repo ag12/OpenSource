@@ -3,7 +3,7 @@
 
 <html lang="${lang}">
     <head>
-        <title>#{get 'title' /}</title>
+        <title>#{get 'title' /} </title>
         <meta charset="${_response_encoding}" />
         <link rel="stylesheet" media="screen" href="@{'/public/stylesheets/crud.css'}" />
     </head>
@@ -37,6 +37,7 @@
         <div id="crudFooter">
         <a href="http://www.hioa.no">Hioa!</a>
         <a href="http://www.logica.no">Logica!</a>
+        <a style="float: right;" href="@{Secure.logout()}">Log out</a>
         </div>
 
     </body>

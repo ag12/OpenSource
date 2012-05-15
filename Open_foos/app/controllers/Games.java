@@ -4,10 +4,13 @@
  */
 package controllers;
 
+import play.mvc.With;
+
 /**
  *
  * @author Santonas
  */
+@With(Secure.class)
 public class Games extends CRUD{
     
 }
