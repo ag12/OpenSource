@@ -29,14 +29,13 @@ GET     /error                                        Application.ofError
 
 
 # Home page
-GET     /                                           Application.main_page
-#GET     /main                                       Application.main_page
-GET     /game                                       Application.game
-GET     /login                                      Application.login
-
+GET     /                                             Application.main_page
+GET     /game                                         Application.game
+GET     /login                                        Application.login
+GET     /register                                     Application.register
 
 # Ignore favicon requests
-GET     /favicon.ico                            404
+GET     /favicon.ico                                 404
 
 # Map static resources from the /app/public folder to the /public path
 GET     /public/                                staticDir:public

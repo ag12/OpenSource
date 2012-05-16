@@ -1,0 +1,33 @@
+*{ You can use plain selenium command using the selenium tag }*
+
+#{selenium}
+    // Open the home page, and check that no error occured
+    open('/')
+    assertNotTitle('Application error')
+#{/selenium}
+
+
+
+
+#{selenium 'Check home page'}
+    clearSession()
+ 
+    // Open the home page
+    open('/')
+    assertTextPresent('Play')
+    
+    // Open the main page
+    open('/')
+ 
+    // Check that the openfoos link is present
+    assertTextPresent('Openfoos')
+    
+    // Click on 'Biggest loser'
+    clickAndWait('link=OpenFoos')
+    assertTextPresent('Rank')
+    assertTextPresent('Played games')
+    assertTextPresent('Biggest loser')
+    assertTextPresent('Biggest winner')
+    
+   
+#{/selenium}

@@ -8,10 +8,10 @@ import play.test.Fixtures;
 @OnApplicationStart
 public class Bootstrap extends Job {
 
-    @Override
-    public void doJob() {
-        if (Admin.count() == 0) {
-            Fixtures.loadModels("dependencies.yml");
-        }
-    }
+//    @Override
+//    public void doJob() {
+//        if (Admin.count() == 0) {
+//            Fixtures.loadModels("dependencies.yml");
+//        }
+//    }
 }

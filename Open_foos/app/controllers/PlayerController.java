@@ -133,7 +133,6 @@ public class PlayerController extends Controller {
             controllers.Application.login();
         }
 
-        //player.password = Crypto.encryptAES(player.password);
         Player exist = Player.find("byUsernameAndPassword",
                 player.username, Crypto.encryptAES(player.password)).first();//dosPlayerExist(player);
 

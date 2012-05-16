@@ -4,6 +4,11 @@
  */
 package Games;
 
+import models.Game;
+import models.Player;
+import models.Team;
+import org.junit.Test;
+import play.test.Fixtures;
 import play.test.FunctionalTest;
 
 /**
@@ -11,5 +16,6 @@ import play.test.FunctionalTest;
  * @author Santonas
  */
 public class GamesFunctionalTest extends FunctionalTest {
+
     
 }

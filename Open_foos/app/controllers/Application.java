@@ -92,6 +92,29 @@ public class Application extends Controller {
         return true;
 
     }
+    //Test
+    public static boolean isOnline(){
+        boolean login = false; 
+        Long id = null;
+        String username = null;
+        if ( session.get("login") == null || session.get("pid") == null || session.get("pname") == null ){
+            return false;
+        }
+        if (session.get("login") != null){
+            login = Boolean.parseBoolean(session.get("login"));
+        }
+        if ( session.get("pid") != null){
+            id = Long.parseLong(session.get("pid"));
+        }
+        if (session.get("pname") != null){
+           username = session.get("pname");
+        }
+        if(id > 0 && login && username != null){
+            return true;
+        }
+        return false;
+        
+    }
 
     public static boolean afterLogout() {
         session.clear();
