@@ -285,13 +285,7 @@ $(document).ready(function(){
                  self.set('state', 'started');
              };
              self.authenticate(successCallback);
-             /*
-             if(this.authenticate() === true)
-             {
-                
-                return true;
-             }
-             */
+             
            }
            
         },
@@ -401,10 +395,45 @@ $(document).ready(function(){
     
     
     Foosball.Referee = Backbone.Model.extend({
+                
         initialize: function()
         { 
+            _.bindAll(this, 'handleKeypress');
             this.set('goals', new Foosball.Goals());
             window.game.on('change:state', this.handleGameState, this);
+            $(document).bind('keypress', this.handleKeypress);
+        },
+        
+        handleKeypress: function(e)
+        {    
+          var state = window.game.get('state');  
+          if(state === 'started' || state === 'overtime')
+          {
+              var key = e.keyCode;
+              var player = undefined;
+              
+              if(key === 49)
+              {
+                 player = game.get('home_team').get('player1'); 
+              }
+              else if(key === 50)
+              {
+                 player = game.get('home_team').get('player2'); 
+              }
+              else if(key === 51)
+              {
+                 player = game.get('visitor_team').get('player1'); 
+              }
+              else if(key === 52)
+              {
+                 player = game.get('visitor_team').get('player2'); 
+              }
+              
+              if(player !== undefined && player.isAuthenticated())
+              {
+                  this.addGoal(player, false);
+              }
+          }
         },
         
         handleGameState: function(game)
@@ -648,7 +677,7 @@ $(document).ready(function(){
             this.team = this.options.team;
             this.defaultName = 'Home team';
             if(this.team === window.game.get('visitor_team'))
-                this.defaultName = 'Visitor team';
+                this.defaultName = 'Away team';
             
             this.team.on("change:team_name", this.render, this);
         },
@@ -759,7 +788,8 @@ $(document).ready(function(){
         render: function()
         {
             this.$el.html(this.template);
-            this.$el.find('#username').typeahead
+            var username = this.$el.find('#username');
+            username.typeahead
             ({
                 items: 3, 
                 source: function (typeahead, query) {
@@ -773,6 +803,13 @@ $(document).ready(function(){
                     });
                 }
             });
+            
+            // The field is not visible at the instant that this render method is called. 
+            // This is because 
+            setTimeout(function()
+            {
+                username.focus();
+            },500);
 
           return this;
         },
