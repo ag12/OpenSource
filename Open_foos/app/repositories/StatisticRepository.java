@@ -19,7 +19,8 @@ public class StatisticRepository {
 
     public static Statistic getStatistics(Long team_id) {
 
-        StringBuilder sqlToQuery = new StringBuilder("SELECT (SELECT SUM(home_score) from Game where home_team_id = ");
+        StringBuilder sqlToQuery = 
+                new StringBuilder("SELECT (SELECT SUM(home_score) from Game where home_team_id = ");
         sqlToQuery.append(team_id);
         sqlToQuery.append(" and end_time != 0) AS score_home_for, ");
         sqlToQuery.append("(SELECT SUM( visitor_score ) from Game where visitor_team_id = ");
@@ -352,46 +353,6 @@ public class StatisticRepository {
         }
         return statistic;
     }
-    
-    
-    
-//    private Statistic getMostRegularAppearances(Long team_id, int differenc) {
-//
-//        StringBuilder sqlToQuery =
-//                new StringBuilder("SELECT DISTINCT Team.id, Team.team_name, Team.image, count(*) AS count_matches FROM Game, Team ");
-//        sqlToQuery.append("WHERE ( winner_id != ");
-//        sqlToQuery.append(team_id);
-//        sqlToQuery.append(" ) ");
-//        sqlToQuery.append("AND (( Team.id = Game.home_team_id AND Game.visitor_team_id = ");
-//        sqlToQuery.append(team_id);
-//        sqlToQuery.append(" ) ");
-//        sqlToQuery.append("OR ( Game.home_team_id = ");
-//        sqlToQuery.append(team_id);
-//        sqlToQuery.append(" AND Team.id = Game.visitor_team_id ))");
-//        sqlToQuery.append(" AND (( home_score=10 AND visitor_score=9 ) OR ( home_score=9 AND visitor_score=10 ))");
-//        sqlToQuery.append("GROUP BY Team.id ORDER BY count_matches DESC LIMIT 1;");
-//
-//
-//        ResultSet resultset = OpenFoosDatabase.executeQueryToFoosBase(sqlToQuery.toString());
-//        Team team = new Team();
-//        Statistic statistic = new Statistic();
-//        try {
-//            while (resultset.next()) {
-//
-//                team.id = resultset.getLong("id");
-//                team.team_name = resultset.getString("team_name");
-//                team.image = resultset.getString("image");
-//                statistic.count_most_regular_appearances = resultset.getInt("count_matches");
-//
-//            }
-//            resultset.close();
-//            statistic.target_team = team;
-//        } catch (SQLException e) {
-//        } finally {
-//        }
-//        return statistic;
-//    }
-
     
     public List<Statistic> getMoreInfoForOneTeam(Long team_id) {
 

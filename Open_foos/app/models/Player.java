@@ -12,7 +12,6 @@ import play.data.validation.MinSize;
 import play.data.validation.Password;
 import play.data.validation.Required;
 import play.db.jpa.Model;
-import play.libs.Crypto;
 
 /**
  *
@@ -42,9 +41,6 @@ public class Player extends Model {
 
     @Override
     public String toString() {
-
-
-
         return username;
     }
 }

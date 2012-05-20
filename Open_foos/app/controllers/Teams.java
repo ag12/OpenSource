@@ -5,7 +5,6 @@
 package controllers;
 
 import java.lang.reflect.Constructor;
-import models.Team;
 import play.data.binding.Binder;
 import play.db.Model;
 import play.exceptions.TemplateNotFoundException;

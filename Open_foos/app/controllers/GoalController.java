@@ -4,7 +4,6 @@
  */
 package controllers;
 
-import java.util.ArrayList;
 import java.util.List;
 import models.Goal;
 import play.mvc.Controller;

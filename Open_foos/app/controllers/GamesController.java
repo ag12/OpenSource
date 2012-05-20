@@ -4,8 +4,6 @@
  */
 package controllers;
 
-import java.util.Calendar;
-import java.util.Date;
 import java.util.List;
 import models.Game;
 import play.mvc.Controller;

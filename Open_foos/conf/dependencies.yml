@@ -1,8 +1,9 @@
 # Application dependencies
 
 require:
-    - play
-    - play -> module.secure
+    - play 1.2.4
+    - play -> secure
+    - play -> crud
     
     
    
