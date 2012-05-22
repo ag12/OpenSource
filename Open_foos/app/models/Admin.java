@@ -28,7 +28,7 @@ public class Admin extends Model{
     public String password; 
     public Date registered = new Date();
     @Required
-    public boolean activ = true;
+    public boolean active = true;
     
     public String toString(){
         return username;

@@ -12,10 +12,6 @@ import play.exceptions.TemplateNotFoundException;
 import play.libs.Crypto;
 import play.mvc.With;
 
-/**
- *
- * @author Santonas
- */
 
 @With(Secure.class)
 public class Admins extends CRUD{

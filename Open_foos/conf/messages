@@ -36,6 +36,22 @@ player1 = Player one
 player2 = Player two
 arch_rival = Arch rival
 rating = Rating
+won = Won
+lost = Lost
+#Board
+
+
+latitude = Latitude
+longitude = Longitude
+description = Description
+address = Address
+city = City
+organization = Organization   
+active = Active
+inUse = In use (for ongoing matches)
+board_name = Name
+count_games_played = Number of games played at this board
+
 
 
 # Default CRUD messages

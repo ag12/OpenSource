@@ -36,8 +36,7 @@ public class Players extends CRUD {
             }
         }
         
-        //HER MÅ VI OGSÅ BRUKE GENEREL METODE 
-        //MÅ SJEKKE OM BRUKERNAVNET ER UNIQT
+        
         Player player = (Player) object;
         player.password = Crypto.encryptAES(player.password);
         player.registered = new Date();
@@ -47,7 +46,7 @@ public class Players extends CRUD {
         //DETTE ER TEMP TIL VI FINNER EN GENERELL METODE FOR Å REGISTRERE LAG
         Team team = new Team();
         team.registered = player.registered;
-        team.team_name = "Team " + player.username;
+        team.team_name =  player.username;
         team.player1 = player;
         
         //TEMP KODE SLUTTER

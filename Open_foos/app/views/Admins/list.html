@@ -10,18 +10,15 @@
     </div>
 
     <div id="crudListTable">
-        #{crud.table fields:['start_time', 'end_time', 'home_team', 'visitor_team', 'mode']  /}
+        #{crud.table fields:['username', 'email', 'registered', 'active']/}
     </div>
 
     <div id="crudListPagination">
         #{crud.pagination /}
     </div>
-<!--
-
-IF YOU WANT TO ADD A GAME
 
     <p id="crudListAdd">
         <a href="@{blank()}">&{'crud.add', type.modelName}</a>
-    </p>-->
+    </p>
 
 </div>
