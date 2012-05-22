@@ -230,8 +230,11 @@ public class PlayerController extends Controller {
 
                 if (existingplayer.first_name == null || !existingplayer.first_name.equals(player.first_name)) {
 
-                   
+
                     existingplayer.first_name = player.first_name;
+                    if (existingplayer.first_name != null && !existingplayer.first_name.equals("")) {
+                        existingplayer.first_name = capitalize(existingplayer.first_name);
+                    }
                     hasChanged = true;
                     changes.add("Your first name is now changed.");
 
@@ -246,8 +249,11 @@ public class PlayerController extends Controller {
 
                 if (existingplayer.last_name == null || !existingplayer.last_name.equals(player.last_name)) {
                     existingplayer.last_name = player.last_name;
+                    if (existingplayer.last_name != null && !existingplayer.last_name.equals("")) {
+                        existingplayer.last_name = capitalize(existingplayer.last_name);
+                    }
                     hasChanged = true;
-                    changes.add("Your last name is now changed."); 
+                    changes.add("Your last name is now changed.");
                 }
             }
             //BIO
@@ -259,7 +265,7 @@ public class PlayerController extends Controller {
                     existingplayer.bio = player.bio;
                     hasChanged = true;
                     changes.add("Your bio is now changed.");
-                     
+
                 }
 
             }
@@ -273,8 +279,8 @@ public class PlayerController extends Controller {
                     if (player.email.equals("")) {
                         existingplayer.email = player.email;
                         hasChanged = true;
-                        changes.add("Your email is now changed."); 
-                         
+                        changes.add("Your email is now changed.");
+
                     } else {
                         validation.required(player.email);
                         validation.email(player.email);
@@ -282,7 +288,7 @@ public class PlayerController extends Controller {
                             existingplayer.email = player.email;
                             hasChanged = true;
                             changes.add("Your email is now changed.");
-                            
+
                         } else if (Validation.hasErrors()) {
                             Validation.addError("settings", "You email is incorrect.", player.username);
                             Validation.keep();
@@ -302,7 +308,7 @@ public class PlayerController extends Controller {
                     if (byRfid == null) {
                         existingplayer.rfid = player.rfid;
                         hasChanged = true;
-                         changes.add("Your rfid is now changed.");
+                        changes.add("Your rfid is now changed.");
                     } else if (byRfid != null && !byRfid.equals(existingplayer)) {
                         //OBS
                         Validation.addError("settings", "There is a nother user with the same rfid.", player.username);
@@ -310,7 +316,7 @@ public class PlayerController extends Controller {
                     }
                 }
             }
-            if (resetrfid){
+            if (resetrfid) {
                 existingplayer.rfid = null;
                 hasChanged = true;
                 changes.add("Your rfid is now reseted.");
@@ -375,13 +381,13 @@ public class PlayerController extends Controller {
         if (hasChanged) {
 
             existingplayer.save();
-            for ( int i = 0; i < changes.size(); i++){
-            Validation.addError("itsok", changes.get(i));
+            for (int i = 0; i < changes.size(); i++) {
+                Validation.addError("itsok", changes.get(i));
             }
             params.flash();
             Validation.keep();
         }
-        if ( !hasChanged){
+        if (!hasChanged) {
             Validation.addError("gay", "You have not changed anything.");
             Validation.keep();
         }
@@ -467,5 +473,18 @@ public class PlayerController extends Controller {
             notNull += 10;
         }
         return notNull;
+    }
+
+    private static String capitalize(String s) {
+        s.trim();
+        char[] chars = s.toLowerCase().toCharArray();
+        chars[0] = Character.toUpperCase(chars[0]);
+        for (int i = 0; i < chars.length - 1; i++) {
+            if (Character.isWhitespace(chars[i])) {
+                chars[i + 1] = Character.toUpperCase(chars[i + 1]);
+            }
+        }
+        return String.valueOf(chars);
+
     }
 }
