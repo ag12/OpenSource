@@ -119,10 +119,19 @@ public class TeamController extends Controller {
                 existingTeam.bio = team.bio;
                 hasChanged = true;
 
-                changes.add("Your teams bio changed.");
+                changes.add("Your teams bio has changed.");
 
 
 
+            }
+        }
+        
+        if (team.organization != null /*&& !"".equals(team.organization)*/){
+            if ( !team.organization.equals(existingTeam.organization)){
+                existingTeam.organization = team.organization;
+                hasChanged = true;
+                changes.add("Your teams organization has changed.");
+                
             }
         }
 

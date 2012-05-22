@@ -17,11 +17,11 @@ import play.db.jpa.Model;
 @Entity
 public class Team extends Model {
 
-    //@Column(unique=true)
     public String team_name = null;
     public String bio = "";
     public Date registered = new Date();
     public String image = "team.png";
+    public String organization = "";
     public int won = 0;
     public int lost = 0;
     @ManyToOne
