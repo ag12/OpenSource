@@ -25,7 +25,6 @@ public class GoalController extends Controller {
     public static int getIndividualOwnGoal(Long player_id){
         
         List<Goal> goal = Goal.find("player_id = ? AND backfire = 1", player_id).fetch();
-        System.out.println(goal.size());
         return goal.size();
         
     }

@@ -192,8 +192,8 @@ public class StatisticRepository {
             resultset.close();
 
         } catch (SQLException e) {
-        } finally {
-        }
+            System.out.println(e.toString());
+        } 
         last_three_games_played.replace(last_three_games_played.toString().length() - 2, last_three_games_played.toString().length(), "");
         last_three_games_played.reverse();
         return last_three_games_played.toString();
@@ -229,8 +229,8 @@ public class StatisticRepository {
                 statistic.target_team = team;
             }
         } catch (SQLException e) {
-        } finally {
-        }
+            System.out.println(e.toString());
+        } 
 
         return statistic;
     }
@@ -271,8 +271,8 @@ public class StatisticRepository {
                 statistic.target_team = team;
             }
         } catch (SQLException e) {
-        } finally {
-        }
+            System.out.println(e.toString());
+        } 
         return statistic;
     }
 
@@ -349,8 +349,8 @@ public class StatisticRepository {
                 statistic.target_team = team;
             }
         } catch (SQLException e) {
-        } finally {
-        }
+            System.out.println(e.toString());
+        } 
         return statistic;
     }
     

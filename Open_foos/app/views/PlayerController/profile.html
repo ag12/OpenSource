@@ -629,10 +629,10 @@
                         #{/if}
                         <br/> <br/>
                         #{if scoredGoal != 0 && statistic?.score_for > 0 }
-                        <p>${team?.team_name} have scored <strong>${scoredGoal}</strong> goals while playing in other teams.</p>
+                        <p>${team?.team_name} have scored a total of <strong>${scoredGoal}</strong> goals, <strong>${statistic?.score_for}</strong> one of them while playing in single matches.</p>
                         #{/if} 
                         #{if ownGoal != 0}
-                        <p>And scored <strong>${ownGoal}</strong> own goals.</p>
+                        <p>The own goal record for ${team?.team_name} is a total of <strong>${ownGoal}</strong> goals ;(.</p>
                         #{/if}
                     </div>
                 </div>

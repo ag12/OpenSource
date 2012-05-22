@@ -47,8 +47,6 @@ public class GameRepository {
         try {
             while (resultset.next()) {
                 Long time = resultset.getLong(1);
-
-               
             }
         } catch (SQLException e) {
             System.out.println(e.toString());

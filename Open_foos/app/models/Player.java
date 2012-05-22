@@ -30,13 +30,13 @@ public class Player extends Model {
     public String password = null;
     @Column(unique = true)
     public Long rfid = null;
-    public String first_name = null;
-    public String last_name = null;
+    public String first_name = "";
+    public String last_name = "";
     @Email
-    public String email = null;
+    public String email = "";
     //default "player.png"
     public String image = "player.png";
-    public String bio = null;
+    public String bio = "";
     public Date registered = new Date();
 
     @Override

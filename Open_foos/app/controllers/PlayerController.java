@@ -102,7 +102,6 @@ public class PlayerController extends Controller {
         if (!player.username.equals("") && player.username != null) {
             try {
                 rfid = Long.parseLong(player.username);
-                System.out.println(rfid);
 
             } catch (NumberFormatException e) {
             }
@@ -200,7 +199,7 @@ public class PlayerController extends Controller {
         controllers.Application.main_page();
     }
 
-    public static void editPlayer(Player player, File image, boolean reset) {
+    public static void editPlayer(Player player, File image, boolean resetPicture, boolean resetrfid) {
 
         Player existingplayer = null;
         Long id = null;
@@ -231,10 +230,11 @@ public class PlayerController extends Controller {
 
                 if (existingplayer.first_name == null || !existingplayer.first_name.equals(player.first_name)) {
 
+                   
                     existingplayer.first_name = player.first_name;
                     hasChanged = true;
                     changes.add("Your first name is now changed.");
-                    
+
                 }
 
             }
@@ -245,10 +245,9 @@ public class PlayerController extends Controller {
                      */player.last_name != null)) {
 
                 if (existingplayer.last_name == null || !existingplayer.last_name.equals(player.last_name)) {
-
                     existingplayer.last_name = player.last_name;
                     hasChanged = true;
-                     changes.add("Your last name is now changed.");
+                    changes.add("Your last name is now changed."); 
                 }
             }
             //BIO
@@ -257,10 +256,10 @@ public class PlayerController extends Controller {
                      */player.bio != null)) {
 
                 if (existingplayer.bio == null || !existingplayer.bio.equals(player.bio)) {
-
                     existingplayer.bio = player.bio;
                     hasChanged = true;
-                     changes.add("Your bio is now changed.");
+                    changes.add("Your bio is now changed.");
+                     
                 }
 
             }
@@ -274,14 +273,16 @@ public class PlayerController extends Controller {
                     if (player.email.equals("")) {
                         existingplayer.email = player.email;
                         hasChanged = true;
-                         changes.add("Your email is now changed.");
+                        changes.add("Your email is now changed."); 
+                         
                     } else {
                         validation.required(player.email);
                         validation.email(player.email);
                         if (!Validation.hasErrors()) {
                             existingplayer.email = player.email;
                             hasChanged = true;
-                             changes.add("Your email is now changed.");
+                            changes.add("Your email is now changed.");
+                            
                         } else if (Validation.hasErrors()) {
                             Validation.addError("settings", "You email is incorrect.", player.username);
                             Validation.keep();
@@ -308,6 +309,11 @@ public class PlayerController extends Controller {
                         Validation.keep();
                     }
                 }
+            }
+            if (resetrfid){
+                existingplayer.rfid = null;
+                hasChanged = true;
+                changes.add("Your rfid is now reseted.");
             }
             //IMAGE
             if (image != null) {
@@ -344,7 +350,7 @@ public class PlayerController extends Controller {
                 changes.add("Your picture is now changed.");
 
             }
-            if (reset) {
+            if (resetPicture) {
 
                 if (!existingplayer.image.equals("player.png")) {
                     String main_path = Play.applicationPath + "/public/images/";

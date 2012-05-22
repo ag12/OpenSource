@@ -99,25 +99,29 @@ public class TeamController extends Controller {
                 hasChanged = true;
                 changes.add("Your teams name is now changed.");
 
-            }else if (t != null ){
-                    Validation.addError("settings", "That team name is in use......");
-                    Validation.keep();
-                  showValidationErrors = true;
-                            }
-        }else if (team.team_name.equals("")){
-                   Validation.addError("settings", "You must have a team name......");
-                    Validation.keep();
-                  showValidationErrors = true;
-                            }
-        
+            } else if (t != null) {
+                Validation.addError("settings", "That team name is in use......");
+                Validation.keep();
+                showValidationErrors = true;
+            }
+        } else if (team.team_name.equals("")) {
+            Validation.addError("settings", "You must have a team name......");
+            Validation.keep();
+            showValidationErrors = true;
+        }
+
         if (team.bio != null /*
                  * && !"".equals(team.bio)
                  */) {
 
             if (!team.bio.equals(existingTeam.bio)) {
+
                 existingTeam.bio = team.bio;
                 hasChanged = true;
+
                 changes.add("Your teams bio changed.");
+
+
 
             }
         }
@@ -268,7 +272,9 @@ public class TeamController extends Controller {
                 }
             }//END arch_rival != null && existingTeam.arch_rival != arch_rival
             else {
-                System.out.println("men ingen forandring eller at arch ikke finnes");
+                   Validation.addError("settings", "Cant find a team or a player with that name..");
+                                Validation.keep();
+                                showValidationErrors = true;
             }
 
         }

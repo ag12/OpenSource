@@ -19,7 +19,7 @@ public class Team extends Model {
 
     //@Column(unique=true)
     public String team_name = null;
-    public String bio = null;
+    public String bio = "";
     public Date registered = new Date();
     public String image = "team.png";
     public int won = 0;

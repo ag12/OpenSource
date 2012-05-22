@@ -87,9 +87,9 @@
                 <br/>
             </div>
             #{/ifError}
-            
-            
-              #{ifError 'settings'}
+
+
+            #{ifError 'settings'}
             <div class="alert alert-error">
 
                 <button class="close" data-dismiss="alert">×</button>
@@ -97,13 +97,13 @@
                 <br/>
                 #{errors 'settings'}
                 <li>${error }</li>
-                 #{/errors}
+                #{/errors}
                 <br/>
             </div>
             #{/ifError}
 
-            
-            
+
+
             #{ifError 'itsok'}
             <div class="alert alert-success">
 
@@ -111,27 +111,27 @@
                 <h1>Changes…</h1>
                 <br/>
                 #{errors 'itsok'}
-                
+
                 <li>${error}</li>
                 #{/errors}
                 <br/>
             </div>
             #{/ifError}
-            
-             #{ifError 'gay'}
-            <div class="alert alert-info">
+
+            #{ifError 'gay'}
+            <div class="alert">
 
                 <button class="close" data-dismiss="alert">×</button>
                 <h1>Okey...</h1>
                 <br/>
                 #{errors 'gay'}
-                
+
                 <li>${error}</li>
                 #{/errors}
                 <br/>
             </div>
             #{/ifError}
-            
+
 
 
         </div>
@@ -159,7 +159,7 @@
                                     Maximum size of 700kb.<br/> 
                                     JPG, GIF, PNG
                                     <p class="help-block"><strong>Reset profile picture.</strong>&nbsp;&nbsp;
-                                        <input id="reset" type="checkbox" name="reset"
+                                        <input id="reset" type="checkbox" name="resetPicture"
                                                title="Reset profile picture"/></p>
 
 
@@ -171,10 +171,10 @@
                             <div class="control-group">
                                 <label class="control-label" for="rfid">Rf-id</label>
                                 <div class="controls">
-                                    <input type="password" class="input-xlarge" id="rfid" placeholder="Scan your rfid" 
+                                    <input type="password" class="input-xlarge" id="rfid" placeholder="Scan your rfid while signin in to a match" 
                                            value="${player?.rfid}" name="player.rfid" autofocus="autofocus" disabled="">
 
-                                   <p class="help-block"><strong>Reset radio frequency identification number</strong>&nbsp;&nbsp;
+                                    <p class="help-block"><strong>Reset radio frequency identification</strong>&nbsp;&nbsp;
                                         <input id="resetrfid" type="checkbox" name="resetrfid"
                                                title="Reset profile picture"/></p>
                                 </div>
@@ -299,7 +299,7 @@
                                 <label class="control-label" for="arch-rival">Arch-rival</label>
                                 <div class="controls">
                                     <input type="text" data-provide="typeahead" class="input-xlarge" id="playerArchRival" 
-                                           value="${team?.arch_rival?.team_name}" name="team.arch_rival.team_name">
+                                           value="${team?.arch_rival?.team_name}" name="team.arch_rival.team_name" autocomplete="off">
                                     <p class="help-block">Don't worry we will find them for you .</p>
                                 </div>
                             </div>
