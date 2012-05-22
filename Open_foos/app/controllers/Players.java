@@ -71,7 +71,7 @@ public class Players extends CRUD {
 
     }
 
-    public static void save(String id, String encryptedPassword) throws Exception {
+    public static void save(String id, String encryptedPassword, String oldUsername) throws Exception {
 
         ObjectType type = ObjectType.get(getControllerClass());
         notFoundIfNull(type);
@@ -91,6 +91,17 @@ public class Players extends CRUD {
       
 
         Player player = (Player) object;
+        boolean usernameIsStillUniq = true;
+        if (!player.username.equals(oldUsername)){
+           
+            Player chekPlayer = Player.find("byUsername", player.username).first();
+            if ( chekPlayer != null){
+                usernameIsStillUniq = false;
+                flash.error(type.modelName + " Username have been used, and it's not uniq", "PROBLEM");
+            }
+        }
+        
+        
         //Admin whants to change players password
         if (!encryptedPassword.equals(player.password)){    
            String temp = Crypto.encryptAES(player.password);
@@ -100,12 +111,13 @@ public class Players extends CRUD {
             player.password = Crypto.decryptAES(player.password);
             player.password = Crypto.encryptAES(player.password);
         }
-       
+        
         object = player;
-
-        object._save();
-        flash.success(play.i18n.Messages.get("crud.saved", type.modelName));
-        if (params.get("_save") != null) {
+        if ( usernameIsStillUniq){
+             object._save();
+             flash.success(play.i18n.Messages.get("crud.saved", type.modelName));
+        }
+        if (params.get("_save") != null && usernameIsStillUniq) {
             redirect(request.controller + ".list");
         }
         redirect(request.controller + ".show", object._key());

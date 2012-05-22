@@ -117,7 +117,12 @@ public class Application extends Controller {
     }
 
     public static boolean afterLogout() {
-        session.clear();
+        //session.clear();
+        //Best to use the code under, else if admin i online he/she wil be logd out...
+        session.remove("login");
+        session.remove("pid");
+        session.remove("pname");
+        session.remove("token");
         return true;
     }
     public static List<Object> teamsAndPlayers() {
