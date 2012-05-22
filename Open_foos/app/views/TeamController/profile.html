@@ -41,7 +41,7 @@
                 options.series[0] = new Array();
  
                 options.series[0].data = [ data.games_playd, data.winns, data.losts ]
-                options.series[0].name = "${team?.team_name}";
+                options.series[0].name = "${team?.player1.username}" + " & " + "${team?.player2.username}";
                         
                 window.chart = new Highcharts.Chart(options);
                 console.log("new chart stat")
