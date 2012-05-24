@@ -487,7 +487,7 @@
 
                                 <img src="@{'/public/images/teams'}/${teams?.image}" alt="${teams?.team_name}" class="small-image" />
 
-                                <h3 class="team-name">@${teams?.team_name}</h3>
+                                <h3 class="team-name">@ ${teams?.team_name}</h3>
 
                             </a>
                         </li>
@@ -599,7 +599,7 @@
                                 <img src="@{'/public/images/teams'}/${statistics?.target_team.image}" 
                                      class="small-image" alt="${statistics?.target_team?.team_name}">
 
-                                <h3 class="team-name"> @${statistics?.target_team.team_name}</h3>
+                                <h3 class="team-name">@ ${statistics?.target_team.team_name}</h3>
 
 
                             </a>
@@ -622,7 +622,9 @@
                     <div id="team_box">
                         <p>Have been registered since <strong>${team?.registered.since(false)}</strong>!</p>
                         <p><strong>Team name: </strong> ${team?.team_name}</p>
-     
+                        #{if team?.organization != null && team?.organization != ""}
+                        <p><strong>Organization: </strong> ${team?.organization}</p>
+                        #{/if}
                         <p style="font-style: italic"><strong>${team?.bio}</strong></p>
                         #{if team?.arch_rival != null}
                         <strong>Arch rival </strong> <a href="@{TeamController.profile(team?.arch_rival?.team_name)}"> @ ${team?.arch_rival?.team_name}</a>

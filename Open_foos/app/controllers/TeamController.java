@@ -92,6 +92,7 @@ public class TeamController extends Controller {
         boolean hasChanged = false;
         boolean showValidationErrors = false;
         List<String> changes = new ArrayList<String>();
+        team.team_name = team.team_name.trim();
         if (team.team_name != null && !"".equals(team.team_name) && !existingTeam.team_name.equals(team.team_name)) {
             Team t = Team.find("byTeam_name", team.team_name).first();
             if (t == null) {
@@ -127,7 +128,9 @@ public class TeamController extends Controller {
         }
         
         if (team.organization != null /*&& !"".equals(team.organization)*/){
+              team.organization = team.organization.trim();
             if ( !team.organization.equals(existingTeam.organization)){
+              
                 existingTeam.organization = team.organization;
                 hasChanged = true;
                 changes.add("Your teams organization has changed.");
@@ -196,10 +199,14 @@ public class TeamController extends Controller {
         //User picks arch rival from the list
         if (team.arch_rival.team_name != null && team.arch_rival.team_name.length() > 1/*
                  * && !team.arch_rival.team_name.equals("")
-                 */) {
+                 */ ) {
 
-            Team arch_rival = Team.find("byTeam_name", team.arch_rival.team_name).first();
-
+            team.arch_rival.team_name = team.arch_rival.team_name.trim();
+            Team arch_rival = null;
+            if ( !team.arch_rival.team_name.equals("")){
+                arch_rival = Team.find("byTeam_name", team.arch_rival.team_name).first();
+            }
+           
             if (arch_rival != null && existingTeam.arch_rival != arch_rival) {
 
                 //User cant pick them self
@@ -222,7 +229,7 @@ public class TeamController extends Controller {
 
 
                             } else {
-                                Validation.addError("settings", "You cant have one of your own players as arch rival......");
+                                Validation.addError("settings", "You cant have one of your own players as arch rival..");
                                 Validation.keep();
                                 showValidationErrors = true;
                             }
@@ -256,7 +263,7 @@ public class TeamController extends Controller {
                                 changes.add("Your teams arch rival is now changed.");
 
                             } else {
-                                Validation.addError("settings", "You cant have one of your own players as arch rival......");
+                                Validation.addError("settings", "You cant have one of your own players as arch rival..");
                                 Validation.keep();
                                 showValidationErrors = true;
                             }
@@ -280,8 +287,8 @@ public class TeamController extends Controller {
                     showValidationErrors = true;
                 }
             }//END arch_rival != null && existingTeam.arch_rival != arch_rival
-            else {
-                   Validation.addError("settings", "Cant find a team or a player with that name..");
+            else if (arch_rival == null){
+                   Validation.addError("settings", "Cant find anybody with that name..");
                                 Validation.keep();
                                 showValidationErrors = true;
             }

@@ -105,7 +105,7 @@ public class PlayerController extends Controller {
 
             } catch (NumberFormatException e) {
             }
-            if (rfid != null && rfid > 999999999) {
+            if (rfid != null && rfid >= 1) {
 
                 Player exist = Player.find("byRfid", rfid).first();
 
@@ -231,6 +231,7 @@ public class PlayerController extends Controller {
                 if (existingplayer.first_name == null || !existingplayer.first_name.equals(player.first_name)) {
 
 
+                    player.first_name = player.first_name.trim();
                     existingplayer.first_name = player.first_name;
                     if (existingplayer.first_name != null && !existingplayer.first_name.equals("")) {
                         existingplayer.first_name = capitalize(existingplayer.first_name);
@@ -248,6 +249,7 @@ public class PlayerController extends Controller {
                      */player.last_name != null)) {
 
                 if (existingplayer.last_name == null || !existingplayer.last_name.equals(player.last_name)) {
+                    player.last_name = player.last_name.trim();
                     existingplayer.last_name = player.last_name;
                     if (existingplayer.last_name != null && !existingplayer.last_name.equals("")) {
                         existingplayer.last_name = capitalize(existingplayer.last_name);
