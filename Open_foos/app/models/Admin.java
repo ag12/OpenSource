@@ -12,8 +12,7 @@ import play.data.validation.Required;
 import play.db.jpa.Model;
 
 /**
- *
- * @author Santonas
+ * There is no need for getters and setters methods, play framework takes care of that while compiling the source code.
  */
 @Entity
 public class Admin extends Model{

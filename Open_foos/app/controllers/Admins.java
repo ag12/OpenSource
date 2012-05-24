@@ -12,11 +12,10 @@ import play.exceptions.TemplateNotFoundException;
 import play.libs.Crypto;
 import play.mvc.With;
 
-
 @With(Secure.class)
-public class Admins extends CRUD{
-    
-        public static void create() throws Exception {
+public class Admins extends CRUD {
+
+    public static void create() throws Exception {
         ObjectType type = ObjectType.get(getControllerClass());
         notFoundIfNull(type);
         Constructor<?> constructor = type.entityClass.getDeclaredConstructor();
@@ -45,11 +44,47 @@ public class Admins extends CRUD{
         }
         redirect(request.controller + ".show", object._key());
     }
+
+    public static void save(String id,String encryptedPassword) throws Exception {
+        ObjectType type = ObjectType.get(getControllerClass());
+        notFoundIfNull(type);
+        Model object = type.findById(id);
+        notFoundIfNull(object);
+        Binder.bindBean(params.getRootParamNode(), "object", object);
+        validation.valid(object);
+        if (validation.hasErrors()) {
+            renderArgs.put("error", play.i18n.Messages.get("crud.hasErrors"));
+            try {
+                render(request.controller.replace(".", "/") + "/show.html", type, object);
+            } catch (TemplateNotFoundException e) {
+                render("CRUD/show.html", type, object);
+            }
+        }
         
+        Admin admin = (Admin) object;
+        //Admin whants to change players password
+        if (!encryptedPassword.equals(admin.password)){    
+           String temp = Crypto.encryptAES(admin.password);
+           admin.password = temp;
+           
+        }else if( encryptedPassword.equals(admin.password)){
+            admin.password = Crypto.decryptAES(admin.password);
+            admin.password = Crypto.encryptAES(admin.password);
+        }
+        
+        object = admin;
+        object._save();
+        flash.success(play.i18n.Messages.get("crud.saved", type.modelName));
+        if (params.get("_save") != null) {
+            redirect(request.controller + ".list");
+        }
+        redirect(request.controller + ".show", object._key());
+    }
+
     static void onDisconnected() {
         CRUD.index();
     }
-    
+
     static void onAuthenticated() {
         CRUD.index();
     }

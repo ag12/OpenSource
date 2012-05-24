@@ -5,19 +5,10 @@
 package models;
 
 /**
- *
- * @author Santonas
+ * There is no need for getters and setters methods, play framework takes care of that while compiling the source code.
  */
 public class Statistic {
-    
-    
-//    public Long game_id;
-//    public Long player_id;   
-//    public Long player2_id;
-    
-    
-    
-    
+   
     public int games_playd;
     
     public int home_games;

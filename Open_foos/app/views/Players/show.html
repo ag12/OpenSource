@@ -1,6 +1,9 @@
 #{extends 'CRUD/layout.html' /}
 #{set title:messages.get('crud.show.title', type.modelName) /}
-
+    <script src="@{'/public/javascripts/jquery-1.7.2.js'}"></script>
+<script type="text/javascript">
+    $(document).ready(function(){$('#object_rfid').attr('size','12');});
+</script>
 <div id="crudShow" class="${type.name}">
 
     <h2 id="crudShowTitle">&{'crud.show.title', type.modelName}</h2>

@@ -143,6 +143,7 @@ public class Application extends Controller {
             
         }
         for (int i = 0; i < players.size(); i++) {
+            players.get(i).password = "sorry to disappoint you hacker";
             teamsAndPlayers.add(players.get(i));
         }
         return teamsAndPlayers;

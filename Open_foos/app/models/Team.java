@@ -8,15 +8,17 @@ import java.util.Date;
 import javax.persistence.Entity;
 import javax.persistence.ManyToOne;
 import javax.persistence.OneToOne;
+import play.data.validation.MinSize;
+import play.data.validation.Required;
 import play.db.jpa.Model;
 
 /**
- *
- * @author Santonas
+ * There is no need for getters and setters methods, play framework takes care of that while compiling the source code.
  */
 @Entity
 public class Team extends Model {
 
+    @Required
     public String team_name = null;
     public String bio = "";
     public Date registered = new Date();
@@ -24,6 +26,7 @@ public class Team extends Model {
     public String organization = "";
     public int won = 0;
     public int lost = 0;
+    @Required
     @ManyToOne
     public Player player1 = null;
     @ManyToOne

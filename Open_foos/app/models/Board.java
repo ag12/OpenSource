@@ -4,13 +4,13 @@
  */
 package models;
 
+import java.util.Date;
 import javax.persistence.Entity;
 import play.data.validation.Required;
 import play.db.jpa.Model;
 
 /**
- *
- * @author Santonas
+ * There is no need for getters and setters methods, play framework takes care of that while compiling the source code.
  */
 @Entity
 public class Board extends Model {
@@ -30,6 +30,8 @@ public class Board extends Model {
     public String organization;
     
     public int count_games_played;
+    
+    public Date registered = new Date();
     
     public boolean active = true;
     public boolean inUse = false;

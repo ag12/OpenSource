@@ -2,14 +2,14 @@
 #{set title:messages.get('crud.show.title', type.modelName) /}
     <script src="@{'/public/javascripts/jquery-1.7.2.js'}"></script>
 <script type="text/javascript">
-    $(document).ready(function(){$('#object_registered').attr('size','17');});
+    $(document).ready(function(){$('#object_registered').attr('size','17'); $('#object_registered').attr('disabled','');});
 </script>
 <div id="crudShow" class="${type.name}">
 
     <h2 id="crudShowTitle">&{'crud.show.title', type.modelName}</h2>
 
     <div class="objectForm">
-    #{form action:@save(object._key()), enctype:'multipart/form-data'}
+    #{form action:@save(object._key(),object.password), enctype:'multipart/form-data'}
         #{crud.form /}
         <p class="crudButtons">
             <input type="submit" name="_save" value="&{'crud.save', type.modelName}" />

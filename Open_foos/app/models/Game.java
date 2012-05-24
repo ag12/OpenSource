@@ -13,8 +13,7 @@ import play.data.validation.Min;
 import play.db.jpa.Model;
 
 /**
- *
- * @author Bela Lugosi
+ * There is no need for getters and setters methods, play framework takes care of that while compiling the source code.
  */
 @Entity
 public class Game extends Model {
