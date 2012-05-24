@@ -309,7 +309,7 @@ public class TeamController extends Controller {
         }
         if (existingTeam.memberCount() == 1) {
 
-            controllers.PlayerController.settings();
+            controllers.PlayerController.settings(2);
         } else {
             settings(existingTeam.team_name);
         }
@@ -345,7 +345,7 @@ public class TeamController extends Controller {
 
     public static int compeletedProfile(Team team) {
 
-        int notNull = 10;
+        int notNull = 0;
         if (team.bio != null && !team.bio.equals("")) {
             notNull += 10;
         }
@@ -353,6 +353,9 @@ public class TeamController extends Controller {
             notNull += 10;
         }
         if (team.arch_rival != null) {
+            notNull += 10;
+        }
+         if (team.organization != null && !team.organization.equals("")) {
             notNull += 10;
         }
         return notNull;

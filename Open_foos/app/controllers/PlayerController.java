@@ -21,16 +21,16 @@ import repositories.StatisticRepository;
 
 public class PlayerController extends Controller {
 
-    public static void getPlayer(String username) {
-        Player p = Player.find("byUsername", username).first();
-        renderJSON(p);
-
-    }
+//    public static void getPlayer(String username) {
+//        Player p = Player.find("byUsername", username).first();
+//        renderJSON(p);
+//
+//    }
 
     /*
      * Here the player can change settings, the actuale code is edit();
      */
-    public static void settings() {
+    public static void settings(int p) {
 
         if (session.get("login") != null && session.get("pid") != null) {
 
@@ -41,14 +41,13 @@ public class PlayerController extends Controller {
             if (id != null && (username != null && !username.equals(""))) {
 
                 Player player = Player.find("id = ? and username = ?", id, username).first();
-                //getPlayer(id, username);
 
                 Team team = TeamController.getTeam(id);
 
                 int compeleted = (compeletedProfile(player)
                         + controllers.TeamController.compeletedProfile(team));
-                boolean where = false;
-                render(player, team, compeleted, where);
+                
+                render(player, team, compeleted,p);
 
             } else {
                 controllers.Application.error();
@@ -394,7 +393,7 @@ public class PlayerController extends Controller {
             Validation.keep();
         }
 
-        settings();
+        settings(1);
     }
 
     public static void changePassword(Player player, String newPassword, String newPassword2) {
@@ -404,7 +403,7 @@ public class PlayerController extends Controller {
             Validation.addError("settings", "Missing informasjon", player.password);
             params.flash();
             Validation.keep();
-            settings();
+            settings(3);
         }
 
 
@@ -415,7 +414,7 @@ public class PlayerController extends Controller {
             Validation.addError("settings", "Your passwords must bee the same.", player.password);
             params.flash();
             Validation.keep();
-            settings();
+            settings(3);
 
         } else if (newPassword.equals(newPassword2) && (player.password != null || !player.password.equals(""))) {
 
@@ -433,7 +432,7 @@ public class PlayerController extends Controller {
                     player.save();
                     Validation.addError("itsok", "Your password is now changed", "error");
                     Validation.keep();
-                    settings();
+                    settings(3);
                 }
                 if (player == null) {
 
@@ -441,7 +440,7 @@ public class PlayerController extends Controller {
 
                     params.flash();
                     Validation.keep();
-                    settings();
+                    settings(3);
                 }
             }
         }

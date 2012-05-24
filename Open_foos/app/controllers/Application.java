@@ -133,9 +133,11 @@ public class Application extends Controller {
         for (int i = 0; i < teams.size(); i++) {
            
             if ( teams.get(i) != null && teams.get(i).memberCount() == 2){
+                teams.get(i).arch_rival = null;//prevent from circular reference error
                teamsAndPlayers.add(teams.get(i)); 
             }else if ( teams.get(i) != null && teams.get(i).memberCount() == 1){
                 if(!teams.get(i).team_name.equals(teams.get(i).player1.username)){
+                    teams.get(i).arch_rival = null;
                     teamsAndPlayers.add(teams.get(i)); 
                 }
             }
@@ -144,6 +146,7 @@ public class Application extends Controller {
         }
         for (int i = 0; i < players.size(); i++) {
             players.get(i).password = "sorry to disappoint you hacker";
+            players.get(i).email = null;
             teamsAndPlayers.add(players.get(i));
         }
         return teamsAndPlayers;
