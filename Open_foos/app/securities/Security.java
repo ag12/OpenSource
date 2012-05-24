@@ -18,4 +18,5 @@ public class Security extends Secure.Security {
         Admin admin = Admin.find("byUsernameAndPassword", username,Crypto.encryptAES(password)).first();
         return (admin != null && admin.active);
     }
+    
 }

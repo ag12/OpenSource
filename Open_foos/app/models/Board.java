@@ -29,7 +29,7 @@ public class Board extends Model {
     @Required
     public String organization;
     
-    public int count_games_played;
+    public int count_games_played = 0;
     
     public Date registered = new Date();
     

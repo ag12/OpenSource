@@ -31,6 +31,9 @@ public class PlayerController extends Controller {
      * Here the player can change settings, the actuale code is edit();
      */
     public static void settings(int p) {
+        if (p > 3 || p < 1){
+            controllers.Application.ofError();
+        }
 
         if (session.get("login") != null && session.get("pid") != null) {
 
@@ -50,10 +53,10 @@ public class PlayerController extends Controller {
                 render(player, team, compeleted,p);
 
             } else {
-                controllers.Application.error();
+                controllers.Application.ofError();
             }
         } else {
-            controllers.Application.error();
+            controllers.Application.ofError();
         }
 
     }

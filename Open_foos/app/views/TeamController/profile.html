@@ -335,7 +335,18 @@
                 </li>
 
                 #{/if}
-            </ul>  
+            </ul> 
+            #{ if statistic.games_playd <= 0 } 
+                <div class="alert alert-block">
+                    <a class="close" data-dismiss="alert" href="#">×</a>
+                    <h4 class="alert-heading">Attention!</h4>
+                    <br/>
+                    This team haven't played any foosball matches
+                    <br/>
+                    <br/>
+                    There are no statistic to show.
+                </div>
+                #{/if}
         </div>
         <div class="span9"> 
             <div id="profile-menu-info" class="tab-content card section">

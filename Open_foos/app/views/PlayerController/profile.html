@@ -50,167 +50,167 @@
                 
         function this_drawGameChart(id){
             if(id !== null){
-            $.getJSON("@{GamesController.getTeamGamesForChart()}", {team_id : id},function(data){
+                $.getJSON("@{GamesController.getTeamGamesForChart()}", {team_id : id},function(data){
                 
-                var teamId = parseFloat(id);
-                var winArray = new Array();
-                var lostArray = new Array();
-                for( var i = 0; i < data.length; i++){
+                    var teamId = parseFloat(id);
+                    var winArray = new Array();
+                    var lostArray = new Array();
+                    for( var i = 0; i < data.length; i++){
                     
-                    if (data[i].winner.id === teamId){
-                        winArray[i] = data[i];
-                        lostArray[i] = null;
-                    }
-                    else if (data[i].winner.id !== teamId){
+                        if (data[i].winner.id === teamId){
+                            winArray[i] = data[i];
+                            lostArray[i] = null;
+                        }
+                        else if (data[i].winner.id !== teamId){
                         
-                        lostArray[i] = data[i];
-                        winArray[i] = null;
+                            lostArray[i] = data[i];
+                            winArray[i] = null;
+                        }
                     }
-                }
-                var countWin = new Array();
-                var countLost = new Array();
-                for (var i = 0; i < winArray.length; i++){
-                    if (winArray[i]){
-                        countWin[i] = 1;
-                    }
-                    else if (!winArray[i]){
-                        countWin[i] = null;
-                    }
+                    var countWin = new Array();
+                    var countLost = new Array();
+                    for (var i = 0; i < winArray.length; i++){
+                        if (winArray[i]){
+                            countWin[i] = 1;
+                        }
+                        else if (!winArray[i]){
+                            countWin[i] = null;
+                        }
                     
-                }
-                for (var i = 0; i < lostArray.length; i++){
-                    if( lostArray[i]){
-                        countLost[i] = -1;
                     }
-                    else if ( !lostArray[i]){
-                        countLost[i] = null;
-                    }           
-                }
-                window.chart = new Highcharts.Chart(
-                {
+                    for (var i = 0; i < lostArray.length; i++){
+                        if( lostArray[i]){
+                            countLost[i] = -1;
+                        }
+                        else if ( !lostArray[i]){
+                            countLost[i] = null;
+                        }           
+                    }
+                    window.chart = new Highcharts.Chart(
+                    {
                         
-                    chart: {
-                        renderTo: 'game_statistic',
-                        type: 'area',
-                        spacingBottom: 40
-                    },
-                    rangeSelector : {
-                        selected : 1
+                        chart: {
+                            renderTo: 'game_statistic',
+                            type: 'area',
+                            spacingBottom: 40
+                        },
+                        rangeSelector : {
+                            selected : 1
                 
-                    },
-                    title: {
-                        text: '${team?.team_name}' + '\'s' + ' played games'
-                    },
-                    subtitle: {
-                        text: '',
-                        floating: true,
-                        align: 'right',
-                        verticalAlign: 'bottom',
-                        y: 15
-                    },
-                    legend: {
-                        layout: 'vertical',
-                        align: 'left',
-                        verticalAlign: 'top',
-                        x: 100,
-                        y: 0,
-                        floating: true,
-                        borderWidth: 2,
-                        backgroundColor: '#FFFFFF'
-                    },
-                    xAxis: {
+                        },
                         title: {
-                            text: 'Played games'
+                            text: '${team?.team_name}' + '\'s' + ' played games'
                         },
-                        labels: {
+                        subtitle: {
+                            text: '',
+                            floating: true,
+                            align: 'right',
+                            verticalAlign: 'bottom',
+                            y: 15
+                        },
+                        legend: {
+                            layout: 'vertical',
+                            align: 'left',
+                            verticalAlign: 'top',
+                            x: 100,
+                            y: 0,
+                            floating: true,
+                            borderWidth: 2,
+                            backgroundColor: '#FFFFFF'
+                        },
+                        xAxis: {
+                            title: {
+                                text: 'Played games'
+                            },
+                            labels: {
+                                formatter: function() {
+                                    return this.value;
+                                }
+                            },
+                            tickInterval: 1
+                        },
+                        yAxis: {
+                            title: {
+                                text: 'Winns and losts'
+                            },
+                            labels: {
+                                formatter: function() {
+                                    return this.value;
+                                }
+                            }, 
+                            minRange: -1,
+                            max: 2,
+                            tickInterval: 1
+                        },
+                        tooltip: {
                             formatter: function() {
-                                return this.value;
-                            }
-                        },
-                        tickInterval: 1
-                    },
-                    yAxis: {
-                        title: {
-                            text: 'Winns and losts'
-                        },
-                        labels: {
-                            formatter: function() {
-                                return this.value;
-                            }
-                        }, 
-                        minRange: -1,
-                        max: 2,
-                        tickInterval: 1
-                    },
-                    tooltip: {
-                        formatter: function() {
-                            var winMatch =  winArray[this.x];
-                            var lostMatch = lostArray[this.x];
-                            if ( winMatch !== null){
+                                var winMatch =  winArray[this.x];
+                                var lostMatch = lostArray[this.x];
+                                if ( winMatch !== null){
                                  
-                                return '<b>'+ this.series.name +'</b><br/>' +
-                                    winMatch.home_team.team_name + " VS " + 
-                                    winMatch.visitor_team.team_name +'<br/>'+
-                                    "Result : " + winMatch.home_score + " - " + 
-                                    winMatch.visitor_score+ '<br/>' + 
-                                    "Winner : " + winMatch.winner.team_name + '<br/>' + 
-                                    "Played : " + winMatch.start_time;
+                                    return '<b>'+ this.series.name +'</b><br/>' +
+                                        winMatch.home_team.team_name + " VS " + 
+                                        winMatch.visitor_team.team_name +'<br/>'+
+                                        "Result : " + winMatch.home_score + " - " + 
+                                        winMatch.visitor_score+ '<br/>' + 
+                                        "Winner : " + winMatch.winner.team_name + '<br/>' + 
+                                        "Played : " + winMatch.start_time;
                                    
-                            }
-                            if ( lostMatch !== null){
+                                }
+                                if ( lostMatch !== null){
                                  
-                                return '<b>'+ this.series.name +'</b><br/>' +
-                                    lostMatch.home_team.team_name + " VS " + 
-                                    lostMatch.visitor_team.team_name +'<br/>'+
-                                    "Result : " + lostMatch.home_score + " - " + 
-                                    lostMatch.visitor_score+ '<br/>' + 
-                                    "Winner : " + lostMatch.winner.team_name + '<br/>' +
-                                    "Played : " + lostMatch.start_time;
+                                    return '<b>'+ this.series.name +'</b><br/>' +
+                                        lostMatch.home_team.team_name + " VS " + 
+                                        lostMatch.visitor_team.team_name +'<br/>'+
+                                        "Result : " + lostMatch.home_score + " - " + 
+                                        lostMatch.visitor_score+ '<br/>' + 
+                                        "Winner : " + lostMatch.winner.team_name + '<br/>' +
+                                        "Played : " + lostMatch.start_time;
                                  
-                            } 
-                        }
-                    },
-                    plotOptions: {
-                        area: {
-                            fillOpacity: 0.5
-                        }
-                    },
-                    credits: {
-                        enabled: false
-                    },
-                    series:[
-                        {
-                            name : 'Win',
-                            data : countWin,
-                            marker : {
-                                enabled : true,
-                                radius : 8
-                            },
-                            shadow : true,
-                            tooltip : {
-                                valueDecimals : 2
+                                } 
                             }
-                        
-                        
                         },
-                        
-                        
-                        {
-                            name : 'Lost',
-                            data : countLost
-                            ,
-                            marker : {
-                                enabled : true,
-                                radius : 8
-                            },
-                            shadow : true,
-                            tooltip : {
-                                valueDecimals : 2
+                        plotOptions: {
+                            area: {
+                                fillOpacity: 0.5
                             }
-                        }]
-                });
-            });               
-        } }                    
+                        },
+                        credits: {
+                            enabled: false
+                        },
+                        series:[
+                            {
+                                name : 'Win',
+                                data : countWin,
+                                marker : {
+                                    enabled : true,
+                                    radius : 8
+                                },
+                                shadow : true,
+                                tooltip : {
+                                    valueDecimals : 2
+                                }
+                        
+                        
+                            },
+                        
+                        
+                            {
+                                name : 'Lost',
+                                data : countLost
+                                ,
+                                marker : {
+                                    enabled : true,
+                                    radius : 8
+                                },
+                                shadow : true,
+                                tooltip : {
+                                    valueDecimals : 2
+                                }
+                            }]
+                    });
+                });               
+            } }                    
         function this_AddTodrawChart(id, username){
                
             $.getJSON("@{StatisticController.data()}", {id : "${team.id}"},function(data1){
@@ -254,7 +254,7 @@
 
             <div id="profile-description" class="span7">
                 <h1>${player?.first_name} ${player?.last_name}
-                   
+
 
                 </h1>
                 <h2 class="title">@ ${player?.username}
@@ -323,7 +323,7 @@
                         <i class="icon-chevron-right pull-right"></i>
                     </a>
                 </li>
-                   <li>
+                <li>
                     <a href="#gamesMap" data-toggle="tab">Game graph
                         <i class="icon-chevron-right pull-right"></i>
                     </a>
@@ -344,9 +344,21 @@
                         <i class="icon-chevron-right pull-right"></i>
                     </a>
                 </li>
-             
+
                 #{/if}
+
             </ul> 
+            #{ if statistic.games_playd <= 0 } 
+            <div class="alert alert-block">
+                <a class="close" data-dismiss="alert" href="#">×</a>
+                <h4 class="alert-heading">Attention!</h4>
+                <br/>
+                This player haven't played any foosball matches
+                <br/>
+                <br/>
+                There are no statistic to show.
+            </div>
+            #{/if}
         </div>
 
         <div class="span9"> 
@@ -695,7 +707,7 @@
                                <th class='prosent'>${games?.start_time.format('dd MMMM yyyy hh:mm:ss', 'fr')}</th>
                                </tr>
                                </thead>
-                                <thead>
+                               <thead>
                                <tr>
                                <th>Ended</th>
                                <th class='prosent'>${games?.end_time.format('dd MMMM yyyy hh:mm:ss', 'fr')}</th>
@@ -723,7 +735,7 @@
 
 
                             </a>
-                        
+
                         </li>
 
                         #{/list}                                   
