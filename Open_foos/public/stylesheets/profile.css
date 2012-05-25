@@ -6,16 +6,12 @@
 @import url(/public/bootstrap/css/bootstrap.css);
 
 
-.icon-openfoos {
-  background-image: url("/public/images/default/foosbal_icon.png");
-}
-
 /* Now my custom styles */
 
 body
 {
     padding-top: 60px;
-    background-image:  url(https://si0.twimg.com/images/themes/theme1/bg.png);
+    background-image:  url("../images/default/bg.png");
     background-position: left 40px;
     background-attachment: fixed;
     background-repeat: no-repeat;
@@ -27,6 +23,12 @@ body
 /******************************************
     General
 ******************************************/
+.menydowner{
+    margin-top: 16px;
+}
+.menydowner2{
+    margin-top: 13px;
+}
 
 .card
 {

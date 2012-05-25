@@ -201,7 +201,7 @@ public class TeamController extends Controller {
                  * && !team.arch_rival.team_name.equals("")
                  */ ) {
 
-            team.arch_rival.team_name = team.arch_rival.team_name.trim();
+            //team.arch_rival.team_name = team.arch_rival.team_name.trim();
             Team arch_rival = null;
             if ( !team.arch_rival.team_name.equals("")){
                 arch_rival = Team.find("byTeam_name", team.arch_rival.team_name).first();

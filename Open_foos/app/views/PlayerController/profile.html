@@ -266,7 +266,7 @@
 
 
                 #{if  ( (session.pid && (Long.parseLong(session.pid) == player?.id)) && session.token && session.login)}
-                <div><a id="openfoose_see_profile" class="btn pull-right" href="@{PlayerController.settings()}">Edit your profile</a></div>
+                <div><a id="openfoose_see_profile" class="btn pull-right" href="@{PlayerController.settings(1)}">Edit your profile</a></div>
                 #{/if}
 
 
@@ -637,10 +637,13 @@
                         #{if team?.organization != null && team?.organization != ""}
                         <p><strong>Organization: </strong> ${team?.organization}</p>
                         #{/if}
-                        <p style="font-style: italic"><strong>${team?.bio}</strong></p>
+
                         #{if team?.arch_rival != null}
                         <strong>Arch rival </strong> <a href="@{TeamController.profile(team?.arch_rival?.team_name)}"> @ ${team?.arch_rival?.team_name}</a>
                         #{/if}
+                        <br/><br/>
+                        <p>${team?.bio}</p>
+
                         <br/> <br/>
                         #{if scoredGoal != 0 && statistic?.score_for > 0 }
                         <p>${team?.team_name} have scored a total of <strong>${scoredGoal}</strong> goals while playing in other teams and

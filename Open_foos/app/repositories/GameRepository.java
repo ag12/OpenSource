@@ -22,9 +22,11 @@ public class GameRepository {
         StringBuilder sqlToQuery =
                 new StringBuilder("SELECT Game.id FROM Game, Team ");
         sqlToQuery.append("WHERE ((Game.home_team_id = Team.id OR Game.visitor_team_id = Team.id) ");
-        sqlToQuery.append("AND ( NOW() - Game.start_time < 36000 )) ");
+       sqlToQuery.append(")");
+        //sqlToQuery.append("AND ( NOW() - Game.start_time < 36000 )) ");
         sqlToQuery.append("GROUP BY Game.id DESC LIMIT 15;");
 
+        
         ResultSet resultset = OpenFoosDatabase.executeQueryToFoosBase(sqlToQuery.toString());
         List<Game> games = new ArrayList<Game>();
         try {

@@ -272,7 +272,7 @@
 
 
                             <h2>Password</h2>
-                            <h3 class="title underline section ">Change your password.</h3>
+                            <h3 class="title underline section ">It is good to change your password now and then.</h3>
 
 
                             <form action="@{PlayerController.changePassword()}"  method="POST" class="form-horizontal">
@@ -332,7 +332,7 @@
 
                                 <h2>Your game profile</h2>
                                 <h3 class="title underline section ">
-                                    This information will be shown while playing a match.
+                                   Some of this information will be shown while playing a match.
                                 </h3>
 
                                 <form action="@{TeamController.editTeam(team.id)}" enctype="multipart/form-data" method="POST" class="form-horizontal">
@@ -340,7 +340,7 @@
                                     <fieldset>
                                         <div class="control-group">
                                             <label class="control-label" for="fileInput">Picture</label>
-                                            <img src="@{'/public/images/teams'}/${team?.image}" style="float: left; margin: 0 20px 0 20px;"/>
+                                            <img src="@{'/public/images/teams'}/${team?.image}" width="79" height="79" style="float: left; margin: 0 20px 0 20px;"/>
                                             <div class="controls">
                                                 <input type="file" name="image" id="team_image" /><br/>
                                                 Maximum size of 700k.<br/> 

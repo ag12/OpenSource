@@ -58,14 +58,14 @@
                             <a class="brand" href="/">
                                 
                                 OpenFoos
-                                <i class="icon-openfoos"></i>
                                 
+                                <img id="imgo" src="@{'public/images/default/openfoos_icon.png'}">
                             </a> 
                         </li>
                         #{if !session.login}
  
                         <li class="dropdown">
-                            <a class="dropdown-toggle"
+                            <a class="dropdown-toggle menydowner2"
                                data-toggle="dropdown"
                                href="#">
                               <i class="icon-home icon-white"></i>
@@ -81,13 +81,13 @@
                         #{/if}
                     </ul>
 
-                    <div class="navbar-search pull-right">
+                    <div class="navbar-search pull-right menydowner">
                         <input type="text" data-provide="typeahead" class="search-query span3" placeholder="Search" id="main_typeahead">   
                     </div>
                     #{if session.login}
                     <ul class="nav pull-right">
                         <li class="dropdown ${page == 'settings' ? 'active' : ''}">
-                            <a class="dropdown-toggle"
+                            <a class="dropdown-toggle menydowner2"
                                data-toggle="dropdown"
                                href="#">
                                 <i class="icon-user icon-white"></i>
@@ -109,7 +109,7 @@
         </div>
 
         <div class="container">
-
+<br/><br/>
             #{doLayout /}
 
         </div><!-- END .container -->
