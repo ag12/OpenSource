@@ -6,7 +6,6 @@
 #*      /                module:secure
  *      /admin           module:crud
 
-
 # API
 
 GET     /api/player/autocomplete/{username}           Api.autocomplete
@@ -18,15 +17,10 @@ POST    /api/game                                     Api.initializeGame
 PUT     /api/game                                     Api.setGame  
 POST    /api/game/goals                               Api.registerGoals  
 
-
 GET     /application/everybody                        Application.autocomplete      
 GET     /error                                        Application.ofError      
-
-
-
-
-
-
+GET     /application/boards                          BoardsController.getAllBoards
+GET     /application/goals                           GoalController.getAllGoals
 
 # Home page
 GET     /                                             Application.main_page

@@ -36,7 +36,6 @@ public class ApplicationFunctionalTest extends FunctionalTest {
     @Test
     public void testThatErrorPageWorks() {
         Http.Response response = GET("/error");
-        //assertStatus(200, response);
         assertIsOk(response);
         assertContentType("text/html", response);
         assertCharset(play.Play.defaultWebEncoding, response);
@@ -97,27 +96,4 @@ public class ApplicationFunctionalTest extends FunctionalTest {
         assertContentType("application/json", response);
         assertCharset(play.Play.defaultWebEncoding, response);
     }
-    
-//    @Test
-//    public void testThatRfidJsonWorks() {
-//        Http.Response response = GET("/api/player/login/rfid/1");
-//        assertIsOk(response);
-//        assertContentType("application/json", response);
-//        assertCharset(play.Play.defaultWebEncoding, response);
-//    }
-//    
-//    @Test
-//    public void testThatPlayerProfileWorks() {
-//        Http.Response response = GET("/players/profile/neberd");
-//        assertIsOk(response);
-//        assertContentType("text/html", response);
-//        assertCharset(play.Play.defaultWebEncoding, response);
-//    }
-//    @Test
-//    public void testThatTeamProfileWorks() {
-//        Http.Response response = GET("/teams/profile/neberd1");
-//        assertIsOk(response);
-//        assertContentType("text/html", response);
-//        assertCharset(play.Play.defaultWebEncoding, response);
-//    }
 }

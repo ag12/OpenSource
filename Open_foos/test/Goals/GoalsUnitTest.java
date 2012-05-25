@@ -5,6 +5,7 @@
 package Goals;
 
 import java.util.Date;
+import java.util.List;
 import models.Goal;
 import org.junit.Test;
 import play.test.Fixtures;
@@ -41,6 +42,7 @@ public class GoalsUnitTest extends UnitTest{
         goal.backfire = true;
         goal.save();
     }
+    
     @Test
     public void CountGoal(){
         assertEquals(2, Goal.count());
@@ -51,6 +53,11 @@ public class GoalsUnitTest extends UnitTest{
         assertNotNull(goal);
     }
     @Test
+    public void GetAllGoals(){
+        List<Goal> goals = Goal.findAll();
+        assertNotNull(goals);
+    }
+    @Test
     public void ChangePosition(){
         Goal goal = Goal.findById(new Long(1));
         goal.position = 1; 
@@ -58,4 +65,5 @@ public class GoalsUnitTest extends UnitTest{
         assertEquals(1, goal.position);
         Fixtures.deleteDatabase();
     }
+    
 }

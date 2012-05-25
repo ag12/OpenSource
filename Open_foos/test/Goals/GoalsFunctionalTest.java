@@ -2,7 +2,7 @@
  * To change this template, choose Tools | Templates
  * and open the template in the editor.
  */
-package Games;
+package Goals;
 
 import org.junit.Test;
 import play.mvc.Http;
@@ -12,13 +12,13 @@ import play.test.FunctionalTest;
  *
  * @author Santonas
  */
-public class GamesFunctionalTest extends FunctionalTest {
+public class GoalsFunctionalTest extends FunctionalTest {
 
     @Test
-    public void testThatGamePageWorks() {
-        Http.Response response = GET("/game");
+    public void testThatGoalsJsonWorks() {
+        Http.Response response = GET("/application/goals");
         assertIsOk(response);
-        assertContentType("text/html", response);
+        assertContentType("application/json", response);
         assertCharset(play.Play.defaultWebEncoding, response);
     }
 }

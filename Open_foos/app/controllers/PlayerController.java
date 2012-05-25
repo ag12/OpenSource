@@ -391,7 +391,7 @@ public class PlayerController extends Controller {
             params.flash();
             Validation.keep();
         }
-        if (!hasChanged) {
+        if (!hasChanged && !Validation.hasErrors()) {
             Validation.addError("gay", "You have not changed anything.");
             Validation.keep();
         }

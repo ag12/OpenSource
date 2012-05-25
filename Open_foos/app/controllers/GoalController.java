@@ -50,4 +50,9 @@ public class GoalController extends Controller {
         return goals.size();
 
     }
+    
+    public static void getAllGoals(){
+        List<Goal> goals = Goal.findAll();
+        renderJSON(goals);
+    }
 }

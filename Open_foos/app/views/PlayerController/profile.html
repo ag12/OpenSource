@@ -641,16 +641,28 @@
                         #{if team?.arch_rival != null}
                         <strong>Arch rival: </strong> <a href="@{TeamController.profile(team?.arch_rival?.team_name)}"> @ ${team?.arch_rival?.team_name}</a>
                         #{/if}
-                        
-                        
+
+
                         <br/>
                         <p>${team?.bio}</p>
 
                         <br/>
+
+
+
                         #{if scoredGoal != 0 && statistic?.score_for > 0 }
                         <p>${team?.team_name} have scored a total of <strong>${scoredGoal}</strong> goals while playing in other teams and
                             <strong>${statistic?.score_for}</strong> while playing in single matches.</p>
                         #{/if} 
+
+
+                        #{if scoredGoal != 0 && statistic?.score_for == 0 }
+                        <p>${team?.team_name} have scored a total of <strong>${scoredGoal}</strong> goals while playing in other teams,
+                            ${team?.team_name} have not played any single matches yet.
+                        #{/if} 
+
+
+
                         #{if ownGoal != 0}
                         <p>The own goal record for ${team?.team_name} is a total of <strong>${ownGoal}</strong> goals ;(.</p>
                         #{/if}

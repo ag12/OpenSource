@@ -96,18 +96,20 @@
 
 
 
-
-            #{ifError 'email'}
-            <div class="alert alert-error">
+            
+            #{ifError 'itsok'}
+            <div class="alert alert-success">
 
                 <button class="close" data-dismiss="alert">×</button>
-                <h1>Oops…</h1>
+                <h1>Changes…</h1>
                 <br/>
-                <li>#{error 'email' /}</li>
+                #{errors 'itsok'}
+
+                <li>${error}</li>
+                #{/errors}
                 <br/>
             </div>
             #{/ifError}
-
 
             #{ifError 'settings'}
             <div class="alert alert-error">
@@ -124,20 +126,9 @@
 
 
 
-            #{ifError 'itsok'}
-            <div class="alert alert-success">
 
-                <button class="close" data-dismiss="alert">×</button>
-                <h1>Changes…</h1>
-                <br/>
-                #{errors 'itsok'}
 
-                <li>${error}</li>
-                #{/errors}
-                <br/>
-            </div>
-            #{/ifError}
-
+            
             #{ifError 'gay'}
             <div class="alert">
 
@@ -236,7 +227,7 @@
                                 <div class="control-group">
                                     <label class="control-label" for="bio">Biography</label>
                                     <div class="controls">
-                                        <textarea id="bio" maxlength="160" name="player.bio" placeholder="Your bio is missing">${player.bio}</textarea>
+                                        <textarea id="bio" maxlength="160" name="player.bio" placeholder="Your biography is missing">${player.bio}</textarea>
                                         <p class="help-block">About yourself in fewer than <strong>160</strong> characters.</p>
                                     </div>
                                 </div>
@@ -356,7 +347,7 @@
                                         <div class="control-group">
                                             <label class="control-label" for="organization">Organization</label>
                                             <div class="controls">
-                                                <input type="text" class="input-xlarge" id="organization" 
+                                                <input type="text" class="input-xlarge" id="organization" placeholder="Your organization is missing"
                                                        value="${team?.organization}" name="team.organization">
                                                 <p class="help-block">Which organization are you with.</p>
                                             </div>
@@ -367,16 +358,16 @@
                                         <div class="control-group">
                                             <label class="control-label" for="playerArchRival">Arch-rival</label>
                                             <div class="controls">
-                                                <input type="text" data-provide="typeahead" class="input-xlarge" id="playerArchRival" 
+                                                <input type="text" data-provide="typeahead" class="input-xlarge" id="playerArchRival" placeholder="Your arch rival is missing"
                                                        value="${team?.arch_rival?.team_name}" name="team.arch_rival.team_name" autocomplete="off">
                                                 <p class="help-block">Don't worry we will find them for you.</p>
                                             </div>
                                         </div>
                                         <div class="control-group">
-                                            <label class="control-label" for="bio">Bio</label>
+                                            <label class="control-label" for="bio">Biography</label>
                                             <div class="controls">
-                                                <textarea id="team_bio" maxlength="160" name="team.bio">${team?.bio}</textarea>
-                                                <p class="help-block">About yourself in fewer than <strong>160</strong> characters.</p>
+                                                <textarea id="team_bio" maxlength="160" name="team.bio" placeholder="Your biography is missing">${team?.bio}</textarea>
+                                                <p class="help-block">About your team in fewer than <strong>160</strong> characters.</p>
                                             </div>
                                         </div>
                                         <div class="form-actions">

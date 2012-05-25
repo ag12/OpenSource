@@ -51,11 +51,30 @@
                 <div class="bar"
                      style="width: 100%;"></div>
             </div>
-            You have compeleted ${compeleted}% of you profile
+            You have completed ${compeleted}% of you profile
         </div>
 
         <div class="span4">
 
+            
+            
+            #{ifError 'itsok'}
+            <div class="alert alert-success">
+
+                <button class="close" data-dismiss="alert">×</button>
+                <h1>Changes…</h1>
+                <br/>
+                #{errors 'itsok'}
+
+                <li>${error}</li>
+                #{/errors}
+                <br/>
+            </div>
+            #{/ifError}
+
+            
+            
+            
             #{ifError 'settings'}
             <div class="alert alert-error">
 
@@ -70,20 +89,6 @@
             #{/ifError}
 
 
-
-            #{ifError 'itsok'}
-            <div class="alert alert-success">
-
-                <button class="close" data-dismiss="alert">×</button>
-                <h1>Changes…</h1>
-                <br/>
-                #{errors 'itsok'}
-
-                <li>${error}</li>
-                #{/errors}
-                <br/>
-            </div>
-            #{/ifError}
 
 
             #{ifError 'gay'}
@@ -144,7 +149,7 @@
                                 <div class="controls">
                                     <input type="text" class="input-xlarge" id="organization" 
                                            value="${team?.organization}" name="team.organization">
-                                    <p class="help-block">Which organization are you with</p>
+                                    <p class="help-block">Which organization are you with?</p>
                                 </div>
                             </div>
 
@@ -156,14 +161,14 @@
                                 <div class="controls">
                                     <input type="text" data-provide="typeahead" class="input-xlarge" id="playerArchRival" 
                                            autocomplete="off" value="${team?.arch_rival?.team_name}" name="team.arch_rival.team_name">
-                                    <p class="help-block">Don't worry we will find them for you .</p>
+                                    <p class="help-block">Don't worry we will find them for you.</p>
                                 </div>
                             </div>
                             <div class="control-group">
                                 <label class="control-label" for="team_bio">Biography</label>
                                 <div class="controls">
                                     <textarea id="team_bio" maxlength="160" name="team.bio">${team?.bio}</textarea>
-                                    <p class="help-block">About yourself in fewer than <strong>160</strong> characters.</p>
+                                    <p class="help-block">About your team in fewer than <strong>160</strong> characters.</p>
                                 </div>
                             </div>
                             <div class="form-actions">
