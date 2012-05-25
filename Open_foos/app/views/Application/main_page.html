@@ -413,8 +413,8 @@
                                                 <thead style="background-color: #eee">
                                                     <tr>
                                                         <th>#</th>
-                                                        <th>Home-team</th>
-                                                        <th>Visitor-team</th>
+                                                        <th>Home team</th>
+                                                        <th>Away team</th>
                                                         <th>Results</th>
                                                         <th>Mode</th>
                                                         <th>Started</th>
@@ -443,7 +443,7 @@
                                                         <td>${ogg?.mode} </td>
                                                         <td>${ogg?.start_time.since(false)}</td>
                                                         #{if ogg?.winner == null}
-                                                        <td style="text-align: center">- </td>
+                                                        <td>------</td>
                                                         #{/if}
                                                         #{else}
                                                         <td>${ogg?.winner}</td>
@@ -539,13 +539,13 @@
                                            autocomplete="on" class="input-xlarge "
                                            placeholder="Type your username"/>
 
-                                    <p class="help-block">This address will be used as a login identifier.</p>
+                                    <p class="help-block">Username will be used as a login identifier.</p>
 
                                     <input type="password" name="player.password"
                                            class="input-xlarge"
                                            placeholder="Type your password"/>
 
-                                    <button type="submit" class="btn btn-warning">Sign up for OpenFoos</button>
+                                    <button type="submit" class="btn btn-warning">Sign up for Openfoos</button>
                                 </form>
                                 #{/if}
 

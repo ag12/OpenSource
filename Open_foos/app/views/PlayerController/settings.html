@@ -53,7 +53,7 @@
                      style="width:100%; "></div>
 
             </div>
-            You have compeleted ${compeleted}% of you profile
+            You have completed ${compeleted}% of you profile
         </div>
 
 
@@ -169,19 +169,11 @@
                     <div class="tab-pane" id="account">
                         #{/else}
 
-
-
-
-
-
-
-
-
                         <h2>Profile management</h2>
                         <h3 class="title underline section "> 
-                            This information wil be seen by people who visit your profile page.</h3>
+                            This information will be seen by people who visit your profile page.</h3>
 
-
+                        <br/><br/>
                         <!-- FOR PLAYER INFO -->
                         <form id="editformplayer" action="@{PlayerController.editPlayer()}"
                               enctype="multipart/form-data" method="POST" class="form-horizontal">
@@ -194,7 +186,7 @@
                                         <input class="input-file" type="file" name="image" id="image"/><br/>
                                         Maximum size of 700kb.<br/> 
                                         JPG, GIF, PNG
-                                        <p class="help-block"><strong>Reset profile picture.</strong>&nbsp;&nbsp;
+                                        <p class="help-block"><strong>Reset profile picture</strong>&nbsp;&nbsp;
                                             <input id="reset" type="checkbox" name="resetPicture"
                                                    title="Reset profile picture"/></p>
 
@@ -205,12 +197,12 @@
 
                                 #{if player?.rfid != null }
                                 <div class="control-group">
-                                    <label class="control-label" for="rfid">Rf-id</label>
+                                    <label class="control-label" for="rfid">RfID</label>
                                     <div class="controls">
                                         <input type="password" class="input-xlarge" id="rfid" placeholder="Scan your rfid while signin in to a match" 
                                                value="${player?.rfid}" name="player.rfid" autofocus="autofocus" disabled="">
 
-                                        <p class="help-block"><strong>Reset radio frequency identification</strong>&nbsp;&nbsp;
+                                        <p class="help-block"><strong>Reset RFID</strong>&nbsp;&nbsp;
                                             <input id="resetrfid" type="checkbox" name="resetrfid"
                                                    title="Reset profile picture"/></p>
                                     </div>
@@ -221,7 +213,7 @@
                                     <div class="controls">
                                         <input type="text" class="input-xlarge" id="fname" placeholder="Your firstname is missing" 
                                                value="${player?.first_name}" name="player.first_name">
-                                        <p class="help-block">Enter your real name, so people can recognize you.</p>
+                                        <p class="help-block">Enter your name, so people can recognize you.</p>
                                     </div>
                                 </div>
                                 <div class="control-group">
@@ -230,7 +222,7 @@
                                         <input type="text" class="input-xlarge" id="lname" placeholder="Your lastname is missing"
                                                value="${player?.last_name}" name="player.last_name">
 
-                                        <p class="help-block">Enter your real name, so people can recognize you.</p>
+                                       
                                     </div>
                                 </div>
                                 <div class="control-group">
@@ -238,7 +230,7 @@
                                     <div class="controls">
                                         <input type="text" class="input-xlarge" id="email" placeholder="Your email is missing"
                                                value="${player?.email}" name="player.email"> 
-                                        <p class="help-block">Enter your email, so people can email you.</p>
+                                        
                                     </div>
                                 </div>
                                 <div class="control-group">
@@ -274,7 +266,7 @@
                             <h2>Password</h2>
                             <h3 class="title underline section ">It is good to change your password now and then.</h3>
 
-
+                            <br/><br/>
                             <form action="@{PlayerController.changePassword()}"  method="POST" class="form-horizontal">
                                 #{authenticityToken /}
                                 <fieldset>
@@ -284,7 +276,7 @@
                                             <input type="password" class="input-xlarge" id="current_password" 
                                                    placeholder="Enter your current password" name="player.password">
 
-                                            <p class="help-block">Have you forgotten your password?</p>
+                                          
                                         </div>
                                     </div>
 
@@ -332,9 +324,10 @@
 
                                 <h2>Your game profile</h2>
                                 <h3 class="title underline section ">
-                                   Some of this information will be shown while playing a match.
-                                </h3>
+                                    Some of this information will be shown while playing a match.
 
+                                </h3>
+                                <br/><br/>
                                 <form action="@{TeamController.editTeam(team.id)}" enctype="multipart/form-data" method="POST" class="form-horizontal">
                                     #{authenticityToken /}
                                     <fieldset>
@@ -345,7 +338,7 @@
                                                 <input type="file" name="image" id="team_image" /><br/>
                                                 Maximum size of 700k.<br/> 
                                                 JPG, GIF, PNG
-                                                <p class="help-block"><strong>Reset profile picture.</strong>&nbsp;&nbsp;
+                                                <p class="help-block"><strong>Reset profile picture</strong>&nbsp;&nbsp;
                                                     <input id="reset2" type="checkbox" name="reset"
                                                            title="Reset profile picture"/></p>
                                             </div>

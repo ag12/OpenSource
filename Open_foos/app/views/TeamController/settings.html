@@ -10,8 +10,8 @@
         doInputfeltTricks();
 
 
-  $('.bar').css('width', '${compeleted}%')
-            $('#playerArchRival').typeahead({
+        $('.bar').css('width', '${compeleted}%')
+        $('#playerArchRival').typeahead({
             items: 3, 
             source: function (typeahead) {
                 return $.get('/application/everybody ',  function (data) 
@@ -34,8 +34,8 @@
     <div class="dashboard">
         <div class="span4 card section">
             <ul class="thumbnails">
-               
-<!--                /teams/profile/${team?.team_name}-->
+
+         
                 <li>
                     <a href="@{TeamController.profile(team?.team_name)}" class="thumbnail">
                         <img src="@{'/public/images/teams'}/${team?.image}" alt="${team?.team_name}">
@@ -46,17 +46,17 @@
                     <p class="subheader">View your profile page</p>
                 </li>
             </ul>
-              <div class="progress progress-striped
+            <div class="progress progress-striped
                  active">
                 <div class="bar"
                      style="width: 100%;"></div>
             </div>
-             You have compeleted ${compeleted}% of you profile
+            You have compeleted ${compeleted}% of you profile
         </div>
 
         <div class="span4">
-            
-             #{ifError 'settings'}
+
+            #{ifError 'settings'}
             <div class="alert alert-error">
 
                 <button class="close" data-dismiss="alert">×</button>
@@ -64,42 +64,42 @@
                 <br/>
                 #{errors 'settings'}
                 <li>${error }</li>
-                 #{/errors}
+                #{/errors}
                 <br/>
             </div>
             #{/ifError}
-            
-            
-            
-           #{ifError 'itsok'}
+
+
+
+            #{ifError 'itsok'}
             <div class="alert alert-success">
 
                 <button class="close" data-dismiss="alert">×</button>
                 <h1>Changes…</h1>
                 <br/>
                 #{errors 'itsok'}
-                
+
                 <li>${error}</li>
                 #{/errors}
                 <br/>
             </div>
             #{/ifError}
-            
-            
-             #{ifError 'gay'}
+
+
+            #{ifError 'gay'}
             <div class="alert">
 
                 <button class="close" data-dismiss="alert">×</button>
                 <h1>Okey....</h1>
                 <br/>
                 #{errors 'gay'}
-                
+
                 <li>${error}</li>
                 #{/errors}
                 <br/>
             </div>
             #{/ifError}
-    
+
         </div>
 
     </div>
@@ -112,7 +112,7 @@
 
 
 
-
+     <br/><br/>
 
                     <form action="@{TeamController.editTeam(team.id)}" enctype="multipart/form-data" method="POST" class="form-horizontal">
                         #{authenticityToken /}
@@ -124,9 +124,9 @@
                                     <input type="file" name="image" id="team_image" /><br/>
                                     Maximum size of 700k.<br/> 
                                     JPG, GIF, PNG
-                                     <p class="help-block"><strong>Reset profile picture.</strong>&nbsp;&nbsp;
-                                    <input id="reset" type="checkbox" name="reset"
-                                       title="Reset profile picture"/></p>
+                                    <p class="help-block"><strong>Reset profile picture</strong>&nbsp;&nbsp;
+                                        <input id="reset" type="checkbox" name="reset"
+                                               title="Reset profile picture"/></p>
                                 </div>
                             </div>  
                             <div class="control-group">
@@ -137,20 +137,20 @@
                                     <p class="help-block"></p>
                                 </div>
                             </div>
-                            
-                            
-                                <div class="control-group">
+
+
+                            <div class="control-group">
                                 <label class="control-label" for="organization">Organization</label>
                                 <div class="controls">
                                     <input type="text" class="input-xlarge" id="organization" 
                                            value="${team?.organization}" name="team.organization">
                                     <p class="help-block">Which organization are you with</p>
                                 </div>
-                                </div>
-                            
-                            
-                            
-                            
+                            </div>
+
+
+
+
                             <div class="control-group">
                                 <label class="control-label" for="playerArchRival">Arch-rival</label>
                                 <div class="controls">
