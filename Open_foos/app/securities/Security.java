@@ -18,5 +18,14 @@ public class Security extends Secure.Security {
         Admin admin = Admin.find("byUsernameAndPassword", username,Crypto.encryptAES(password)).first();
         return (admin != null && admin.active);
     }
+        static void redirectToOriginalURL() throws Throwable {
+        Secure.Security.invoke("onAuthenticated");
+        String url = flash.get("url");
+        if(url == null) {
+            url = "/admin";
+        }
+        redirect(url);
+    }
+    
     
 }
