@@ -8,24 +8,10 @@ import controllers.Secure;
 import models.Admin;
 import play.libs.Crypto;
 
-/**
- *
- * @author Santonas
- */
 public class Security extends Secure.Security {
-
+                          
     public static boolean authenticate(String username, String password) {
         Admin admin = Admin.find("byUsernameAndPassword", username,Crypto.encryptAES(password)).first();
         return (admin != null && admin.active);
-    }
-        static void redirectToOriginalURL() throws Throwable {
-        Secure.Security.invoke("onAuthenticated");
-        String url = flash.get("url");
-        if(url == null) {
-            url = "/admin";
-        }
-        redirect(url);
-    }
-    
-    
+    }   
 }
