@@ -15,11 +15,12 @@ import play.mvc.Http;
 public class Api extends Controller
 {
     
-    /*
-      Useful methods: 
-      await("5s"); // wait for 5 seconds
+    /**
+     * Performs a request to fetch usernames that 
+     * begin with chars given in the String 'username'
+     * 
+     * @param username 
      */
-    
     public static void autocomplete(String username)
     {   
        if(StringUtils.isNullOrEmpty(username))
@@ -39,7 +40,7 @@ public class Api extends Controller
     }
     
     public static void getPlayer(JsonElement body)
-    {
+    {  
        Player player = construct(body, Player.class);  
        
        if(StringUtils.isNullOrEmpty(player.username) || StringUtils.isNullOrEmpty(player.password))
@@ -386,4 +387,5 @@ public class Api extends Controller
         home_team.save();
         visitor_team.save();
     }
+    
 }

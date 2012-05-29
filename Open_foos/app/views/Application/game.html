@@ -2,13 +2,19 @@
 <!DOCTYPE html>
 <html>
     <head>
-        <title></title>
+        <title>Openfoos!</title>
         <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+        <link rel="stylesheet" href="@{'/public/stylesheets/game.css'}" />
         <script src="@{'/public/javascripts/jquery-1.7.2.js'}" type="text/javascript" charset="${_response_encoding}"></script>
         <script src="@{'/public/javascripts/underscore.js'}" type="text/javascript" charset="${_response_encoding}"></script>
         <script src="@{'/public/javascripts/json2.js'}" type="text/javascript" charset="${_response_encoding}"></script>
         <script src="@{'/public/javascripts/backbone.js'}" type="text/javascript" charset="${_response_encoding}"></script>
-        <link rel="stylesheet" href="@{'/public/stylesheets/game.css'}" />
+        <script src="@{'/public/bootstrap/js/typeahead.js'}" type="text/javascript" charset="${_response_encoding}" ></script>
+        
+        <script src="@{'/public/javascripts/game.js'}" type="text/javascript" charset="${_response_encoding}"></script>
+        <!-- <script src="@{'/public/javascripts/application.js'}" type="text/javascript" charset="${_response_encoding}"></script>  --> 
+        
+        
 
         
 
@@ -59,7 +65,10 @@
             
             else
             {
-                var state = game.get('state');                    
+                                
+                var state = Foosball.Game.get('state');                    
+                
+                
                 if(state === 'new')
                 {
                     statusClass = 'player-logout'; 
@@ -231,9 +240,5 @@
             </div>
         </script>
 
-
-        <script src="@{'/public/bootstrap/js/typeahead.js'}" type="text/javascript" charset="${_response_encoding}" ></script>
-        <script src="@{'/public/javascripts/application.js'}" type="text/javascript" charset="${_response_encoding}"></script>
-        
     </body>
 </html>
