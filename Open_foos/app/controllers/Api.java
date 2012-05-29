@@ -39,6 +39,10 @@ public class Api extends Controller
        renderJSON(usernames);
     }
     
+    /**
+     * Fetches a given player. 
+     * @param body takes in a json representation of the player class 
+     */
     public static void getPlayer(JsonElement body)
     {  
        Player player = construct(body, Player.class);  
@@ -71,6 +75,10 @@ public class Api extends Controller
        
     }
     
+    /**
+     * Fetches a player by a given RFID 
+     * @param rfid the RFID card number
+     */
     public static void getPlayerByRFID(long rfid)
     {
        if(rfid < 1)
@@ -89,6 +97,10 @@ public class Api extends Controller
           renderJSON(player);      
     }
     
+    /**
+     * Registers a given player if he is not present
+     * @param body takes in a json representation of the player class 
+     */
     public static void registerPlayer(JsonElement body)
     {
       
@@ -127,6 +139,10 @@ public class Api extends Controller
        }
     }    
     
+    /**
+     * Fetches a given based on the player(s) provided. Creates the team if it does not exists 
+     * @param body takes in a json representation of the team class 
+     */
     public static void fetchTeam(JsonElement body)
     {
        Team team = construct(body, Team.class);
@@ -199,6 +215,10 @@ public class Api extends Controller
        }
     }
     
+    /**
+     * Persists a new game. Returning a JSON representation with imprinted start time and an id
+     * @param body takes in a json representation of the game class 
+     */
     public static void initializeGame(JsonElement body)
     {
        Game game = construct(body, Game.class);
@@ -227,6 +247,10 @@ public class Api extends Controller
        renderJSON(verifiedGame); 
     }
 
+    /**
+     * Sets and finishes a started game. Persists changes and scores. Calculates ratings based on game mode
+     * @param body takes in a json representation of the game class 
+     */
     public static void setGame(JsonElement body)
     {
        Game game = construct(body, Game.class);
@@ -289,6 +313,10 @@ public class Api extends Controller
        }
     }
     
+    /**
+     * Persists a collection of goals 
+     * @param body the collection / array of goals to be persisted  
+     */
     public static void registerGoals(JsonElement body)
     {
         if(body == null)
@@ -323,6 +351,13 @@ public class Api extends Controller
         
     }
     
+    /**
+     * Helper method to bind and construct JSON objects to Java classes. 
+     * @param <T> the class you want to bind to
+     * @param json the json body representation of the object to be constructed 
+     * @param classOfT
+     * @return 
+     */
     private static <T extends Object> T construct(JsonElement json, Class<T> classOfT)
     {
        if(json == null)
@@ -339,6 +374,13 @@ public class Api extends Controller
        }
     }
     
+    /**
+     * Private helper method to calculate rating based on the ELO algorithm. 
+     * @param home_team
+     * @param visitor_team
+     * @param home_score
+     * @param visitor_score 
+     */
     private static void calculateRating(Team home_team, Team visitor_team, int home_score, int visitor_score)
     {
 
