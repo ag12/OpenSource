@@ -13,14 +13,15 @@ import play.mvc.Controller;
 import repositories.StatisticRepository;
 
 /**
- *
+ *This class handles all the information about the object Team, and the renderer its data to the corresponding view
  *
  */
 public class TeamController extends Controller {
 
     /*
-     *
-     *
+     * A team with one player have it's profile inside playerController.profile
+     * This method is for other teams(with two players)
+     * 
      */
     public static void profile(String teamname) {
 
@@ -320,6 +321,7 @@ public class TeamController extends Controller {
 
     public static void settings(String teamname) {
 
+        //There are two players that can edit information about a team
         if (session.get("login") != null && session.get("pid") != null) {
             Team team = Team.find("byTeam_name", teamname).first();
             if (team != null) {

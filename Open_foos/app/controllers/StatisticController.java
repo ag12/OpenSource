@@ -8,7 +8,7 @@ import play.mvc.Controller;
 import repositories.StatisticRepository;
 
 /**
- *
+ *This class handles the information sent via the repository
  * 
  */
 public class StatisticController extends Controller {
@@ -19,6 +19,7 @@ public class StatisticController extends Controller {
         renderJSON(statistic);
     }
     
+    //renders teamobject or a playerobject in JSONformat
     public static void statisticForWho(String name){
         
         Player player = Player.find("byUsername", name).first();
@@ -37,7 +38,7 @@ public class StatisticController extends Controller {
                  renderJSON(team);
             }
            
-        }else 
+        }else //name is a team_name
         {
             Team team = Team.find("byTeam_name", name).first();
             if ( team != null){

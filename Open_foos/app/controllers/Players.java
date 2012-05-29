@@ -42,6 +42,7 @@ public class Players extends CRUD {
         player.registered = new Date();
 
 
+        //Players team
         Team team = new Team();
         team.registered = player.registered;
         team.team_name = player.username;
@@ -51,6 +52,7 @@ public class Players extends CRUD {
         object = player;
         Player chekPlayer = Player.find("byUsername", player.username).first();
         if (chekPlayer == null) {
+            //Still a uniq name
             object._save();
 
             team.save();

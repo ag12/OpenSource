@@ -1,4 +1,3 @@
-
 package controllers;
 
 import java.lang.reflect.Constructor;
@@ -7,14 +6,9 @@ import play.db.Model;
 import play.exceptions.TemplateNotFoundException;
 import play.mvc.With;
 
-/**
- *
- * 
- */
-
 @With(Secure.class)
-public class Teams extends CRUD{
-    
+public class Teams extends CRUD {
+
     public static void create() throws Exception {
         ObjectType type = ObjectType.get(getControllerClass());
         notFoundIfNull(type);
@@ -42,5 +36,4 @@ public class Teams extends CRUD{
         }
         redirect(request.controller + ".show", object._key());
     }
-    
 }
