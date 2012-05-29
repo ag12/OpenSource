@@ -20,7 +20,7 @@ POST    /api/game/goals                               Api.registerGoals
 
 GET     /application/everybody                        Application.autocomplete      
 GET     /error                                        Application.ofError      
-<<<<<<< HEAD
+
 GET     /application/boards                          BoardsController.getAllBoards
 GET     /application/goals                           GoalController.getAllGoals
 
@@ -35,8 +35,6 @@ GET     /register                                     Application.register
 GET     /                                           Application.main_page
 GET     /game                                       Application.game
 GET     /login                                      Application.login
-
->>>>>>> Commented. Added async game start
 
 # Ignore favicon requests
 GET     /favicon.ico                                 404
