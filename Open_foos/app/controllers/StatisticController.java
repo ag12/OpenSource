@@ -1,7 +1,4 @@
-/*
- * To change this template, choose Tools | Templates
- * and open the template in the editor.
- */
+
 package controllers;
 
 import models.Player;
@@ -12,7 +9,7 @@ import repositories.StatisticRepository;
 
 /**
  *
- * @author Santonas
+ * 
  */
 public class StatisticController extends Controller {
     

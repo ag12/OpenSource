@@ -1,6 +1,6 @@
 /*
  * THIS IS module.secure=${play.path}/modules/secure/Check
- * 
+ * This interface is been used inside secure class
  */
 package controllers;
 

@@ -1,7 +1,3 @@
-/*
- * To change this template, choose Tools | Templates
- * and open the template in the editor.
- */
 package controllers;
 
 import java.lang.reflect.Constructor;
@@ -35,32 +31,32 @@ public class Players extends CRUD {
                 render("CRUD/blank.html", type, object);
             }
         }
-        
-        
+
+
         Player player = (Player) object;
         player.password = Crypto.encryptAES(player.password);
         player.registered = new Date();
-        
-        
-        //TODO
-        //DETTE ER TEMP TIL VI FINNER EN GENERELL METODE FOR Å REGISTRERE LAG
+
+
         Team team = new Team();
         team.registered = player.registered;
-        team.team_name =  player.username;
+        team.team_name = player.username;
         team.player1 = player;
-        
-        //TEMP KODE SLUTTER
+
+
         object = player;
         Player chekPlayer = Player.find("byUsername", player.username).first();
-        if ( chekPlayer == null){
-        object._save();
-        
-        //OG HER. PLAYER MÅ "SAVES" først
-        team.save();
-        flash.success(play.i18n.Messages.get("crud.created", type.modelName));
-        }if( chekPlayer != null){
-        flash.error(type.modelName + " Username have been used, and it's not uniq", "PROBLEM");}
-        
+        if (chekPlayer == null) {
+            object._save();
+
+            team.save();
+
+            flash.success(play.i18n.Messages.get("crud.created", type.modelName));
+        }
+        if (chekPlayer != null) {
+            flash.error(type.modelName + " Username have been used, and it's not uniq", "PROBLEM");
+        }
+
         if (params.get("_save") != null) {
             redirect(request.controller + ".list");
         }
@@ -87,35 +83,35 @@ public class Players extends CRUD {
                 render("CRUD/show.html", type, object);
             }
         }
-  
-      
+
+
 
         Player player = (Player) object;
         boolean usernameIsStillUniq = true;
-        if (!player.username.equals(oldUsername)){
-           
+        if (!player.username.equals(oldUsername)) {
+
             Player chekPlayer = Player.find("byUsername", player.username).first();
-            if ( chekPlayer != null){
+            if (chekPlayer != null) {
                 usernameIsStillUniq = false;
                 flash.error(type.modelName + " Username have been used, and it's not uniq", "PROBLEM");
             }
         }
-        
-        
+
+
         //Admin whants to change players password
-        if (!encryptedPassword.equals(player.password)){    
-           String temp = Crypto.encryptAES(player.password);
-           player.password = temp;
-           
-        }else if( encryptedPassword.equals(player.password)){
+        if (!encryptedPassword.equals(player.password)) {
+            String temp = Crypto.encryptAES(player.password);
+            player.password = temp;
+
+        } else if (encryptedPassword.equals(player.password)) {
             player.password = Crypto.decryptAES(player.password);
             player.password = Crypto.encryptAES(player.password);
         }
-        
+
         object = player;
-        if ( usernameIsStillUniq){
-             object._save();
-             flash.success(play.i18n.Messages.get("crud.saved", type.modelName));
+        if (usernameIsStillUniq) {
+            object._save();
+            flash.success(play.i18n.Messages.get("crud.saved", type.modelName));
         }
         if (params.get("_save") != null && usernameIsStillUniq) {
             redirect(request.controller + ".list");

@@ -1,7 +1,4 @@
-/*
- * To change this template, choose Tools | Templates
- * and open the template in the editor.
- */
+
 package controllers;
 
 import java.io.File;
@@ -20,13 +17,7 @@ import play.mvc.Controller;
 import repositories.StatisticRepository;
 
 public class PlayerController extends Controller {
-
-//    public static void getPlayer(String username) {
-//        Player p = Player.find("byUsername", username).first();
-//        renderJSON(p);
-//
-//    }
-
+    
     /*
      * Here the player can change settings, the actuale code is edit();
      */

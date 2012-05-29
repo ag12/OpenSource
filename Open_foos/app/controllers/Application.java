@@ -176,7 +176,7 @@ public class Application extends Controller {
             //For Security off application
             players.get(i).password = "sorry to disappoint you hacker";
             players.get(i).email = null;
-            
+
             teamsAndPlayers.add(players.get(i));
         }
         return teamsAndPlayers;

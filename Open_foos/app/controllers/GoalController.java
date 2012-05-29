@@ -1,7 +1,4 @@
-/*
- * To change this template, choose Tools | Templates
- * and open the template in the editor.
- */
+
 package controllers;
 
 import java.util.ArrayList;
@@ -9,9 +6,11 @@ import java.util.List;
 import models.Goal;
 import play.mvc.Controller;
 
-/**
- *
- * @author Santonas
+/*
+ *This class shows information about all registered goals that have been scored by players. 
+ * The methods under have been designed with two options in this 
+ * way can the methods run against SQL  and Postgres databases
+ * 
  */
 public class GoalController extends Controller {
 
@@ -52,6 +51,7 @@ public class GoalController extends Controller {
     }
     
     public static void getAllGoals(){
+        //show all goas in JS-format
         List<Goal> goals = Goal.findAll();
         renderJSON(goals);
     }
