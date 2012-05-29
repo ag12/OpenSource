@@ -329,12 +329,14 @@ $(document).ready(function()
         },
        
         // Starts the game if all authentication is successfull
-        start: function() 
+        start: function(restart) 
         {
            if(!this.isReady()) 
                return false; 
            
            var self = this;
+           
+           console.log('is in start and restat is ' + (restart === true ? 'isset' : '!set'));
            
            // Anonymus callback that sets the game state
            // if the authentication of the game is successful
@@ -362,6 +364,11 @@ $(document).ready(function()
            // Authenticates the home team and proceeds to 
            // authenticate the visitor team if successful
            var options = {success: authenticateVisitor};
+           
+           if(restart === true)
+           authenticateGame(); 
+       
+           else
            self.get('home_team').authenticate(options);
            
         },
@@ -381,14 +388,17 @@ $(document).ready(function()
             var self = this;
             var options = 
             { 
+                async: true,
                 success: function()
                 {
                     self.set('state', 'finish'); 
                     self.reset();
-                }
+                },
+                error: self.error,
+                wait: true
             };
             
-            self.authenticate(options);    
+            self.save({}, options); 
         },
        
         // Re-sets some of the game variables to default-values. 
@@ -397,22 +407,28 @@ $(document).ready(function()
         {    
             var self = this;
             self.set('state', 'restart');
-            self.set({
-                        id: undefined,
+            
+            var options = 
+            {
+                async: true,
+                success: function()
+                {
+                    self.set
+                    ({
+                        id: undefined, 
                         home_score: 0,
                         visitor_score: 0,
                         state: 'ready'
                     });
-            
-            var options = 
-            {
-                success: function()
-                {
-                    self.set('state', 'started');
-                }
+                    
+                    var restart = true; 
+                    self.start(true);
+                },
+                error: self.error, 
+                wait: true
             }; 
 
-            self.authenticate(options);
+            self.save({}, options);
         },
        
         reset: function()
@@ -441,16 +457,19 @@ $(document).ready(function()
         // if the communication with the server is ended and successful
         authenticate: function(options)
         {
+           var self = this;
            this.save({}, {
                async: true,
                success: options.success,
-               error: function()
-               {
-                 Foosball.Message.showError("An error occured when trying to authenticate the game", false);  
-               },
+               error: self.error,
                wait:true
            });
         },
+        
+        error: function()
+               {
+                 Foosball.Message.showError("An error occured when trying to authenticate the game", false);  
+               },
         
          // Indicates whether the game is authenticated or not, 
         isAuthenticated: function()
