@@ -1,6 +1,6 @@
 /*
- * To change this template, choose Tools | Templates
- * and open the template in the editor.
+ * THIS IS module.secure=${play.path}/modules/secure
+ * 
  */
 package controllers;
 
@@ -12,47 +12,42 @@ import play.mvc.Controller;
 import play.mvc.Http;
 import play.utils.Java;
 
-/**
- *
- * @author Santonas
- */
 public class Secure extends Controller {
-    
-     @Before(unless={"login", "authenticate", "logout"})
+
+    @Before(unless = {"login", "authenticate", "logout"})
     static void checkAccess() throws Throwable {
         // Authent
-        if(!session.contains("username")) {
+        if (!session.contains("username")) {
             flash.put("url", "GET".equals(request.method) ? request.url : "/"); // seems a good default
             login();
         }
         // Checks
         Check check = getActionAnnotation(Check.class);
-        if(check != null) {
+        if (check != null) {
             check(check);
         }
         check = getControllerInheritedAnnotation(Check.class);
-        if(check != null) {
+        if (check != null) {
             check(check);
         }
     }
 
     private static void check(Check check) throws Throwable {
-        for(String profile : check.value()) {
-            boolean hasProfile = (Boolean)Secure.Security.invoke("check", profile);
-            if(!hasProfile) {
+        for (String profile : check.value()) {
+            boolean hasProfile = (Boolean) Secure.Security.invoke("check", profile);
+            if (!hasProfile) {
                 Secure.Security.invoke("onCheckFailed", profile);
             }
         }
     }
 
     // ~~~ Login
-
     public static void login() throws Throwable {
         Http.Cookie remember = request.cookies.get("rememberme");
-        if(remember != null && remember.value.indexOf("-") > 0) {
+        if (remember != null && remember.value.indexOf("-") > 0) {
             String sign = remember.value.substring(0, remember.value.indexOf("-"));
             String username = remember.value.substring(remember.value.indexOf("-") + 1);
-            if(Crypto.sign(username).equals(sign)) {
+            if (Crypto.sign(username).equals(sign)) {
                 session.put("username", username);
                 redirectToOriginalURL();
             }
@@ -66,12 +61,12 @@ public class Secure extends Controller {
         Boolean allowed = false;
         try {
             // This is the deprecated method name
-            allowed = (Boolean)Secure.Security.invoke("authentify", username, password);
-        } catch (UnsupportedOperationException e ) {
+            allowed = (Boolean) Secure.Security.invoke("authentify", username, password);
+        } catch (UnsupportedOperationException e) {
             // This is the official method name
-            allowed = (Boolean)Secure.Security.invoke("authenticate", username, password);
+            allowed = (Boolean) Secure.Security.invoke("authenticate", username, password);
         }
-        if(validation.hasErrors() || !allowed) {
+        if (validation.hasErrors() || !allowed) {
             flash.keep("url");
             flash.error("secure.error");
             params.flash();
@@ -80,7 +75,7 @@ public class Secure extends Controller {
         // Mark user as connected
         session.put("username", username);
         // Remember if needed
-        if(remember) {
+        if (remember) {
             response.setCookie("rememberme", Crypto.sign(username) + "-" + username, "30d");
         }
         // Redirect to the original URL (or /)
@@ -99,11 +94,10 @@ public class Secure extends Controller {
     }
 
     // ~~~ Utils
-
     static void redirectToOriginalURL() throws Throwable {
         Secure.Security.invoke("onAuthenticated");
         String url = flash.get("url");
-        if(url == null) {
+        if (url == null) {
             url = "/admin";
         }
         redirect(url);
@@ -113,7 +107,7 @@ public class Secure extends Controller {
 
         /**
          * @Deprecated
-         * 
+         *
          * @param username
          * @param password
          * @return
@@ -123,9 +117,10 @@ public class Secure extends Controller {
         }
 
         /**
-         * This method is called during the authentication process. This is where you check if
-         * the user is allowed to log in into the system. This is the actual authentication process
-         * against a third party system (most of the time a DB).
+         * This method is called during the authentication process. This is
+         * where you check if the user is allowed to log in into the system.
+         * This is the actual authentication process against a third party
+         * system (most of the time a DB).
          *
          * @param username
          * @param password
@@ -136,8 +131,9 @@ public class Secure extends Controller {
         }
 
         /**
-         * This method checks that a profile is allowed to view this page/method. This method is called prior
-         * to the method's controller annotated with the @Check method. 
+         * This method checks that a profile is allowed to view this
+         * page/method. This method is called prior to the method's controller
+         * annotated with the @Check method.
          *
          * @param profile
          * @return true if you are allowed to execute this controller method.
@@ -148,6 +144,7 @@ public class Secure extends Controller {
 
         /**
          * This method returns the current connected username
+         *
          * @return
          */
         static String connected() {
@@ -156,35 +153,41 @@ public class Secure extends Controller {
 
         /**
          * Indicate if a user is currently connected
-         * @return  true if the user is connected
+         *
+         * @return true if the user is connected
          */
         static boolean isConnected() {
             return session.contains("username");
         }
 
         /**
-         * This method is called after a successful authentication.
-         * You need to override this method if you with to perform specific actions (eg. Record the time the user signed in)
+         * This method is called after a successful authentication. You need to
+         * override this method if you with to perform specific actions (eg.
+         * Record the time the user signed in)
          */
         static void onAuthenticated() {
         }
 
-         /**
-         * This method is called before a user tries to sign off.
-         * You need to override this method if you wish to perform specific actions (eg. Record the name of the user who signed off)
+        /**
+         * This method is called before a user tries to sign off. You need to
+         * override this method if you wish to perform specific actions (eg.
+         * Record the name of the user who signed off)
          */
         static void onDisconnect() {
         }
 
-         /**
-         * This method is called after a successful sign off.
-         * You need to override this method if you wish to perform specific actions (eg. Record the time the user signed off)
+        /**
+         * This method is called after a successful sign off. You need to
+         * override this method if you wish to perform specific actions (eg.
+         * Record the time the user signed off)
          */
         static void onDisconnected() {
         }
 
         /**
-         * This method is called if a check does not succeed. By default it shows the not allowed page (the controller forbidden method).
+         * This method is called if a check does not succeed. By default it
+         * shows the not allowed page (the controller forbidden method).
+         *
          * @param profile
          */
         static void onCheckFailed(String profile) {
@@ -194,11 +197,10 @@ public class Secure extends Controller {
         private static Object invoke(String m, Object... args) throws Throwable {
 
             try {
-                return Java.invokeChildOrStatic(Secure.Security.class, m, args);       
-            } catch(InvocationTargetException e) {
+                return Java.invokeChildOrStatic(Secure.Security.class, m, args);
+            } catch (InvocationTargetException e) {
                 throw e.getTargetException();
             }
         }
-
     }
 }

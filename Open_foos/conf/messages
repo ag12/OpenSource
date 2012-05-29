@@ -100,3 +100,14 @@ crud.help.past=In the past.
 crud.help.after=After %s.
 crud.help.before=Before %s.
 crud.help.range=Between %d and %d
+
+
+#DEfault secure messages 
+
+secure.title=Welcome to Admin
+secure.username=Username:
+secure.password=Password:
+secure.remember=Remember me
+secure.signin=Sign in
+secure.error=Oops, unknown username or password.
+secure.logout=You have been logged out.
