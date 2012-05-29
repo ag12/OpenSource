@@ -19,7 +19,7 @@ public class TeamRepository {
         sqlToQuery.append("SUM(Team.id = visitor_team_id) as away_games, ");
         sqlToQuery.append("SUM((Team.id = home_team_id or Team.id = visitor_team_id) and winner_id=Team.id) as win, ");
         sqlToQuery.append("SUM(Team.id = home_team_id or Team.id = visitor_team_id) as total ");
-        sqlToQuery.append("FROM Game, Team where end_time != 0 GROUP BY Team.id ORDER BY win DESC");
+        sqlToQuery.append("FROM Game, Team where end_time != 0 GROUP BY Team.id ORDER BY win DESC LIMIT 15;");
 
         ResultSet resultset = OpenFoosDatabase.executeQueryToFoosBase(sqlToQuery.toString());
         List<Team> teams = new ArrayList<Team>();
@@ -49,7 +49,7 @@ public class TeamRepository {
         sqlToQuery.append("sum(Team.id = visitor_team_id) as away_games, ");
         sqlToQuery.append("sum((Team.id = home_team_id or Team.id = visitor_team_id) and winner_id!=Team.id) as lost, ");
         sqlToQuery.append("sum(Team.id = home_team_id or Team.id = visitor_team_id) as total ");
-        sqlToQuery.append("FROM Game, Team Where end_time != 0 GROUP BY Team.id ORDER BY lost DESC");
+        sqlToQuery.append("FROM Game, Team Where end_time != 0 GROUP BY Team.id ORDER BY lost DESC LIMIT 15;");
 
 
         ResultSet resultset = OpenFoosDatabase.executeQueryToFoosBase(sqlToQuery.toString());

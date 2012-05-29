@@ -1,7 +1,4 @@
-/*
- * To change this template, choose Tools | Templates
- * and open the template in the editor.
- */
+
 package Application;
 
 import models.Player;
@@ -13,7 +10,7 @@ import play.test.FunctionalTest;
 
 /**
  *
- * @author Santonas
+ *
  */
 public class ApplicationFunctionalTest extends FunctionalTest {
     

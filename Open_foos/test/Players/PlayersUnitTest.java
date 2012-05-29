@@ -1,18 +1,14 @@
-/*
- * To change this template, choose Tools | Templates
- * and open the template in the editor.
- */
+
 package Players;
 
 import models.Player;
-import org.junit.Before;
 import org.junit.Test;
 import play.test.Fixtures;
 import play.test.UnitTest;
 
 /**
  *
- * @author Santonas
+ * 
  */
 public class PlayersUnitTest extends UnitTest {
 

@@ -1,20 +1,14 @@
-/*
- * To change this template, choose Tools | Templates
- * and open the template in the editor.
- */
+
 package Admins;
 
 import models.Admin;
-import models.Player;
-import org.junit.After;
-
 import org.junit.Test;
 import play.test.Fixtures;
 import play.test.UnitTest;
 
 /**
  *
- * @author Santonas
+ * 
  */
 public class AdminUnitTest extends UnitTest {
 

@@ -1,10 +1,6 @@
-/*
- * To change this template, choose Tools | Templates
- * and open the template in the editor.
- */
+
 package Application;
 
-import javax.mail.Session;
 import models.Player;
 import org.junit.Test;
 import play.libs.Crypto;
@@ -13,7 +9,7 @@ import play.test.UnitTest;
 
 /**
  *
- * @author Santonas
+ * 
  */
 public class ApplicationUnitTest extends UnitTest {
     
