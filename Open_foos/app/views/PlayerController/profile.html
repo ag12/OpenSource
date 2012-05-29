@@ -638,8 +638,8 @@
                         <p><strong>Organization: </strong> ${team?.organization}</p>
                         #{/if}
 
-                        #{if team?.arch_rival != null}
-                        <strong>Arch rival: </strong> <a href="@{TeamController.profile(team?.arch_rival?.team_name)}"> @ ${team?.arch_rival?.team_name}</a>
+                        #{if arch_rival != null}
+                        <strong>Arch rival: </strong> <a href="@{TeamController.profile(arch_rival?.team_name)}"> @ ${arch_rival?.team_name}</a>
                         #{/if}
 
 

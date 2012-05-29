@@ -1,12 +1,7 @@
 # Routes
 # This file defines all application routes (Higher priority routes first)
 # ~~~~
-
  *      /admin           module:crud
-GET	/login	        OFSecure.login
-POST    /login          OFSecure.authenticate
-GET     /logout         OFSecure.logout
-
 # API
 
 GET     /api/player/autocomplete/{username}           Api.autocomplete

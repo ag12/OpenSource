@@ -32,7 +32,11 @@ public class Players extends CRUD {
             }
         }
 
-
+        /*
+         * important
+         * check if the username is uniq 
+         * have to encrypt the playes password and give the player a team
+         */
         Player player = (Player) object;
         player.password = Crypto.encryptAES(player.password);
         player.registered = new Date();

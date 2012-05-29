@@ -25,6 +25,15 @@ public class StatisticController extends Controller {
         if(player!= null){
             Team team = statisticTeamForPlayer(player.getId());
             if ( team != null){
+                 team.arch_rival = null;
+                 if ( team.memberCount() >= 1){
+                     team.player1.password = "sorry to disappoint you hacker";
+                     team.player1.email = null;
+                 }
+                 if (team.memberCount() == 2 ){
+                     team.player2.password = "sorry to disappoint you hacker";
+                     team.player2.email = null;
+                 }
                  renderJSON(team);
             }
            
@@ -32,6 +41,15 @@ public class StatisticController extends Controller {
         {
             Team team = Team.find("byTeam_name", name).first();
             if ( team != null){
+                team.arch_rival = null;
+                 if ( team.memberCount() >= 1){
+                     team.player1.password = "sorry to disappoint you hacker";
+                     team.player1.email = null;
+                 }
+                 if (team.memberCount() == 2 ){
+                     team.player2.password = "sorry to disappoint you hacker";
+                     team.player2.email = null;
+                 }
                 renderJSON(team);
             }
         }  

@@ -1,4 +1,3 @@
-
 package controllers;
 
 import java.io.File;
@@ -16,16 +15,33 @@ import play.libs.Images;
 import play.mvc.Controller;
 import repositories.StatisticRepository;
 
+/**
+ * In a short brief: treat this class all the information about players and show
+ * it to different views. Further explanation is written under each of the class
+ * methods.
+ */
 public class PlayerController extends Controller {
-    
+
     /*
      * Here the player can change settings, the actuale code is edit();
      */
     public static void settings(int p) {
-        if (p > 3 || p < 1){
+        /*
+         * The integer p, indicates what part of the menu user used last time.
+         * and in default its value is 1 * This will onley happens if a user
+         * changes the urls value. *
+         */
+        if (p > 3 || p < 1) {
             controllers.Application.ofError();
         }
 
+
+        /*
+         * If the players is not online the view wil show applications error
+         * site Else we use sessions values to find ond render data about the
+         * player this data can bee edited.
+         *
+         */
         if (session.get("login") != null && session.get("pid") != null) {
 
             Long id = Long.parseLong(session.get("pid"));
@@ -40,8 +56,8 @@ public class PlayerController extends Controller {
 
                 int compeleted = (compeletedProfile(player)
                         + controllers.TeamController.compeletedProfile(team));
-                
-                render(player, team, compeleted,p);
+
+                render(player, team, compeleted, p);
 
             } else {
                 controllers.Application.ofError();
@@ -54,22 +70,25 @@ public class PlayerController extends Controller {
 
     public static void registerPlayer(@Valid Player player) {
 
+        //expects a valid player
         if (Validation.hasErrors()) {
-            params.flash(); // add http parameters to the flash scope
+            params.flash();
             Validation.addError("register", "Username and password is missing", player.username);
-            Validation.keep();   // keep the errors for the next request
+            Validation.keep();
             controllers.Application.register();
         }
 
 
-        Player exist = Player.find("byUsername", player.username).first();//getPlayer(player);
+        //player is valid here, so we have to check it username is uniq
+        Player exist = Player.find("byUsername", player.username).first();
         if (exist != null) {
+            //not uniq, shows message to user
             Validation.addError("register", "The username have been used.", player.username);
             Validation.keep();
             controllers.Application.register();
         } else if (exist == null) {
 
-
+            //uniq, we save it
             player.username = player.username.trim();
             player.password = player.password.trim();
             player.password = Crypto.encryptAES(player.password);
@@ -86,13 +105,18 @@ public class PlayerController extends Controller {
 
     public static void loginPlayer(@Valid Player player) {
 
+        player.username = player.username.trim();
+        player.password = player.password.trim();
+        //not necessary
         boolean b = Boolean.parseBoolean(session.get("login"));
         if (b) {
             controllers.Application.afterLogout();
         }
 
+
         Long rfid = null;
-        if (!player.username.equals("") && player.username != null) {
+        if ((!player.username.equals("") && player.username != null) && (player.password == null && player.password.equals(""))) {
+            //user onley writes a rfid and password is empty
             try {
                 rfid = Long.parseLong(player.username);
 
@@ -100,6 +124,7 @@ public class PlayerController extends Controller {
             }
             if (rfid != null && rfid >= 1) {
 
+                //checks if thereis a player with the same rfid. rfids are uniq
                 Player exist = Player.find("byRfid", rfid).first();
 
                 if (exist != null) {
@@ -143,9 +168,18 @@ public class PlayerController extends Controller {
 
     public static void profile(String username) {
 
+        /*
+         * Profile page is open to every body, so here we have to show playes
+         * information. first we have to find the player, and his/her team. and
+         * then statistics for the team and all other teams
+         *
+         */
+        //Player
         Player player = Player.find("byUsername", username).first();
+        Team arch_rival = null;
         if (player != null) {
 
+            //Team
             Team team = TeamController.getTeam(player.getId());
 
             //players team statistic
@@ -154,34 +188,42 @@ public class PlayerController extends Controller {
             List<Team> teams = null;
             //funn facts
             List<Statistic> statistics = null;
+            //played games 
             List<Game> games = null;
+            //players total scoredGoal and owngolas
             int scoredGoal = GoalController.getIndividualGoalScoreds(player.getId());
             int ownGoal = GoalController.getIndividualOwnGoal(player.getId());
 
             if (team != null) {
-                teams = TeamController.getTeams(player.getId());
 
+                arch_rival = team.arch_rival;
+                teams = TeamController.getTeams(player.getId());
                 statistic = StatisticRepository.getStatistics(team.getId());
                 statistics = new StatisticRepository().getMoreInfoForOneTeam(team.getId());
                 games = GamesController.getTeamGames(team.getId(), "id desc", 20);
 
             }
+
             List<Statistic> teams_statistics = null;
+
             if (teams != null) {
+
+                //statistics for all the teams player have played with
                 teams_statistics = StatisticRepository.getMoreInfoForTeams(teams);
             }
 
-            render((player != null ? player : null),
-                    (team != null ? team : null),
-                    (teams != null ? teams : null),
-                    (statistic != null ? statistic : null),
-                    (statistics != null ? statistics : null),
-                    (teams_statistics != null ? teams_statistics : null),
-                    (games != null ? games : null), scoredGoal, ownGoal);
+            render(player,
+                    team,
+                    teams,
+                    statistic,
+                    statistics,
+                    teams_statistics,
+                    games, arch_rival, scoredGoal, ownGoal);
 
 
         } else if (player == null) {
 
+            //This player dont exixt or we could not find them
             controllers.Application.ofError();
         }
     }
@@ -193,6 +235,26 @@ public class PlayerController extends Controller {
     }
 
     public static void editPlayer(Player player, File image, boolean resetPicture, boolean resetrfid) {
+
+        /*
+         * Allows user to upload a picture, reset it, and reset the RFID value
+         * (only if it is set). and everything else that acknowledges a player
+         * This method checks always first that if the values in databse is
+         * different from input values before doing calls to databse for save
+         *
+         *
+         * important You can remove the comments inside if-sentences if you do
+         * not want the user to have blank values or reset the values such ass
+         * firstname, lastname and bio
+         *
+         * Theres is opportunity for the user to set RFID from setting viwe, but
+         * this is blankd out you have to change settings.html to lett the user
+         * see the input feeld for rfid. you dont have to change anything else
+         * here
+         *
+         */
+
+
 
         Player existingplayer = null;
         Long id = null;
@@ -206,10 +268,7 @@ public class PlayerController extends Controller {
 
         if (id != null && (username != null && !username.equals(""))) {
 
-
             existingplayer = Player.find("id = ? and username = ?", id, username).first();
-
-
         }
         //indicates if player have changed any info
         boolean hasChanged = false;
@@ -333,6 +392,7 @@ public class PlayerController extends Controller {
                     imageEnd = ".jpg";
                 }
                 String playerImage = "openfoos_player_" + id + imageEnd;
+                //serverpath =  applicationPath
                 String main_path = Play.applicationPath + "/public/images/";
                 if (!existingplayer.image.equals("player.png") && existingplayer.image != null) {
                     String delete_path = main_path + "players/" + existingplayer.image;
@@ -393,16 +453,16 @@ public class PlayerController extends Controller {
     public static void changePassword(Player player, String newPassword, String newPassword2) {
 
 
+        /*
+         * Have to check if the oldpassword is right, and the two passwords are
+         * equal before we change the password
+         */
         if ((player.password == null || player.password.equals("")) || newPassword == null || newPassword2 == null) {
             Validation.addError("settings", "Missing informasjon", player.password);
             params.flash();
             Validation.keep();
             settings(3);
         }
-
-
-
-
         if (!newPassword.equals(newPassword2)) {
 
             Validation.addError("settings", "Your passwords must bee the same.", player.password);
@@ -470,6 +530,9 @@ public class PlayerController extends Controller {
         return notNull;
     }
 
+    /*
+     * capitalizes the first leter of the input param and returns it.
+     */
     private static String capitalize(String s) {
         s.trim();
         char[] chars = s.toLowerCase().toCharArray();

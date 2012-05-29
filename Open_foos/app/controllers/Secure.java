@@ -1,7 +1,4 @@
-/*
- * THIS IS module.secure=${play.path}/modules/secure
- * 
- */
+
 package controllers;
 
 import java.lang.reflect.InvocationTargetException;
@@ -11,7 +8,10 @@ import play.mvc.Before;
 import play.mvc.Controller;
 import play.mvc.Http;
 import play.utils.Java;
-
+/*
+ * THIS IS module.secure=${play.path}/modules/secure
+ * This class have modified urls. 
+ */
 public class Secure extends Controller {
 
     @Before(unless = {"login", "authenticate", "logout"})

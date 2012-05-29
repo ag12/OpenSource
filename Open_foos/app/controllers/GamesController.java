@@ -16,9 +16,9 @@ public class GamesController extends Controller {
         List<Game> games = Game.find("(home_team_id = ? or visitor_team_id = ?) and (end_time != 0 ) order by " + order, team_id, team_id).fetch(limit);
 
         for (int i = 0; i < games.size(); i++) {
-               //For Security off application
-            games.get(i).home_team.arch_rival = null;
-            games.get(i).visitor_team.arch_rival = null;
+            //For Security off application
+             games.get(i).home_team.arch_rival = null;
+             games.get(i).visitor_team.arch_rival = null;
             if (games.get(i).home_team.memberCount() >= 1) {
                 games.get(i).home_team.player1.password = "sorry to disappoint you hacker";
                 games.get(i).home_team.player1.email = null;

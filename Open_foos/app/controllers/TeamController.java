@@ -1,4 +1,3 @@
-
 package controllers;
 
 import java.io.File;
@@ -15,7 +14,7 @@ import repositories.StatisticRepository;
 
 /**
  *
- * 
+ *
  */
 public class TeamController extends Controller {
 
@@ -26,10 +25,12 @@ public class TeamController extends Controller {
     public static void profile(String teamname) {
 
         Team team = Team.find("byTeam_name", teamname).first();
+        
         if (team != null && team.memberCount() == 2) {
 
             //This teams statistic
             Statistic statistic = StatisticRepository.getStatistics(team.id);
+            Team arch_rival = team.arch_rival;
 
 
             //This team morestatistic, as most played against and so on
@@ -53,7 +54,7 @@ public class TeamController extends Controller {
                     (statistics != null ? statistics : null),
                     (games != null ? games : null),
                     (teams_statistics != null ? teams_statistics : null),
-                    (teams != null ? teams : null));
+                    (teams != null ? teams : null),arch_rival);
         } else if (team != null && team.memberCount() == 1) {
 
             // send user to player profile site, where the player team info is available
@@ -123,15 +124,17 @@ public class TeamController extends Controller {
 
             }
         }
-        
-        if (team.organization != null /*&& !"".equals(team.organization)*/){
-              team.organization = team.organization.trim();
-            if ( !team.organization.equals(existingTeam.organization)){
-              
+
+        if (team.organization != null /*
+                 * && !"".equals(team.organization)
+                 */) {
+            team.organization = team.organization.trim();
+            if (!team.organization.equals(existingTeam.organization)) {
+
                 existingTeam.organization = team.organization;
                 hasChanged = true;
                 changes.add("Your teams organization has changed.");
-                
+
             }
         }
 
@@ -196,14 +199,14 @@ public class TeamController extends Controller {
         //User picks arch rival from the list
         if (team.arch_rival.team_name != null && team.arch_rival.team_name.length() > 1/*
                  * && !team.arch_rival.team_name.equals("")
-                 */ ) {
+                 */) {
 
             //team.arch_rival.team_name = team.arch_rival.team_name.trim();
             Team arch_rival = null;
-            if ( !team.arch_rival.team_name.equals("")){
+            if (!team.arch_rival.team_name.equals("")) {
                 arch_rival = Team.find("byTeam_name", team.arch_rival.team_name).first();
             }
-           
+
             if (arch_rival != null && existingTeam.arch_rival != arch_rival) {
 
                 //User cant pick them self
@@ -284,10 +287,10 @@ public class TeamController extends Controller {
                     showValidationErrors = true;
                 }
             }//END arch_rival != null && existingTeam.arch_rival != arch_rival
-            else if (arch_rival == null){
-                   Validation.addError("settings", "Cant find anybody with that name..");
-                                Validation.keep();
-                                showValidationErrors = true;
+            else if (arch_rival == null) {
+                Validation.addError("settings", "Cant find anybody with that name..");
+                Validation.keep();
+                showValidationErrors = true;
             }
 
         }
@@ -352,7 +355,7 @@ public class TeamController extends Controller {
         if (team.arch_rival != null) {
             notNull += 10;
         }
-         if (team.organization != null && !team.organization.equals("")) {
+        if (team.organization != null && !team.organization.equals("")) {
             notNull += 10;
         }
         return notNull;

@@ -259,10 +259,10 @@
                 #{if team?.bio != null}
                 <p>${team?.bio}</p>
                 #{/if}
-                #{if team?.arch_rival != null}
+                #{if arch_rival != null}
 
                 <p><strong>Arch rival </strong> 
-                    <a href="@{TeamController.profile(team?.arch_rival?.team_name)}"> @ ${team?.arch_rival?.team_name}</a></p>
+                    <a href="@{TeamController.profile(arch_rival?.team_name)}"> @ ${arch_rival?.team_name}</a></p>
                 #{/if}
                 #{if team?.organization != null && team?.organization != ""}
                 <p><strong>Organization: </strong> ${team?.organization}</p>
