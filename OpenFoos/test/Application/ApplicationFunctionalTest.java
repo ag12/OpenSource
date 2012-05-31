@@ -1,4 +1,3 @@
-
 package Application;
 
 import models.Player;
@@ -13,16 +12,17 @@ import play.test.FunctionalTest;
  *
  */
 public class ApplicationFunctionalTest extends FunctionalTest {
-    
+
     @Test
     public void EmptyDatabase() {
         Fixtures.deleteDatabase();
     }
+
     @Test
-    public void required(){
-        
+    public void required() {
+
         Player player = new Player();
-        player.username = "Neberd";
+        player.username = "guest";
         player.rfid = new Long(1);
         player.save();
         Team teamPlayer = new Team();
@@ -30,6 +30,7 @@ public class ApplicationFunctionalTest extends FunctionalTest {
         teamPlayer.player1 = player;
         teamPlayer.save();
     }
+
     @Test
     public void testThatErrorPageWorks() {
         Http.Response response = GET("/error");
@@ -88,9 +89,10 @@ public class ApplicationFunctionalTest extends FunctionalTest {
 
     @Test
     public void testThatAutocompleteWorks() {
-        Http.Response response = GET("/api/player/autocomplete/neberd");
+        Http.Response response = GET("/api/player/autocomplete/guest");
         assertIsOk(response);
         assertContentType("application/json", response);
         assertCharset(play.Play.defaultWebEncoding, response);
+        Fixtures.deleteDatabase();
     }
 }
