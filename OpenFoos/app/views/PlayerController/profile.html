@@ -283,8 +283,12 @@
                     </li> 
                     #{if statistic?.games_playd > 0 }
                     <li>
+                        <h6 class="underline">RATING<p class="stat-para">${team?.rating.format('0')}</p></h6>    
+                    </li> 
+                    <li>
                         <h6 class="underline">FORM<p class="stat-para">${statistic?.last_three_games_played}</p></h6>    
                     </li> 
+
                     #{/if}
                 </ul>
 
@@ -642,7 +646,7 @@
                         <strong>Arch rival: </strong> <a href="@{TeamController.profile(arch_rival?.team_name)}"> @ ${arch_rival?.team_name}</a>
                         #{/if}
 
-<br/>
+                        <br/>
                         <br/>
                         <p>${team?.bio}</p>
 
@@ -659,11 +663,11 @@
                         #{if scoredGoal != 0 && statistic?.score_for == 0 }
                         <p>${team?.team_name} have scored a total of <strong>${scoredGoal}</strong> goals while playing in other teams,
                             ${team?.team_name} have not played any single matches yet.
-                        #{/if} 
+                            #{/if} 
 
 
 
-                        #{if ownGoal != 0}
+                            #{if ownGoal != 0}
                         <p>The own goal record for ${team?.team_name} is a total of <strong>${ownGoal}</strong> goals ;(.</p>
                         #{/if}
                     </div>
